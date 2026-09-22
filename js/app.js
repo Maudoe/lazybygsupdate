@@ -27,12 +27,89 @@ function escPárrafo(str) {
   return esc(str).replace(/\n+/g, "<br>");
 }
 
-const ICONO_CONTACTO = {
-  telefono: "📞", email: "✉️", ubicacion: "📍", linkedin: "🔗", web: "🌐",
-};
+function iconoDe(tipo) {
+  const pack = PAQUETES_ICONOS[estado.iconos] || PAQUETES_ICONOS.emoji1;
+  return pack.iconos[tipo] ?? "•";
+}
+
 const ETIQUETA_TIPO_CONTACTO = {
   telefono: "Teléfono", email: "Email", ubicacion: "Ubicación", linkedin: "LinkedIn", web: "Sitio web",
 };
+
+// ---------------- packs de íconos de contacto (10 opciones) ----------------
+// Ojo con un límite real: los emoji son glifos a todo color (no son
+// vectores monocromos) — CSS `color` no les pega nada, así que NO seguían
+// el tema elegido (se quedaban rosa/celeste "de fábrica" aunque el tema
+// fuera bordó). Los packs "Símbolo" de acá abajo usan caracteres Unicode
+// de texto (sin variante emoji) en vez de emoji — esos SÍ heredan el
+// color del tema porque el navegador los dibuja como texto normal.
+const PAQUETES_ICONOS = {
+  emoji1: { nombre: "Emoji clásico", iconos: { telefono: "📞", email: "✉️", ubicacion: "📍", linkedin: "🔗", web: "🌐" } },
+  emoji2: { nombre: "Emoji teléfono fijo", iconos: { telefono: "☎️", email: "📧", ubicacion: "📌", linkedin: "💼", web: "🌍" } },
+  emoji3: { nombre: "Emoji chat", iconos: { telefono: "💬", email: "📨", ubicacion: "🏠", linkedin: "👤", web: "🔗" } },
+  emoji4: { nombre: "Emoji redondeado", iconos: { telefono: "📱", email: "📩", ubicacion: "🗺️", linkedin: "🌐", web: "💻" } },
+  simbolo1: { nombre: "Símbolo — se adapta al tema", iconos: { telefono: "☎", email: "✉", ubicacion: "⚑", linkedin: "in", web: "◎" } },
+  simbolo2: { nombre: "Símbolo geométrico", iconos: { telefono: "◆", email: "▣", ubicacion: "●", linkedin: "in", web: "◈" } },
+  simbolo3: { nombre: "Símbolo minimal", iconos: { telefono: "—", email: "@", ubicacion: "•", linkedin: "in", web: "www" } },
+  simbolo4: { nombre: "Símbolo flechas", iconos: { telefono: "▸", email: "▸", ubicacion: "▸", linkedin: "▸", web: "▸" } },
+  letras: { nombre: "Iniciales (Tel / Mail / Dir)", iconos: { telefono: "Tel", email: "Mail", ubicacion: "Dir", linkedin: "in", web: "Web" } },
+  sinIcono: { nombre: "Sin ícono", iconos: { telefono: "", email: "", ubicacion: "", linkedin: "", web: "" } },
+};
+
+// ---------------- combinaciones de fuente (30 opciones) ----------------
+// Cada valor de titulos/cuerpo es directamente lo que termina en
+// --cv-font-titulos/--cv-font-cuerpo (JS las pisa en renderPreview, no
+// hay una regla CSS por combinación — con 30 sería un quilombo de
+// mantener en paralelo). `familias` son los segmentos que arman la URL de
+// Google Fonts — se juntan TODOS (de las 30) en un único <link>, cargado
+// una sola vez al arrancar, así cambiar de combinación es instantáneo.
+const FUENTES = {
+  jakarta:      { nombre: "Plus Jakarta Sans + Inter — moderna", titulos: '"Plus Jakarta Sans", sans-serif', cuerpo: '"Inter", sans-serif', familias: ["Plus+Jakarta+Sans:wght@700;800", "Inter:wght@400;500;600;700"] },
+  montserrat:   { nombre: "Montserrat + Source Sans 3 — clásica", titulos: '"Montserrat", sans-serif', cuerpo: '"Source Sans 3", sans-serif', familias: ["Montserrat:wght@700;800", "Source+Sans+3:wght@400;500;600;700"] },
+  editorial:    { nombre: "Playfair Display + Karla — editorial", titulos: '"Playfair Display", serif', cuerpo: '"Karla", sans-serif', familias: ["Playfair+Display:wght@700;800", "Karla:wght@400;500;600;700"] },
+  sora:         { nombre: "Sora + IBM Plex Sans — técnica", titulos: '"Sora", sans-serif', cuerpo: '"IBM Plex Sans", sans-serif', familias: ["Sora:wght@600;700", "IBM+Plex+Sans:wght@400;500;600;700"] },
+  poppins:      { nombre: "Poppins + Mulish — redondeada", titulos: '"Poppins", sans-serif', cuerpo: '"Mulish", sans-serif', familias: ["Poppins:wght@700;800", "Mulish:wght@400;500;600;700"] },
+  raleway:      { nombre: "Raleway + Lato — elegante", titulos: '"Raleway", sans-serif', cuerpo: '"Lato", sans-serif', familias: ["Raleway:wght@700;800", "Lato:wght@400;700"] },
+  oswald:       { nombre: "Oswald + Open Sans — condensada", titulos: '"Oswald", sans-serif', cuerpo: '"Open Sans", sans-serif', familias: ["Oswald:wght@600;700", "Open+Sans:wght@400;600;700"] },
+  merriweather: { nombre: "Merriweather + Work Sans — cálida", titulos: '"Merriweather", serif', cuerpo: '"Work Sans", sans-serif', familias: ["Merriweather:wght@700;900", "Work+Sans:wght@400;500;600;700"] },
+  archivo:      { nombre: "Archivo Black + Archivo — bold", titulos: '"Archivo Black", sans-serif', cuerpo: '"Archivo", sans-serif', familias: ["Archivo+Black", "Archivo:wght@400;500;600;700"] },
+  dmserif:      { nombre: "DM Serif Display + DM Sans — contemporánea", titulos: '"DM Serif Display", serif', cuerpo: '"DM Sans", sans-serif', familias: ["DM+Serif+Display", "DM+Sans:wght@400;500;600;700"] },
+  spacegrotesk: { nombre: "Space Grotesk + Inter — startup", titulos: '"Space Grotesk", sans-serif', cuerpo: '"Inter", sans-serif', familias: ["Space+Grotesk:wght@600;700"] },
+  lora:         { nombre: "Lora + Nunito Sans — editorial cálida", titulos: '"Lora", serif', cuerpo: '"Nunito Sans", sans-serif', familias: ["Lora:wght@600;700", "Nunito+Sans:wght@400;500;600;700"] },
+  bitter:       { nombre: "Bitter + Rubik — seria y amigable", titulos: '"Bitter", serif', cuerpo: '"Rubik", sans-serif', familias: ["Bitter:wght@700;800", "Rubik:wght@400;500;600;700"] },
+  baskerville:  { nombre: "Libre Baskerville + PT Sans — académica", titulos: '"Libre Baskerville", serif', cuerpo: '"PT Sans", sans-serif', familias: ["Libre+Baskerville:wght@700", "PT+Sans:wght@400;700"] },
+  josefin:      { nombre: "Josefin Sans + Quicksand — amigable", titulos: '"Josefin Sans", sans-serif', cuerpo: '"Quicksand", sans-serif', familias: ["Josefin+Sans:wght@600;700", "Quicksand:wght@400;500;600;700"] },
+  anton:        { nombre: "Anton + Roboto — alto impacto", titulos: '"Anton", sans-serif', cuerpo: '"Roboto", sans-serif', familias: ["Anton", "Roboto:wght@400;500;700"] },
+  cormorant:    { nombre: "Cormorant Garamond + Jost — lujo", titulos: '"Cormorant Garamond", serif', cuerpo: '"Jost", sans-serif', familias: ["Cormorant+Garamond:wght@600;700", "Jost:wght@400;500;600;700"] },
+  barlow:       { nombre: "Barlow Semi Condensed + Barlow — uniforme", titulos: '"Barlow Semi Condensed", sans-serif', cuerpo: '"Barlow", sans-serif', familias: ["Barlow+Semi+Condensed:wght@600;700", "Barlow:wght@400;500;600;700"] },
+  abril:        { nombre: "Abril Fatface + Mulish — dramática", titulos: '"Abril Fatface", serif', cuerpo: '"Mulish", sans-serif', familias: ["Abril+Fatface"] },
+  teko:         { nombre: "Teko + Noto Sans — deportiva", titulos: '"Teko", sans-serif', cuerpo: '"Noto Sans", sans-serif', familias: ["Teko:wght@600;700", "Noto+Sans:wght@400;500;600;700"] },
+  crimson:      { nombre: "Crimson Text + Karla — literaria", titulos: '"Crimson Text", serif', cuerpo: '"Karla", sans-serif', familias: ["Crimson+Text:wght@600;700"] },
+  exo2:         { nombre: "Exo 2 — futurista", titulos: '"Exo 2", sans-serif', cuerpo: '"Exo 2", sans-serif', familias: ["Exo+2:wght@400;500;600;700;800"] },
+  redhat:       { nombre: "Red Hat Display + Red Hat Text — corporativa", titulos: '"Red Hat Display", sans-serif', cuerpo: '"Red Hat Text", sans-serif', familias: ["Red+Hat+Display:wght@700;800", "Red+Hat+Text:wght@400;500;600;700"] },
+  syne:         { nombre: "Syne + Inter — creativa", titulos: '"Syne", sans-serif', cuerpo: '"Inter", sans-serif', familias: ["Syne:wght@700;800"] },
+  manrope:      { nombre: "Manrope — minimal moderna", titulos: '"Manrope", sans-serif', cuerpo: '"Manrope", sans-serif', familias: ["Manrope:wght@400;500;600;700;800"] },
+  fraunces:     { nombre: "Fraunces + Inter — editorial con carácter", titulos: '"Fraunces", serif', cuerpo: '"Inter", sans-serif', familias: ["Fraunces:wght@600;700"] },
+  bebas:        { nombre: "Bebas Neue + Roboto — marketing", titulos: '"Bebas Neue", sans-serif', cuerpo: '"Roboto", sans-serif', familias: ["Bebas+Neue"] },
+  outfit:       { nombre: "Outfit — SaaS moderno", titulos: '"Outfit", sans-serif', cuerpo: '"Outfit", sans-serif', familias: ["Outfit:wght@400;500;600;700;800"] },
+  cabin:        { nombre: "Cabin — amigable simple", titulos: '"Cabin", sans-serif', cuerpo: '"Cabin", sans-serif', familias: ["Cabin:wght@400;500;600;700"] },
+  zillaslab:    { nombre: "Zilla Slab + Work Sans — slab profesional", titulos: '"Zilla Slab", serif', cuerpo: '"Work Sans", sans-serif', familias: ["Zilla+Slab:wght@600;700"] },
+};
+
+// Todas las familias de las 30 combinaciones, en un único <link> inyectado
+// una sola vez al cargar — así cambiar de combinación en el dropdown es
+// instantáneo (la fuente ya está cargada), sin ir a buscar nada a la red
+// en el momento. Es un proyecto chico de un solo usuario: no vale la pena
+// la complejidad de cargar fuentes bajo demanda para ahorrar unos KB.
+(function inyectarGoogleFonts() {
+  const familias = new Set();
+  Object.values(FUENTES).forEach((f) => f.familias.forEach((seg) => familias.add(seg)));
+  const href = "https://fonts.googleapis.com/css2?" + [...familias].map((f) => `family=${f}`).join("&") + "&display=swap";
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+})();
 
 // ---------------- estado por defecto: ejemplo lorem ipsum ----------------
 // A propósito NO tiene datos reales de nadie — esto es lo que ve
@@ -44,7 +121,7 @@ function estadoPorDefecto() {
   const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   const LOREM2 = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
   return {
-    modelo: "modelo1", tema: "turquesa", fuente: "jakarta",
+    modelo: "modelo1", tema: "turquesa", fuente: "jakarta", iconos: "emoji1", colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1,
     nombre: "Lorem", apellido: "Ipsum",
     puesto: "Dolor Sit Amet Engineer", subtitulo: "Consectetur+",
     foto: null,
@@ -173,19 +250,66 @@ function guardar() {
 // de index.html — no hace falta tocar ningún campo del editor.
 const MODELOS = {
   modelo1: { nombre: "Modelo 1", render: renderModelo1 },
+  modelo2: { nombre: "Modelo 2", render: renderModelo2 },
 };
 
 function renderPreview() {
   const pagina = $("#cv-pagina");
   pagina.dataset.modelo = estado.modelo || "modelo1";
   pagina.dataset.tema = estado.tema || "turquesa";
-  pagina.dataset.fuente = estado.fuente || "jakarta";
+  pagina.dataset.fuente = estado.fuente || "jakarta"; // sólo para inspeccionar en devtools, el efecto real es el setProperty de abajo
+  const fdata = FUENTES[estado.fuente] || FUENTES.jakarta;
+  pagina.style.setProperty("--cv-font-titulos", fdata.titulos);
+  pagina.style.setProperty("--cv-font-cuerpo", fdata.cuerpo);
+  // color de fondo oscuro/claro: a diferencia de tema (presets fijos por
+  // atributo), acá el usuario puede elegir CUALQUIER color, así que se
+  // pisa la variable directo por JS en vez de necesitar una regla CSS
+  // nueva por cada color posible. Aplica a todos los modelos por igual
+  // (los dos usan las mismas variables para su franja oscura/cuerpo claro).
+  pagina.style.setProperty("--cv-lateral-fondo", estado.colorOscuro || "#16191e");
+  pagina.style.setProperty("--cv-fondo-cuerpo", estado.colorClaro || "#ffffff");
+  // agrandar/achicar de verdad (cambia el tamaño real de la foto/ícono en
+  // el documento, no es un zoom de cámara/recorte) — ver los botones +/-
+  // en el editor y ajustarEscala() más abajo.
+  pagina.style.setProperty("--cv-escala-foto", estado.escalaFoto ?? 1);
+  pagina.style.setProperty("--cv-escala-iconos", estado.escalaIconos ?? 1);
   const modelo = MODELOS[estado.modelo] || MODELOS.modelo1;
   modelo.render();
 }
 
 // ---- Modelo 1: el layout original (franja lateral + timeline) ----
+// El esqueleto (los contenedores con id fijo que el resto de las
+// funciones de este modelo van llenando) se arma UNA sola vez — no en
+// cada tecla que se tipea — y sólo se vuelve a armar si el modelo activo
+// cambió (por ejemplo, si el usuario estaba en el Modelo 2 y volvió a
+// este). Recrear el <img> de la foto en cada letra tipeada haría
+// parpadear la imagen sin necesidad.
+function asegurarEsqueletoModelo1() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo1") return;
+  pagina.dataset.esqueleto = "modelo1";
+  pagina.innerHTML = `
+    <div class="cv-columna-lateral" id="cv-lateral">
+      <div class="cv-foto-marco">
+        <img class="cv-foto" id="cv-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-foto-placeholder" id="cv-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-lateral-bloques" id="cv-lateral-bloques"></div>
+    </div>
+    <div class="cv-columna-principal" id="cv-principal">
+      <div class="cv-encabezado">
+        <h1 class="cv-nombre">
+          <span id="cv-nombre-nombre">Nombre</span> <span class="cv-nombre-acento" id="cv-nombre-apellido">Apellido</span>
+        </h1>
+        <p class="cv-puesto"><span id="cv-puesto-texto">Puesto</span><span id="cv-puesto-sub-envoltorio"> | <span id="cv-puesto-sub"></span></span></p>
+      </div>
+      <div id="cv-principal-bloques"></div>
+    </div>
+  `;
+}
+
 function renderModelo1() {
+  asegurarEsqueletoModelo1();
   $("#cv-nombre-nombre").textContent = estado.nombre || "Nombre";
   $("#cv-nombre-apellido").textContent = estado.apellido || "Apellido";
   $("#cv-puesto-texto").textContent = estado.puesto || "Puesto";
@@ -217,6 +341,10 @@ function renderModelo1() {
 function igualarAlturaLateral() {
   const principal = $("#cv-principal");
   const lateral = $("#cv-lateral");
+  // Sólo existen si el Modelo 1 está activo (otros modelos arman su
+  // propio esqueleto, sin estos ids) — sin este guard, imprimir estando
+  // en otro modelo tiraba un error acá.
+  if (!principal || !lateral) return;
   lateral.style.minHeight = principal.scrollHeight + "px";
 }
 // Recalcular una vez más justo antes de imprimir: las fuentes (Google
@@ -233,7 +361,7 @@ function renderLateralModelo1() {
     html += `<div class="cv-lateral-bloque"><h2 class="cv-lateral-titulo">Contacto</h2><ul class="cv-contacto-lista">`;
     for (const c of estado.contacto) {
       const texto = c.etiqueta ? `${esc(c.etiqueta)}: ${esc(c.valor)}` : esc(c.valor);
-      html += `<li class="cv-contacto-fila"><span class="cv-contacto-icono">${ICONO_CONTACTO[c.tipo] || "•"}</span><span>${texto}</span></li>`;
+      html += `<li class="cv-contacto-fila"><span class="cv-contacto-icono">${iconoDe(c.tipo)}</span><span>${texto}</span></li>`;
     }
     html += `</ul></div>`;
   }
@@ -322,6 +450,147 @@ function renderPrincipalModelo1() {
     html += `</div>`;
   }
 
+  return html;
+}
+
+// ---- Modelo 2: banner oscuro arriba (foto + nombre + contacto) con
+// borde ondulado, dos columnas blancas debajo (skills/idiomas a la
+// izquierda, experiencia/educación a la derecha con títulos en cápsula
+// de color) ----
+//
+// No todas las secciones del editor tienen un lugar en este layout —
+// "Referencias" y "Logros" no aparecen acá (el diseño de referencia no
+// tiene espacio para eso) — es esperable que cada modelo muestre un
+// subconjunto distinto de tus datos, no un error. Nada se pierde: sigue
+// estando en el editor y en el Modelo 1.
+// Traza una onda sinusoidal como puntos "L" de SVG. Se probaron versiones
+// con más amplitud y con "cintas" de ancho variable — pedido explícito
+// después de verlas: quedaban demasiado agresivas/en zigzag, "tiene que
+// ser más sutil". Esta es la versión calma: 3 ciclos (como se pidió) pero
+// con poca amplitud y muchos puntos (160) para que la curva se vea
+// redondeada de verdad y no facetada.
+function trazoOnda(ancho, ciclos, amplitud, centro, fase = 0, pasos = 160) {
+  const puntos = [];
+  for (let i = 0; i <= pasos; i++) {
+    const x = (ancho / pasos) * i;
+    const y = centro + amplitud * Math.sin((i / pasos) * ciclos * Math.PI * 2 + fase);
+    puntos.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+  }
+  return puntos.join(" L");
+}
+
+function asegurarEsqueletoModelo2() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo2") return;
+  pagina.dataset.esqueleto = "modelo2";
+  // La onda principal define el recorte blanco (el límite real entre la
+  // franja oscura y el cuerpo). Las otras dos son puramente decorativas,
+  // encimadas encima — cada una con su propio ciclo/amplitud/fase (no
+  // copias idénticas: "tienen que ser irregulares") y bien menos opacas
+  // hacia atrás, para que se lea como niebla de varias ondas superpuestas
+  // en vez de una sola línea gruesa.
+  const ondaPrincipal = trazoOnda(1000, 3, 9, 16);
+  const ondaFondo1 = trazoOnda(1000, 2.4, 7, 13, 1.1);
+  const ondaFondo2 = trazoOnda(1000, 3.6, 11, 20, -0.7);
+  pagina.innerHTML = `
+    <div class="cv-m2-header">
+      <div class="cv-m2-foto-marco">
+        <img class="cv-m2-foto" id="cv-m2-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m2-foto-placeholder" id="cv-m2-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m2-nombre-bloque">
+        <h1 class="cv-m2-nombre">
+          <span class="cv-m2-nombre-1" id="cv-m2-nombre-nombre">Nombre</span><br>
+          <span class="cv-m2-nombre-2" id="cv-m2-nombre-apellido">Apellido</span>
+        </h1>
+        <p class="cv-m2-puesto" id="cv-m2-puesto">Puesto</p>
+      </div>
+      <ul class="cv-m2-contacto" id="cv-m2-contacto"></ul>
+      <svg class="cv-m2-ola" viewBox="0 0 1000 50" preserveAspectRatio="none">
+        <path d="M${ondaPrincipal} L1000,50 L0,50 Z" style="fill:#ffffff;"></path>
+        <path d="M${ondaFondo2}" style="fill:none; stroke:var(--cv-acento); stroke-width:1.2; stroke-linecap:round; opacity:0.28;"></path>
+        <path d="M${ondaFondo1}" style="fill:none; stroke:var(--cv-acento); stroke-width:2.6; stroke-linecap:round; opacity:0.5;"></path>
+        <path d="M${ondaPrincipal}" style="fill:none; stroke:var(--cv-acento); stroke-width:4; stroke-linecap:round;"></path>
+      </svg>
+    </div>
+    <div class="cv-m2-cuerpo">
+      <div class="cv-m2-col-izq" id="cv-m2-col-izq"></div>
+      <div class="cv-m2-col-der" id="cv-m2-col-der"></div>
+    </div>
+  `;
+}
+
+function renderModelo2() {
+  asegurarEsqueletoModelo2();
+  $("#cv-m2-nombre-nombre").textContent = (estado.nombre || "Nombre").toUpperCase();
+  $("#cv-m2-nombre-apellido").textContent = (estado.apellido || "Apellido").toUpperCase();
+  $("#cv-m2-puesto").textContent = [estado.puesto, estado.subtitulo].filter(Boolean).join(" | ") || "Puesto";
+
+  const foto = $("#cv-m2-foto"), placeholder = $("#cv-m2-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m2-contacto").innerHTML = estado.contacto.map((c) => {
+    const texto = c.etiqueta ? `${esc(c.etiqueta)}: ${esc(c.valor)}` : esc(c.valor);
+    return `<li><span>${texto}</span><span class="cv-m2-contacto-icono">${iconoDe(c.tipo)}</span></li>`;
+  }).join("");
+
+  $("#cv-m2-col-izq").innerHTML = renderColIzqModelo2();
+  $("#cv-m2-col-der").innerHTML = renderColDerModelo2();
+}
+
+function renderColIzqModelo2() {
+  let html = "";
+  if (estado.perfil.trim()) html += `<p class="cv-m2-intro">${escPárrafo(estado.perfil)}</p>`;
+  if (estado.habilidades.length) {
+    html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner">Skills</h2><ul class="cv-lista-simple">${estado.habilidades.map((h) => `<li>${esc(h.texto)}</li>`).join("")}</ul></div>`;
+  }
+  if (estado.idiomas.length) {
+    html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner">Languages</h2><ul class="cv-lista-simple">${estado.idiomas.map((i) => `<li>${esc(i.nombre)}${i.nivel ? ` – ${esc(i.nivel)}` : ""}</li>`).join("")}</ul></div>`;
+  }
+  // "Hobbies" en la imagen de referencia — acá no hay un campo de hobbies
+  // en el editor, así que se usa Habilidades blandas con su nombre real
+  // en vez de etiquetarlas como algo que no son.
+  if (estado.blandas.length) {
+    html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner">Soft Skills</h2><ul class="cv-lista-simple">${estado.blandas.map((h) => `<li>${esc(h.texto)}</li>`).join("")}</ul></div>`;
+  }
+  return html;
+}
+
+function renderColDerModelo2() {
+  let html = "";
+  if (estado.experiencia.length) {
+    html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner cv-m2-banner-ancho">Experience</h2>`;
+    for (const x of estado.experiencia) {
+      html += `<div class="cv-m2-item">
+        <p class="cv-m2-item-titulo">${esc(x.rol || x.empresa)}</p>
+        <p class="cv-m2-item-sub">${esc(x.empresa)}${x.fecha ? ` | ${esc(x.fecha)}` : ""}</p>
+        <ul class="cv-bullets">
+          ${x.descripcion.trim() ? `<li>${esc(x.descripcion)}</li>` : ""}
+          ${x.bullets.map((b) => `<li>${esc(b.texto)}</li>`).join("")}
+          ${x.herramientas.map((h) => `<li>${esc(h.etiqueta)}: <strong>${esc(h.valor)}</strong></li>`).join("")}
+        </ul>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+  // Educación + certificaciones comparten la misma cápsula "Education" —
+  // el diseño de referencia no tiene un bloque aparte para certificados.
+  const items = [
+    ...estado.educacion.map((e) => ({ titulo: e.institucion, fecha: e.fecha, bullets: e.bullets.map((b) => b.texto) })),
+    ...estado.certificaciones.map((c) => ({ titulo: c.titulo, fecha: "", bullets: c.subtitulo ? [c.subtitulo] : [] })),
+  ];
+  if (items.length) {
+    html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner cv-m2-banner-ancho">Education</h2>`;
+    for (const it of items) {
+      html += `<div class="cv-m2-item">
+        <p class="cv-m2-item-titulo">${esc(it.titulo)}</p>
+        ${it.fecha ? `<p class="cv-m2-item-sub">${esc(it.fecha)}</p>` : ""}
+        ${it.bullets.length ? `<ul class="cv-bullets">${it.bullets.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+      </div>`;
+    }
+    html += `</div>`;
+  }
   return html;
 }
 
@@ -613,10 +882,50 @@ function enlazarCampoSimple(inputId, clave) {
   input.oninput = () => { estado[clave] = input.value; renderPreview(); guardar(); };
 }
 
+// Cada color libre (oscuro, claro) tiene DOS inputs para el mismo valor
+// (el swatch nativo <input type=color> y un campo de texto para pegar un
+// hex a mano) — hay que mantenerlos sincronizados entre sí, por eso no
+// alcanza con enlazarCampoSimple() dos veces. Genérica para no repetir
+// esta lógica por cada color libre que se agregue.
+function enlazarColorLibre(idPicker, idTexto, clave, porDefecto) {
+  const HEX_VALIDO = /^#[0-9a-fA-F]{6}$/;
+  const picker = $(idPicker), texto = $(idTexto);
+  const valorInicial = HEX_VALIDO.test(estado[clave]) ? estado[clave] : porDefecto;
+  picker.value = valorInicial;
+  texto.value = valorInicial;
+  picker.oninput = () => {
+    estado[clave] = picker.value;
+    texto.value = picker.value;
+    renderPreview(); guardar();
+  };
+  texto.oninput = () => {
+    if (!HEX_VALIDO.test(texto.value)) return; // deja seguir escribiendo sin aplicar todavía
+    estado[clave] = texto.value;
+    picker.value = texto.value;
+    renderPreview(); guardar();
+  };
+}
+
+// Los <select> de fuente/íconos arrancan vacíos en el HTML — se llenan acá
+// desde el registro (FUENTES/PAQUETES_ICONOS) en vez de tenerlos
+// hardcodeados en index.html, para no mantener la lista en dos lugares.
+// Repoblar en cada poblarDesdeEstado() (por ej. tras "Restablecer") no
+// hace daño: es la misma lista siempre, sólo se pisa el <option> elegido.
+function poblarSelectorDesdeRegistro(idSelect, registro) {
+  const select = $(idSelect);
+  select.innerHTML = Object.entries(registro).map(([id, d]) => `<option value="${esc(id)}">${esc(d.nombre)}</option>`).join("");
+}
+
 function poblarDesdeEstado() {
   enlazarCampoSimple("#in-modelo", "modelo");
   enlazarCampoSimple("#in-tema", "tema");
+  enlazarColorLibre("#in-color-oscuro", "#in-color-oscuro-texto", "colorOscuro", "#16191e");
+  enlazarColorLibre("#in-color-claro", "#in-color-claro-texto", "colorClaro", "#ffffff");
+  poblarSelectorDesdeRegistro("#in-fuente", FUENTES);
   enlazarCampoSimple("#in-fuente", "fuente");
+  poblarSelectorDesdeRegistro("#in-iconos", PAQUETES_ICONOS);
+  enlazarCampoSimple("#in-iconos", "iconos");
+  actualizarTextosEscala();
   enlazarCampoSimple("#in-nombre", "nombre");
   enlazarCampoSimple("#in-apellido", "apellido");
   enlazarCampoSimple("#in-titulo", "puesto");
@@ -648,9 +957,27 @@ function poblarDesdeEstado() {
   renderPreview();
 }
 
+// ---- ajustador +/- de tamaño (foto, íconos) ----
+const ESCALA_PASO = 0.1, ESCALA_MIN = 0.5, ESCALA_MAX_FOTO = 1.8, ESCALA_MAX_ICONOS = 2.2;
+function ajustarEscala(clave, delta, maximo) {
+  const actual = estado[clave] ?? 1;
+  estado[clave] = Math.min(maximo, Math.max(ESCALA_MIN, Math.round((actual + delta) * 100) / 100));
+  actualizarTextosEscala();
+  renderPreview(); guardar();
+}
+function actualizarTextosEscala() {
+  $("#foto-escala-texto").textContent = Math.round((estado.escalaFoto ?? 1) * 100) + "%";
+  $("#iconos-escala-texto").textContent = Math.round((estado.escalaIconos ?? 1) * 100) + "%";
+}
+
 // ---- controles estáticos: se bindean UNA sola vez, nunca dentro de
 // poblarDesdeEstado() (ver comentario más arriba). ----
 function bindearControlesEstaticos() {
+  $("#btn-foto-menos").addEventListener("click", () => ajustarEscala("escalaFoto", -ESCALA_PASO, ESCALA_MAX_FOTO));
+  $("#btn-foto-mas").addEventListener("click", () => ajustarEscala("escalaFoto", ESCALA_PASO, ESCALA_MAX_FOTO));
+  $("#btn-iconos-menos").addEventListener("click", () => ajustarEscala("escalaIconos", -ESCALA_PASO, ESCALA_MAX_ICONOS));
+  $("#btn-iconos-mas").addEventListener("click", () => ajustarEscala("escalaIconos", ESCALA_PASO, ESCALA_MAX_ICONOS));
+
   $$("[data-add]").forEach((btn) => {
     btn.addEventListener("click", () => {
       switch (btn.dataset.add) {

@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CV Generator</title>
 
-<!-- Google Fonts: las 4 combinaciones de plantilla tipográfica que se
-     pueden elegir desde el editor (ver el <select> de "Fuente" y
-     css/style.css → .cv-pagina[data-fuente="..."]) se cargan todas de
-     una — es un proyecto chico, de un solo usuario, no vale la pena
-     complicarse inyectando <link> dinámicos sólo para ahorrar KB. -->
+<!-- Google Fonts: las 30 combinaciones de plantilla tipográfica (ver
+     FUENTES en js/app.js) se cargan con un <link> que ese mismo script
+     inyecta solo al arrancar — junta las familias de las 30 en una sola
+     request. Acá sólo van los preconnect, para que esa carga arranque
+     apenas antes de que el navegador sepa la URL final. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Source+Sans+3:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Karla:wght@400;500;600;700&family=Sora:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/style.css?v=1">
 </head>
@@ -56,6 +55,7 @@
               <label for="in-modelo">Modelo de plantilla</label>
               <select id="in-modelo">
                 <option value="modelo1">Modelo 1</option>
+                <option value="modelo2">Modelo 2</option>
               </select>
             </div>
             <div class="campo">
@@ -68,14 +68,43 @@
                 <option value="violeta">Violeta y dorado</option>
               </select>
             </div>
+            <div class="campo campo-fila">
+              <div class="campo">
+                <label for="in-color-oscuro">Color de fondo oscuro</label>
+                <input type="color" id="in-color-oscuro" value="#16191e">
+              </div>
+              <div class="campo">
+                <label for="in-color-oscuro-texto">O escribilo (hex)</label>
+                <input type="text" id="in-color-oscuro-texto" placeholder="#16191e" maxlength="7">
+              </div>
+            </div>
+            <div class="campo campo-fila">
+              <div class="campo">
+                <label for="in-color-claro">Color de fondo del cuerpo</label>
+                <input type="color" id="in-color-claro" value="#ffffff">
+              </div>
+              <div class="campo">
+                <label for="in-color-claro-texto">O escribilo (hex)</label>
+                <input type="text" id="in-color-claro-texto" placeholder="#ffffff" maxlength="7">
+              </div>
+            </div>
             <div class="campo">
               <label for="in-fuente">Combinación de fuentes</label>
-              <select id="in-fuente">
-                <option value="jakarta">Plus Jakarta Sans + Inter (moderna)</option>
-                <option value="montserrat">Montserrat + Source Sans 3 (clásica)</option>
-                <option value="editorial">Playfair Display + Karla (editorial)</option>
-                <option value="sora">Sora + IBM Plex Sans (técnica)</option>
-              </select>
+              <!-- opciones cargadas por JS desde FUENTES (30) — ver poblarSelectorFuentes() en app.js -->
+              <select id="in-fuente"></select>
+            </div>
+            <div class="campo">
+              <label for="in-iconos">Pack de íconos de contacto</label>
+              <!-- opciones cargadas por JS desde PAQUETES_ICONOS (10) -->
+              <select id="in-iconos"></select>
+            </div>
+            <div class="campo">
+              <label>Tamaño de los íconos</label>
+              <div class="ajustador">
+                <button type="button" class="btn btn-fantasma" id="btn-iconos-menos" title="Achicar">−</button>
+                <span class="ajustador-valor" id="iconos-escala-texto">100%</span>
+                <button type="button" class="btn btn-fantasma" id="btn-iconos-mas" title="Agrandar">+</button>
+              </div>
             </div>
           </div>
         </details>
@@ -95,6 +124,15 @@
               <input type="file" accept="image/*" id="foto-input" hidden>
             </label>
             <button class="btn btn-fantasma btn-chico oculto" id="btn-quitar-foto">Quitar foto</button>
+
+            <div class="campo">
+              <label>Tamaño de la foto</label>
+              <div class="ajustador">
+                <button type="button" class="btn btn-fantasma" id="btn-foto-menos" title="Achicar">−</button>
+                <span class="ajustador-valor" id="foto-escala-texto">100%</span>
+                <button type="button" class="btn btn-fantasma" id="btn-foto-mas" title="Agrandar">+</button>
+              </div>
+            </div>
 
             <div class="campo">
               <label for="in-nombre">Nombre</label>
@@ -212,30 +250,13 @@
       </aside>
 
       <!-- ============ vista previa (esto es lo que se imprime) ============ -->
+      <!-- .cv-pagina arranca vacío a propósito: cada modelo (ver MODELOS en
+           js/app.js) arma su propio HTML entero acá adentro — así un
+           modelo con una estructura totalmente distinta (banner arriba en
+           vez de franja lateral, por ejemplo) no tiene que pelearse con el
+           esqueleto fijo de otro modelo. -->
       <main class="vista-envoltorio">
-        <div class="cv-pagina" id="cv-pagina">
-
-          <div class="cv-columna-lateral" id="cv-lateral">
-            <div class="cv-foto-marco">
-              <img class="cv-foto" id="cv-foto" src="" alt="Foto de perfil" hidden>
-              <div class="cv-foto-placeholder" id="cv-foto-placeholder">🙂</div>
-            </div>
-
-            <div class="cv-lateral-bloques" id="cv-lateral-bloques"></div>
-          </div>
-
-          <div class="cv-columna-principal" id="cv-principal">
-            <div class="cv-encabezado">
-              <h1 class="cv-nombre">
-                <span id="cv-nombre-nombre">Nombre</span> <span class="cv-nombre-acento" id="cv-nombre-apellido">Apellido</span>
-              </h1>
-              <p class="cv-puesto"><span id="cv-puesto-texto">Puesto</span><span id="cv-puesto-sub-envoltorio"> | <span id="cv-puesto-sub"></span></span></p>
-            </div>
-
-            <div id="cv-principal-bloques"></div>
-          </div>
-
-        </div>
+        <div class="cv-pagina" id="cv-pagina"></div>
       </main>
 
     </div>

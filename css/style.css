@@ -31,6 +31,7 @@
   --cv-acento: #2bb0d6;
   --cv-acento-2: var(--cv-acento);
   --cv-badge-texto: #ffffff;
+  --cv-fondo-cuerpo: #ffffff;
   --cv-texto: #1c1e22;
   --cv-tenue: #5b5e66;
   --cv-linea: #e4e6ea;
@@ -105,6 +106,14 @@ input, textarea { font-family: inherit; }
   padding: 9px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
 }
 .btn-linea:hover { border-color: var(--app-acento); background: rgba(41, 182, 216, 0.08); }
+
+/* ---- ajustador +/- (tamaño de foto, tamaño de íconos) ---- */
+.ajustador { display: flex; align-items: center; gap: 10px; }
+.ajustador button {
+  width: 32px; height: 32px; flex: 0 0 auto; padding: 0;
+  font-size: 1.05rem; font-weight: 700; line-height: 1; border-radius: 8px;
+}
+.ajustador-valor { min-width: 42px; text-align: center; font-size: 0.82rem; color: var(--app-tenue); font-weight: 600; }
 
 /* ---------------- layout general ---------------- */
 .app-layout { display: flex; align-items: flex-start; }
@@ -238,21 +247,24 @@ input, textarea { font-family: inherit; }
 .cv-pagina {
   width: 210mm;
   min-height: 297mm;
-  background: #ffffff;
+  background: var(--cv-fondo-cuerpo);
   box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
-  display: grid;
-  grid-template-columns: 70mm 1fr;
   font-family: var(--cv-font-cuerpo);
   color: var(--cv-texto);
   /* el resto de las reglas visuales del CV van abajo, con el prefijo .cv- */
 }
+/* el grid de dos columnas (franja lateral + columna principal) es
+   específico del Modelo 1 — si viviera en .cv-pagina sin este filtro,
+   cualquier otro modelo con una estructura distinta (como el banner de
+   arriba del Modelo 2) quedaría metido a la fuerza en esas mismas dos
+   columnas en vez de apilarse verticalmente como corresponde. */
+.cv-pagina[data-modelo="modelo1"] { display: grid; grid-template-columns: 70mm 1fr; }
 
-/* ---- combinaciones de fuente ("plantilla" tipográfica) — mismo
-   mecanismo que los temas de color, un atributo más en .cv-pagina.
-   "jakarta" (sin atributo) es el default, ya definido arriba en :root. ---- */
-.cv-pagina[data-fuente="montserrat"] { --cv-font-titulos: "Montserrat", sans-serif; --cv-font-cuerpo: "Source Sans 3", sans-serif; }
-.cv-pagina[data-fuente="editorial"]  { --cv-font-titulos: "Playfair Display", serif; --cv-font-cuerpo: "Karla", sans-serif; }
-.cv-pagina[data-fuente="sora"]       { --cv-font-titulos: "Sora", sans-serif; --cv-font-cuerpo: "IBM Plex Sans", sans-serif; }
+/* Las combinaciones de fuente ya NO van acá — con 30 opciones (ver
+   FUENTES en app.js), escribir una regla CSS por cada una sería un
+   quilombo de mantener. En vez de eso, app.js pisa --cv-font-titulos/
+   --cv-font-cuerpo directo por JS (mismo mecanismo que los colores
+   libres de fondo) — una sola fuente de verdad, en el registro. */
 
 /* ---- columna lateral oscura ---- */
 .cv-columna-lateral {
@@ -261,7 +273,7 @@ input, textarea { font-family: inherit; }
   padding: 11mm 8mm 11mm;
 }
 .cv-foto-marco {
-  width: 34mm; height: 34mm; border-radius: 50%;
+  width: calc(34mm * var(--cv-escala-foto, 1)); height: calc(34mm * var(--cv-escala-foto, 1)); border-radius: 50%;
   margin: 0 auto 8mm; overflow: hidden;
   border: 2.4px solid #ffffff;
   background: #23262c;
@@ -299,7 +311,7 @@ input, textarea { font-family: inherit; }
   font-size: 8.4pt; line-height: 1.4; color: var(--cv-lateral-tenue);
   margin-bottom: 2.4mm; word-break: break-word;
 }
-.cv-contacto-icono { color: var(--cv-acento); flex: 0 0 auto; margin-top: 0.1em; }
+.cv-contacto-icono { color: var(--cv-acento); flex: 0 0 auto; margin-top: 0.1em; font-size: calc(1em * var(--cv-escala-iconos, 1)); }
 .cv-contacto-fila a { color: var(--cv-lateral-tenue); text-decoration: none; }
 
 .cv-idioma-fila, .cv-cert-item, .cv-edu-item, .cv-ref-item { margin-bottom: 4mm; }
@@ -421,5 +433,92 @@ input, textarea { font-family: inherit; }
      a la mitad justo en el salto de página — se empuja entero a la
      siguiente. */
   .cv-experiencia, .cv-educ-principal-item, .cv-lateral-bloque,
-  .cv-bloque-principal, .cv-titulo-seccion { break-inside: avoid; }
+  .cv-bloque-principal, .cv-titulo-seccion,
+  .cv-m2-item, .cv-m2-bloque, .cv-m2-header { break-inside: avoid; }
+}
+
+/* ============================================================
+   MODELO 2 — banner oscuro arriba (foto + nombre + contacto) con un
+   borde ondulado, dos columnas blancas debajo (skills/idiomas a la
+   izquierda, experiencia/educación con título en cápsula de color a la
+   derecha). Reusa las variables de tema/fuente (--cv-acento, etc.) igual
+   que el Modelo 1, así el selector de Tema/Fuente le pega a los dos por
+   igual sin duplicar nada.
+   ============================================================ */
+.cv-m2-header {
+  position: relative; overflow: visible;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8mm;
+  background: var(--cv-lateral-fondo); color: var(--cv-lateral-texto);
+  padding: 12mm 12mm 15mm;
+}
+.cv-m2-foto-marco {
+  width: calc(30mm * var(--cv-escala-foto, 1)); height: calc(30mm * var(--cv-escala-foto, 1)); border-radius: 50%; flex: 0 0 auto;
+  overflow: hidden; background: #23262c;
+  border: 1.2mm solid #ffffff;
+  box-shadow: 0 0 0 1.4mm var(--cv-acento);
+  display: grid; place-items: center;
+}
+.cv-m2-foto { width: 100%; height: 100%; object-fit: cover; }
+.cv-m2-foto-placeholder { font-size: 2.2rem; opacity: 0.5; }
+
+.cv-m2-nombre-bloque { flex: 1 1 auto; padding-top: 2mm; min-width: 0; }
+.cv-m2-nombre {
+  font-family: var(--cv-font-titulos); margin: 0; line-height: 1.12;
+  font-size: 17pt; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase;
+}
+.cv-m2-nombre-1 { color: #ffffff; }
+.cv-m2-nombre-2 { color: var(--cv-acento-2); }
+.cv-m2-puesto { margin: 2mm 0 0; font-size: 8.6pt; letter-spacing: 1px; color: var(--cv-lateral-tenue); text-transform: uppercase; }
+
+.cv-m2-contacto { list-style: none; margin: 2mm 0 0; padding: 0; flex: 0 0 auto; max-width: 55mm; }
+.cv-m2-contacto li {
+  display: flex; align-items: center; gap: 2.4mm; justify-content: flex-end;
+  font-size: 7.6pt; color: var(--cv-lateral-texto); margin-bottom: 2.2mm; white-space: nowrap;
+}
+.cv-m2-contacto-icono {
+  min-width: calc(5mm * var(--cv-escala-iconos, 1)); height: calc(5mm * var(--cv-escala-iconos, 1)); border-radius: 2.5mm; background: var(--cv-acento);
+  display: grid; place-items: center; font-size: calc(6pt * var(--cv-escala-iconos, 1)); flex: 0 0 auto;
+  padding: 0 0.8mm; color: #ffffff; line-height: 1;
+}
+
+/* la onda en sí (relleno blanco + una línea fina de acento encima) va con
+   estilos inline en el propio <path> — ver asegurarEsqueletoModelo2() en
+   app.js — así no hay dudas de que el color pega bien. Después de probar
+   una versión con más amplitud y con "cintas" de ancho variable, y que
+   se viera fea/en zigzag ("tiene que ser más sutil"), se volvió a algo
+   simple: una franja bien angosta con una curva suave. */
+.cv-m2-ola { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 15mm; display: block; }
+
+.cv-m2-cuerpo { display: grid; grid-template-columns: 62mm 1fr; }
+.cv-m2-col-izq { padding: 6mm 8mm 12mm 12mm; }
+.cv-m2-col-der { padding: 6mm 12mm 12mm 8mm; }
+/* las listas del Modelo 1 (.cv-lista-simple) se pensaron para texto claro
+   sobre la franja oscura — reusarlas acá (columna blanca) con ese mismo
+   gris claro las dejaría casi invisibles, por eso el color se pisa. */
+.cv-m2-col-izq .cv-lista-simple li { color: var(--cv-tenue); }
+
+.cv-m2-intro { font-size: 8.6pt; line-height: 1.6; color: var(--cv-tenue); margin: 0 0 8mm; }
+
+.cv-m2-bloque { margin-bottom: 7mm; }
+.cv-m2-bloque:last-child { margin-bottom: 0; }
+.cv-m2-banner {
+  font-family: var(--cv-font-titulos); font-weight: 700; font-size: 9.5pt;
+  letter-spacing: 0.6px; text-transform: uppercase; color: #ffffff;
+  background: var(--cv-acento); margin: 0 0 4mm; padding: 2.4mm 4mm;
+  border-radius: 1.5mm;
+}
+.cv-m2-banner-ancho { text-align: center; }
+
+.cv-m2-item { margin-bottom: 5mm; }
+.cv-m2-item:last-child { margin-bottom: 0; }
+.cv-m2-item-titulo { font-size: 9.5pt; font-weight: 700; color: var(--cv-texto); margin: 0; }
+/* antes 8pt/gris tenue/normal — al lado del título en negrita quedaba
+   casi invisible y "opacaba" el nombre de la empresa (pedido explícito
+   de arreglarlo): más grande, semi-negrita y con el acento de color en
+   vez de gris parejo, para que compita mejor por la atención. */
+.cv-m2-item-sub { font-size: 8.8pt; font-weight: 600; color: var(--cv-acento); margin: 1mm 0 2.2mm; }
+
+@media (max-width: 980px) {
+  .cv-m2-header { flex-wrap: wrap; }
+  .cv-m2-cuerpo { grid-template-columns: 1fr; }
 }
