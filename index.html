@@ -38,13 +38,21 @@
       <!-- ============ panel editor (izquierda, no se imprime) ============ -->
       <aside class="editor" id="editor">
 
-        <!-- ---- plantilla: tema de color + combinación de fuentes ---- -->
-        <!-- Presets ya armados (mismo formato/layout para todos, sólo
-             cambian colores y tipografía) — después de elegir uno, cada
-             campo de abajo se sigue editando libre, sin límites. -->
+        <!-- ---- plantilla: modelo (layout) + tema de color + fuentes ---- -->
+        <!-- El "Modelo" cambia el DISEÑO entero de la derecha (estructura,
+             no sólo colores) — el editor de acá abajo es siempre el mismo
+             sea cual sea el modelo elegido, así que los datos que cargues
+             no se pierden al cambiar de modelo. Tema/fuente aplican sobre
+             el modelo activo. -->
         <details class="editor-seccion" open>
           <summary>Plantilla</summary>
           <div class="editor-cuerpo">
+            <div class="campo">
+              <label for="in-modelo">Modelo de plantilla</label>
+              <select id="in-modelo">
+                <option value="modelo1">Modelo 1</option>
+              </select>
+            </div>
             <div class="campo">
               <label for="in-tema">Tema de color</label>
               <select id="in-tema">

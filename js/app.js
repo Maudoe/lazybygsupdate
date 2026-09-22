@@ -44,7 +44,7 @@ function estadoPorDefecto() {
   const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   const LOREM2 = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
   return {
-    tema: "turquesa", fuente: "jakarta",
+    modelo: "modelo1", tema: "turquesa", fuente: "jakarta",
     nombre: "Lorem", apellido: "Ipsum",
     puesto: "Dolor Sit Amet Engineer", subtitulo: "Consectetur+",
     foto: null,
@@ -165,9 +165,27 @@ function guardar() {
 // VISTA PREVIA — reconstruye el HTML imprimible desde `estado`.
 // Se llama después de CUALQUIER cambio (editor o foto).
 // ============================================================
+// ---------------- registro de modelos (plantillas) ----------------
+// Cada modelo es un layout completo, no sólo un color — por eso cada uno
+// tiene su propia función de render en vez de una sola con ifs adentro.
+// El editor de la izquierda es SIEMPRE el mismo (ver index.html): un
+// modelo nuevo sólo agrega una función acá + su entrada en el <select>
+// de index.html — no hace falta tocar ningún campo del editor.
+const MODELOS = {
+  modelo1: { nombre: "Modelo 1", render: renderModelo1 },
+};
+
 function renderPreview() {
-  $("#cv-pagina").dataset.tema = estado.tema || "turquesa";
-  $("#cv-pagina").dataset.fuente = estado.fuente || "jakarta";
+  const pagina = $("#cv-pagina");
+  pagina.dataset.modelo = estado.modelo || "modelo1";
+  pagina.dataset.tema = estado.tema || "turquesa";
+  pagina.dataset.fuente = estado.fuente || "jakarta";
+  const modelo = MODELOS[estado.modelo] || MODELOS.modelo1;
+  modelo.render();
+}
+
+// ---- Modelo 1: el layout original (franja lateral + timeline) ----
+function renderModelo1() {
   $("#cv-nombre-nombre").textContent = estado.nombre || "Nombre";
   $("#cv-nombre-apellido").textContent = estado.apellido || "Apellido";
   $("#cv-puesto-texto").textContent = estado.puesto || "Puesto";
@@ -178,8 +196,8 @@ function renderPreview() {
   if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
   else { foto.hidden = true; placeholder.hidden = false; }
 
-  $("#cv-lateral-bloques").innerHTML = renderLateral();
-  $("#cv-principal-bloques").innerHTML = renderPrincipal();
+  $("#cv-lateral-bloques").innerHTML = renderLateralModelo1();
+  $("#cv-principal-bloques").innerHTML = renderPrincipalModelo1();
   igualarAlturaLateral();
 }
 
@@ -208,7 +226,7 @@ function igualarAlturaLateral() {
 window.addEventListener("beforeprint", igualarAlturaLateral);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(igualarAlturaLateral);
 
-function renderLateral() {
+function renderLateralModelo1() {
   let html = "";
 
   if (estado.contacto.length) {
@@ -272,7 +290,7 @@ function renderLateral() {
   return html;
 }
 
-function renderPrincipal() {
+function renderPrincipalModelo1() {
   let html = "";
 
   if (estado.perfil.trim()) {
@@ -596,6 +614,7 @@ function enlazarCampoSimple(inputId, clave) {
 }
 
 function poblarDesdeEstado() {
+  enlazarCampoSimple("#in-modelo", "modelo");
   enlazarCampoSimple("#in-tema", "tema");
   enlazarCampoSimple("#in-fuente", "fuente");
   enlazarCampoSimple("#in-nombre", "nombre");
