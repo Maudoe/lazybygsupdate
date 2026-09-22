@@ -702,6 +702,46 @@ function bindearControlesEstaticos() {
     poblarDesdeEstado();
     guardar();
   });
+
+  // ---- exportar/importar: respaldo real de tus datos como .json, fuera
+  // del localStorage del navegador — sirve para guardarlo en otro lado
+  // (nube, pendrive) o pasarlo a otra compu/navegador. ----
+  $("#btn-exportar").addEventListener("click", () => {
+    const nombreArchivo = [estado.nombre, estado.apellido].filter(Boolean).join("-").toLowerCase().replace(/[^a-z0-9-]+/g, "-") || "cv";
+    const blob = new Blob([JSON.stringify(estado, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${nombreArchivo}-datos.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+  $("#importar-input").addEventListener("change", (e) => {
+    const archivo = e.target.files[0];
+    if (!archivo) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      let datos;
+      try { datos = JSON.parse(lector.result); }
+      catch { alert("Ese archivo no es un .json válido."); e.target.value = ""; return; }
+      // chequeo mínimo de forma, no una validación exhaustiva — si falta
+      // algo puntual el resto de la app igual sigue andando (los campos
+      // ausentes quedan vacíos, no rompen nada).
+      if (typeof datos !== "object" || datos === null || !Array.isArray(datos.experiencia)) {
+        alert("Ese .json no tiene la forma esperada (¿es un export de esta misma herramienta?).");
+        e.target.value = "";
+        return;
+      }
+      if (!confirm("Esto reemplaza todo el contenido actual por lo que hay en el archivo. ¿Seguir?")) { e.target.value = ""; return; }
+      estado = datos;
+      poblarDesdeEstado();
+      guardar();
+      e.target.value = "";
+    };
+    lector.readAsText(archivo);
+  });
 }
 
 bindearControlesEstaticos();

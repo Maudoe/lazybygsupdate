@@ -28,6 +28,11 @@
       </div>
       <div class="app-header-acciones">
         <span class="autoguardado" id="autoguardado">Guardado</span>
+        <button class="btn btn-fantasma" id="btn-exportar" title="Descarga todos tus datos como un archivo .json — guardalo donde quieras como respaldo">⬇ Exportar datos</button>
+        <label class="btn btn-fantasma" id="btn-importar" title="Carga un .json exportado antes — reemplaza todo lo que hay ahora" style="cursor:pointer;">
+          ⬆ Importar datos
+          <input type="file" accept="application/json" id="importar-input" hidden>
+        </label>
         <button class="btn btn-fantasma" id="btn-restablecer" title="Vuelve al CV de ejemplo, se pierden los cambios">↺ Restablecer</button>
         <button class="btn btn-acento" id="btn-imprimir">⭳ Descargar / Imprimir PDF</button>
       </div>
