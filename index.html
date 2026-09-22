@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Generator</title>
+
+<!-- Google Fonts: las 4 combinaciones de plantilla tipográfica que se
+     pueden elegir desde el editor (ver el <select> de "Fuente" y
+     css/style.css → .cv-pagina[data-fuente="..."]) se cargan todas de
+     una — es un proyecto chico, de un solo usuario, no vale la pena
+     complicarse inyectando <link> dinámicos sólo para ahorrar KB. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Source+Sans+3:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Karla:wght@400;500;600;700&family=Sora:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ============ barra superior ============ -->
+    <header class="app-header">
+      <div class="app-header-marca">
+        <span class="app-header-icono">📄</span>
+        <span class="app-header-titulo">CV Generator</span>
+      </div>
+      <div class="app-header-acciones">
+        <span class="autoguardado" id="autoguardado">Guardado</span>
+        <button class="btn btn-fantasma" id="btn-restablecer" title="Vuelve al CV de ejemplo, se pierden los cambios">↺ Restablecer</button>
+        <button class="btn btn-acento" id="btn-imprimir">⭳ Descargar / Imprimir PDF</button>
+      </div>
+    </header>
+
+    <div class="app-layout">
+
+      <!-- ============ panel editor (izquierda, no se imprime) ============ -->
+      <aside class="editor" id="editor">
+
+        <!-- ---- plantilla: tema de color + combinación de fuentes ---- -->
+        <!-- Presets ya armados (mismo formato/layout para todos, sólo
+             cambian colores y tipografía) — después de elegir uno, cada
+             campo de abajo se sigue editando libre, sin límites. -->
+        <details class="editor-seccion" open>
+          <summary>Plantilla</summary>
+          <div class="editor-cuerpo">
+            <div class="campo">
+              <label for="in-tema">Tema de color</label>
+              <select id="in-tema">
+                <option value="turquesa">Turquesa (original)</option>
+                <option value="azul">Azul y dorado</option>
+                <option value="verde">Verde y dorado</option>
+                <option value="bordo">Bordó y dorado</option>
+                <option value="violeta">Violeta y dorado</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="in-fuente">Combinación de fuentes</label>
+              <select id="in-fuente">
+                <option value="jakarta">Plus Jakarta Sans + Inter (moderna)</option>
+                <option value="montserrat">Montserrat + Source Sans 3 (clásica)</option>
+                <option value="editorial">Playfair Display + Karla (editorial)</option>
+                <option value="sora">Sora + IBM Plex Sans (técnica)</option>
+              </select>
+            </div>
+          </div>
+        </details>
+
+        <!-- ---- encabezado + foto ---- -->
+        <details class="editor-seccion" open>
+          <summary>Encabezado</summary>
+          <div class="editor-cuerpo">
+
+            <label class="campo-dropzone" id="foto-dropzone">
+              <span class="campo-dropzone-vista" id="foto-vista-previa">
+                <span class="campo-dropzone-icono">🖼️</span>
+              </span>
+              <span class="campo-dropzone-texto">
+                <strong>Arrastrá una foto</strong> o hacé clic para elegir un archivo
+              </span>
+              <input type="file" accept="image/*" id="foto-input" hidden>
+            </label>
+            <button class="btn btn-fantasma btn-chico oculto" id="btn-quitar-foto">Quitar foto</button>
+
+            <div class="campo">
+              <label for="in-nombre">Nombre</label>
+              <input type="text" id="in-nombre" placeholder="Lorem">
+            </div>
+            <div class="campo">
+              <label for="in-apellido">Apellido</label>
+              <input type="text" id="in-apellido" placeholder="Ipsum">
+            </div>
+            <div class="campo">
+              <label for="in-titulo">Puesto / título</label>
+              <input type="text" id="in-titulo" placeholder="QA Engineer">
+            </div>
+            <div class="campo">
+              <label for="in-subtitulo">Etiqueta corta (opcional)</label>
+              <input type="text" id="in-subtitulo" placeholder="B2+">
+            </div>
+          </div>
+        </details>
+
+        <!-- ---- contacto ---- -->
+        <details class="editor-seccion" open>
+          <summary>Contacto</summary>
+          <div class="editor-cuerpo">
+            <p class="editor-ayuda">Un renglón por dato — elegí el ícono que mejor lo represente.</p>
+            <div id="lista-contacto" class="editor-lista"></div>
+            <button class="btn btn-linea" data-add="contacto">+ Agregar dato de contacto</button>
+          </div>
+        </details>
+
+        <!-- ---- perfil ---- -->
+        <details class="editor-seccion" open>
+          <summary>Perfil</summary>
+          <div class="editor-cuerpo">
+            <div class="campo">
+              <label for="in-perfil">Resumen profesional</label>
+              <textarea id="in-perfil" rows="6" placeholder="QA Engineer con más de 9 años de experiencia..."></textarea>
+            </div>
+          </div>
+        </details>
+
+        <!-- ---- habilidades ---- -->
+        <details class="editor-seccion" open>
+          <summary>Habilidades</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-habilidades" class="editor-lista"></div>
+            <button class="btn btn-linea" data-add="habilidades">+ Agregar habilidad</button>
+          </div>
+        </details>
+
+        <!-- ---- habilidades blandas ---- -->
+        <details class="editor-seccion">
+          <summary>Habilidades blandas</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-blandas" class="editor-lista"></div>
+            <button class="btn btn-linea" data-add="blandas">+ Agregar habilidad blanda</button>
+          </div>
+        </details>
+
+        <!-- ---- experiencia laboral ---- -->
+        <details class="editor-seccion" open>
+          <summary>Experiencia laboral</summary>
+          <div class="editor-cuerpo">
+            <p class="editor-ayuda">El orden acá define el orden en el CV — usá las flechas para reordenar por fecha.</p>
+            <div id="lista-experiencia" class="editor-lista editor-lista-tarjetas"></div>
+            <button class="btn btn-linea" data-add="experiencia">+ Agregar experiencia</button>
+          </div>
+        </details>
+
+        <!-- ---- educación ---- -->
+        <details class="editor-seccion">
+          <summary>Educación</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-educacion" class="editor-lista editor-lista-tarjetas"></div>
+            <button class="btn btn-linea" data-add="educacion">+ Agregar estudio</button>
+          </div>
+        </details>
+
+        <!-- ---- certificaciones ---- -->
+        <details class="editor-seccion">
+          <summary>Certificaciones</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-certificaciones" class="editor-lista editor-lista-tarjetas"></div>
+            <button class="btn btn-linea" data-add="certificaciones">+ Agregar certificación</button>
+          </div>
+        </details>
+
+        <!-- ---- idiomas ---- -->
+        <details class="editor-seccion">
+          <summary>Idiomas</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-idiomas" class="editor-lista"></div>
+            <button class="btn btn-linea" data-add="idiomas">+ Agregar idioma</button>
+          </div>
+        </details>
+
+        <!-- ---- logros ---- -->
+        <details class="editor-seccion">
+          <summary>Logros</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-logros" class="editor-lista"></div>
+            <button class="btn btn-linea" data-add="logros">+ Agregar logro</button>
+          </div>
+        </details>
+
+        <!-- ---- referencias ---- -->
+        <details class="editor-seccion">
+          <summary>Referencias</summary>
+          <div class="editor-cuerpo">
+            <div id="lista-referencias" class="editor-lista editor-lista-tarjetas"></div>
+            <button class="btn btn-linea" data-add="referencias">+ Agregar referencia</button>
+          </div>
+        </details>
+
+      </aside>
+
+      <!-- ============ vista previa (esto es lo que se imprime) ============ -->
+      <main class="vista-envoltorio">
+        <div class="cv-pagina" id="cv-pagina">
+
+          <div class="cv-columna-lateral" id="cv-lateral">
+            <div class="cv-foto-marco">
+              <img class="cv-foto" id="cv-foto" src="" alt="Foto de perfil" hidden>
+              <div class="cv-foto-placeholder" id="cv-foto-placeholder">🙂</div>
+            </div>
+
+            <div class="cv-lateral-bloques" id="cv-lateral-bloques"></div>
+          </div>
+
+          <div class="cv-columna-principal" id="cv-principal">
+            <div class="cv-encabezado">
+              <h1 class="cv-nombre">
+                <span id="cv-nombre-nombre">Nombre</span> <span class="cv-nombre-acento" id="cv-nombre-apellido">Apellido</span>
+              </h1>
+              <p class="cv-puesto"><span id="cv-puesto-texto">Puesto</span><span id="cv-puesto-sub-envoltorio"> | <span id="cv-puesto-sub"></span></span></p>
+            </div>
+
+            <div id="cv-principal-bloques"></div>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- plantillas para entradas repetibles del editor (clonadas por JS, nunca se muestran solas) -->
+  <template id="tpl-fila-texto">
+    <div class="fila-editable">
+      <input type="text" class="fila-input">
+      <button class="fila-quitar" title="Quitar">✕</button>
+    </div>
+  </template>
+
+  <!-- Sólo existe en tu copia local (ignorado por git, ver .gitignore) —
+       si no está, este <script> simplemente no carga nada (404 benigno,
+       no rompe la página) y js/app.js sigue con el ejemplo lorem-ipsum.
+       Tiene que ir ANTES de app.js: es lo único que decide qué datos
+       arrancan como estado inicial. -->
+  <script src="js/datos-privados.js?v=1"></script>
+  <script src="js/app.js?v=1"></script>
+</body>
+</html>

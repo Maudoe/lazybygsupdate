@@ -1,0 +1,425 @@
+/* ============================================================
+   CV Generator — editor (izquierda) + vista previa imprimible
+   (derecha, ".cv-pagina"). El editor nunca se imprime; sólo
+   ".cv-pagina" se ve en el PDF final (ver @media print al final).
+   ============================================================ */
+
+:root {
+  /* paleta del editor (chrome de la app, sólo en pantalla) */
+  --app-fondo: #0d0f12;
+  --app-panel: #14171c;
+  --app-panel-2: #191d23;
+  --app-borde: #262b33;
+  --app-texto: #e8e9ec;
+  --app-tenue: #8a8f99;
+  --app-acento: #29b6d8;
+  --app-acento-oscuro: #1b8aa6;
+  --app-peligro: #d9534f;
+
+  /* paleta del CV en sí (esto sí se imprime — respeta el diseño original:
+     franja lateral casi negra, textos blancos, acento turquesa en
+     títulos/fechas/línea de tiempo, columna principal blanca). --cv-acento
+     es el color "de la casa" (título, línea de tiempo, bullets, íconos);
+     --cv-acento-2 es el metálico secundario (apellido, badge de fecha) —
+     en el tema original (turquesa) son el mismo color a propósito, así
+     ese tema queda EXACTO a como estaba ("dejalo como está"). Los otros
+     temas (ver .cv-pagina[data-tema=...] más abajo) sí usan un dorado de
+     verdad como --cv-acento-2, al estilo de un escudo con color+metal. */
+  --cv-lateral-fondo: #16191e;
+  --cv-lateral-texto: #f2f3f5;
+  --cv-lateral-tenue: #b6bac2;
+  --cv-acento: #2bb0d6;
+  --cv-acento-2: var(--cv-acento);
+  --cv-badge-texto: #ffffff;
+  --cv-texto: #1c1e22;
+  --cv-tenue: #5b5e66;
+  --cv-linea: #e4e6ea;
+
+  /* tipografía del CV: título/nombres en Plus Jakarta Sans (geométrica,
+     segura y "de diseño" sin ser estridente), cuerpo en Inter (el
+     estándar de facto para texto de UI/documento, muy legible incluso
+     chico e impreso) — la combinación que elegiría alguien que arma
+     material profesional a diario, no una fuente default del sistema. */
+  --cv-font-titulos: "Plus Jakarta Sans", "Montserrat", sans-serif;
+  --cv-font-cuerpo: "Inter", sans-serif;
+}
+
+/* ---- temas de color, inspirados en las combinaciones clásicas de
+   "casa" (color + dorado + base oscura) — mismo layout/formato para
+   todos, sólo cambian estas variables. El turquesa (sin atributo, o
+   data-tema="turquesa") es el original y queda intacto. ---- */
+.cv-pagina[data-tema="azul"]    { --cv-acento: #2f5fd6; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="verde"]   { --cv-acento: #1f8f5c; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="bordo"]   { --cv-acento: #8a1f30; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="violeta"] { --cv-acento: #6a2fa0; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+
+* { box-sizing: border-box; }
+.oculto { display: none !important; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--app-fondo);
+  color: var(--app-texto);
+  font-family: "Inter", sans-serif;
+}
+
+button { font-family: inherit; cursor: pointer; }
+input, textarea { font-family: inherit; }
+
+/* ---------------- barra superior ---------------- */
+.app-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(13, 15, 18, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--app-borde);
+}
+.app-header-marca { display: flex; align-items: center; gap: 10px; }
+.app-header-icono { font-size: 1.3rem; }
+.app-header-titulo { font-family: var(--cv-font-titulos); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.3px; }
+.app-header-acciones { display: flex; align-items: center; gap: 10px; }
+
+.autoguardado {
+  font-size: 0.76rem; color: var(--app-tenue);
+  display: flex; align-items: center; gap: 5px;
+}
+.autoguardado::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: #45c97a; box-shadow: 0 0 6px #45c97a;
+}
+.autoguardado.guardando::before { background: var(--app-acento); box-shadow: 0 0 6px var(--app-acento); }
+
+.btn {
+  border-radius: 9px; border: 1px solid var(--app-borde);
+  padding: 9px 16px; font-size: 0.85rem; font-weight: 600;
+  transition: all 150ms ease; background: var(--app-panel-2); color: var(--app-texto);
+}
+.btn-fantasma { background: transparent; color: var(--app-tenue); }
+.btn-fantasma:hover { color: var(--app-texto); border-color: var(--app-tenue); }
+.btn-acento { background: linear-gradient(135deg, var(--app-acento), var(--app-acento-oscuro)); color: #06161a; border: none; }
+.btn-acento:hover { filter: brightness(1.1); }
+.btn-chico { padding: 5px 10px; font-size: 0.74rem; }
+.btn-linea {
+  display: block; width: 100%; margin-top: 10px;
+  background: transparent; border: 1px dashed var(--app-borde); color: var(--app-acento);
+  padding: 9px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+}
+.btn-linea:hover { border-color: var(--app-acento); background: rgba(41, 182, 216, 0.08); }
+
+/* ---------------- layout general ---------------- */
+.app-layout { display: flex; align-items: flex-start; }
+
+/* ---------------- panel editor ---------------- */
+.editor {
+  width: 400px; flex: 0 0 400px;
+  height: calc(100vh - 57px);
+  overflow-y: auto;
+  border-right: 1px solid var(--app-borde);
+  padding: 14px 16px 60px;
+}
+.editor::-webkit-scrollbar { width: 9px; }
+.editor::-webkit-scrollbar-thumb { background: var(--app-borde); border-radius: 8px; }
+
+.editor-seccion {
+  background: var(--app-panel);
+  border: 1px solid var(--app-borde);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.editor-seccion summary {
+  padding: 13px 16px;
+  font-weight: 700; font-size: 0.88rem;
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--app-texto);
+}
+.editor-seccion summary::-webkit-details-marker { display: none; }
+.editor-seccion summary::after {
+  content: "＋"; color: var(--app-tenue); font-size: 0.9rem; transition: transform 200ms ease;
+}
+.editor-seccion[open] summary::after { content: "－"; }
+.editor-seccion summary:hover { color: var(--app-acento); }
+
+.editor-cuerpo { padding: 4px 16px 16px; }
+.editor-ayuda { font-size: 0.76rem; color: var(--app-tenue); margin: 0 0 10px; line-height: 1.45; }
+
+.campo { margin-bottom: 12px; }
+.campo label { display: block; font-size: 0.76rem; color: var(--app-tenue); margin-bottom: 5px; font-weight: 600; }
+.campo input, .campo textarea, .campo select {
+  width: 100%; background: var(--app-panel-2); border: 1px solid var(--app-borde);
+  border-radius: 8px; padding: 9px 11px; color: var(--app-texto); font-size: 0.86rem;
+  resize: vertical;
+}
+.campo input:focus, .campo textarea:focus, .campo select:focus {
+  outline: none; border-color: var(--app-acento);
+}
+.campo-fila { display: flex; gap: 8px; }
+.campo-fila .campo { flex: 1; }
+
+/* ---- dropzone de la foto ---- */
+.campo-dropzone {
+  display: flex; align-items: center; gap: 12px;
+  border: 1.5px dashed var(--app-borde); border-radius: 12px;
+  padding: 12px; margin-bottom: 8px; cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.campo-dropzone:hover, .campo-dropzone.sobre-arrastre {
+  border-color: var(--app-acento); background: rgba(41, 182, 216, 0.07);
+}
+.campo-dropzone-vista {
+  width: 52px; height: 52px; border-radius: 50%; flex: 0 0 auto;
+  background: var(--app-panel-2); display: grid; place-items: center;
+  overflow: hidden; border: 1px solid var(--app-borde);
+}
+.campo-dropzone-vista img { width: 100%; height: 100%; object-fit: cover; }
+.campo-dropzone-icono { font-size: 1.4rem; opacity: 0.6; }
+.campo-dropzone-texto { font-size: 0.78rem; color: var(--app-tenue); line-height: 1.4; }
+.campo-dropzone-texto strong { color: var(--app-texto); }
+
+/* ---- listas editables (filas de texto simples) ---- */
+.editor-lista { display: flex; flex-direction: column; gap: 6px; }
+.fila-editable { display: flex; align-items: center; gap: 6px; }
+.fila-editable input {
+  flex: 1; background: var(--app-panel-2); border: 1px solid var(--app-borde);
+  border-radius: 7px; padding: 7px 10px; color: var(--app-texto); font-size: 0.83rem;
+}
+.fila-editable input:focus { outline: none; border-color: var(--app-acento); }
+.fila-editable select {
+  background: var(--app-panel-2); border: 1px solid var(--app-borde); color: var(--app-texto);
+  border-radius: 7px; padding: 7px 6px; font-size: 0.8rem;
+}
+.fila-quitar {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid var(--app-borde); background: transparent; color: var(--app-tenue);
+  font-size: 0.7rem; display: grid; place-items: center;
+}
+.fila-quitar:hover { color: var(--app-peligro); border-color: var(--app-peligro); }
+
+/* ---- tarjetas de entradas complejas (experiencia, educación, etc.) ---- */
+.editor-lista-tarjetas { gap: 10px; }
+.tarjeta-entrada {
+  background: var(--app-panel-2); border: 1px solid var(--app-borde);
+  border-radius: 10px; padding: 12px;
+}
+.tarjeta-entrada-cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px; gap: 6px;
+}
+.tarjeta-entrada-titulo { font-size: 0.78rem; font-weight: 700; color: var(--app-acento); }
+.tarjeta-entrada-acciones { display: flex; gap: 4px; }
+.tarjeta-entrada-acciones button {
+  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--app-borde);
+  background: transparent; color: var(--app-tenue); font-size: 0.7rem; display: grid; place-items: center;
+}
+.tarjeta-entrada-acciones button:hover { color: var(--app-texto); border-color: var(--app-tenue); }
+.tarjeta-entrada-acciones .quitar:hover { color: var(--app-peligro); border-color: var(--app-peligro); }
+
+.sublista-etiqueta {
+  font-size: 0.72rem; color: var(--app-tenue); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  margin: 10px 0 6px;
+}
+.sublista-etiqueta:first-child { margin-top: 0; }
+
+/* ============================================================
+   VISTA PREVIA DEL CV — lo único que se imprime
+   ============================================================ */
+.vista-envoltorio {
+  flex: 1 1 auto;
+  min-height: calc(100vh - 57px);
+  padding: 34px 34px 80px;
+  display: flex; justify-content: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(41,182,216,0.05), transparent 60%),
+    var(--app-fondo);
+}
+
+.cv-pagina {
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  display: grid;
+  grid-template-columns: 70mm 1fr;
+  font-family: var(--cv-font-cuerpo);
+  color: var(--cv-texto);
+  /* el resto de las reglas visuales del CV van abajo, con el prefijo .cv- */
+}
+
+/* ---- combinaciones de fuente ("plantilla" tipográfica) — mismo
+   mecanismo que los temas de color, un atributo más en .cv-pagina.
+   "jakarta" (sin atributo) es el default, ya definido arriba en :root. ---- */
+.cv-pagina[data-fuente="montserrat"] { --cv-font-titulos: "Montserrat", sans-serif; --cv-font-cuerpo: "Source Sans 3", sans-serif; }
+.cv-pagina[data-fuente="editorial"]  { --cv-font-titulos: "Playfair Display", serif; --cv-font-cuerpo: "Karla", sans-serif; }
+.cv-pagina[data-fuente="sora"]       { --cv-font-titulos: "Sora", sans-serif; --cv-font-cuerpo: "IBM Plex Sans", sans-serif; }
+
+/* ---- columna lateral oscura ---- */
+.cv-columna-lateral {
+  background: var(--cv-lateral-fondo);
+  color: var(--cv-lateral-texto);
+  padding: 11mm 8mm 11mm;
+}
+.cv-foto-marco {
+  width: 34mm; height: 34mm; border-radius: 50%;
+  margin: 0 auto 8mm; overflow: hidden;
+  border: 2.4px solid #ffffff;
+  background: #23262c;
+  display: grid; place-items: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+.cv-foto { width: 100%; height: 100%; object-fit: cover; }
+.cv-foto-placeholder { font-size: 2.4rem; opacity: 0.5; }
+
+.cv-lateral-bloque { margin-bottom: 7mm; }
+.cv-lateral-titulo {
+  font-family: var(--cv-font-titulos); font-weight: 700; font-size: 10.5pt;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: #ffffff; margin: 0 0 2mm;
+  position: relative; padding-bottom: 2.6mm;
+}
+.cv-lateral-titulo::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 9mm; height: 2px; background: var(--cv-acento);
+}
+
+.cv-lista-simple { list-style: none; margin: 0; padding: 0; }
+.cv-lista-simple li {
+  font-size: 8.6pt; line-height: 1.55; color: var(--cv-lateral-tenue);
+  padding-left: 3.4mm; position: relative; margin-bottom: 1mm;
+}
+.cv-lista-simple li::before {
+  content: ""; position: absolute; left: 0; top: 0.85em;
+  width: 3.4px; height: 3.4px; border-radius: 50%; background: var(--cv-acento);
+}
+
+.cv-contacto-lista { list-style: none; margin: 0; padding: 0; }
+.cv-contacto-fila {
+  display: flex; align-items: flex-start; gap: 2.6mm;
+  font-size: 8.4pt; line-height: 1.4; color: var(--cv-lateral-tenue);
+  margin-bottom: 2.4mm; word-break: break-word;
+}
+.cv-contacto-icono { color: var(--cv-acento); flex: 0 0 auto; margin-top: 0.1em; }
+.cv-contacto-fila a { color: var(--cv-lateral-tenue); text-decoration: none; }
+
+.cv-idioma-fila, .cv-cert-item, .cv-edu-item, .cv-ref-item { margin-bottom: 4mm; }
+.cv-idioma-fila { display: flex; justify-content: space-between; font-size: 8.6pt; color: var(--cv-lateral-tenue); }
+.cv-idioma-nombre { color: var(--cv-lateral-texto); font-weight: 600; }
+
+.cv-edu-item, .cv-cert-item, .cv-ref-item { position: relative; padding-left: 3mm; }
+.cv-edu-item::before, .cv-cert-item::before, .cv-ref-item::before {
+  content: ""; position: absolute; left: 0; top: 1.4mm;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--cv-acento);
+}
+.cv-edu-titulo, .cv-cert-titulo, .cv-ref-nombre {
+  font-size: 8.8pt; font-weight: 700; color: var(--cv-lateral-texto);
+  text-decoration: underline; text-underline-offset: 2px; text-decoration-color: rgba(255,255,255,0.35);
+  display: block; margin-bottom: 0.6mm;
+}
+.cv-edu-fecha, .cv-ref-rol { font-size: 7.8pt; color: var(--cv-acento); font-weight: 600; display: block; margin-bottom: 1.2mm; }
+.cv-ref-rol { color: var(--cv-lateral-tenue); font-weight: 400; }
+.cv-cert-sub { font-size: 8pt; color: var(--cv-lateral-tenue); display: block; }
+
+/* ---- columna principal clara ---- */
+/* filete dorado entre la franja oscura y la hoja blanca — el detalle que
+   separa "dos bloques de color pegados" de "una carpeta con costura" —
+   pedido explícito para que se lea más armado/profesional. */
+.cv-columna-principal {
+  padding: 13mm 12mm 13mm 12mm; position: relative;
+  border-left: 1mm solid var(--cv-acento-2);
+}
+
+.cv-encabezado { margin-bottom: 8mm; }
+.cv-nombre {
+  font-family: var(--cv-font-titulos); font-weight: 800; font-size: 23pt;
+  letter-spacing: 0.4px; margin: 0; color: var(--cv-texto); line-height: 1.05;
+  text-transform: uppercase;
+}
+.cv-nombre-acento { color: var(--cv-acento-2); font-weight: 600; }
+.cv-puesto { margin: 2.4mm 0 0; font-size: 10.5pt; letter-spacing: 0.6px; color: var(--cv-tenue); text-transform: uppercase; }
+
+.cv-bloque-principal { margin-bottom: 8mm; }
+.cv-titulo-seccion {
+  font-family: var(--cv-font-titulos); font-weight: 700; font-size: 12.5pt;
+  letter-spacing: 0.6px; text-transform: uppercase; color: var(--cv-texto);
+  margin: 0 0 4mm; position: relative; padding-bottom: 2.6mm;
+}
+.cv-titulo-seccion::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 11mm; height: 2.4px; background: var(--cv-acento);
+}
+
+.cv-perfil-texto { font-size: 9pt; line-height: 1.65; color: var(--cv-tenue); text-align: left; margin: 0; }
+
+/* línea de tiempo de experiencia: una línea vertical acento + un punto
+   por entrada, alineado a la fila de empresa/fecha — mismo lenguaje
+   visual que el CV original. */
+.cv-lista-experiencia, .cv-lista-educ-principal { position: relative; padding-left: 4.4mm; }
+.cv-lista-experiencia::before, .cv-lista-educ-principal::before {
+  content: ""; position: absolute; left: 0; top: 1.6mm; bottom: 4mm; width: 1.4px;
+  background: var(--cv-acento); opacity: 0.4;
+}
+.cv-experiencia, .cv-educ-principal-item { position: relative; margin-bottom: 6.5mm; }
+.cv-experiencia:last-child, .cv-educ-principal-item:last-child { margin-bottom: 0; }
+.cv-experiencia::before, .cv-educ-principal-item::before {
+  content: ""; position: absolute; left: -4.4mm; top: 1.6mm;
+  width: 2.6mm; height: 2.6mm; border-radius: 50%;
+  background: var(--cv-acento); border: 1.6px solid #ffffff;
+  box-shadow: 0 0 0 1.4px var(--cv-acento);
+}
+
+.cv-experiencia-fila { display: flex; align-items: baseline; justify-content: space-between; gap: 4mm; flex-wrap: wrap; }
+.cv-experiencia-empresa {
+  font-size: 10.5pt; font-weight: 700; text-decoration: underline; text-underline-offset: 2px;
+  text-decoration-color: rgba(0,0,0,0.25);
+}
+.cv-experiencia-fecha {
+  font-size: 7.6pt; font-weight: 700; letter-spacing: 0.3px; white-space: nowrap;
+  background: var(--cv-acento-2); color: var(--cv-badge-texto); padding: 1.3mm 3mm; border-radius: 20px;
+}
+.cv-experiencia-rol { font-size: 8.6pt; color: var(--cv-tenue); margin: 1mm 0 2mm; }
+.cv-experiencia-desc { font-size: 8.8pt; line-height: 1.6; color: var(--cv-tenue); text-align: left; margin: 0 0 2.4mm; }
+
+.cv-subetiqueta { font-size: 9pt; font-weight: 700; color: var(--cv-texto); margin: 3mm 0 1.4mm; }
+.cv-bullets { list-style: none; margin: 0; padding: 0; }
+.cv-bullets li {
+  font-size: 8.6pt; line-height: 1.6; color: var(--cv-tenue);
+  padding-left: 3.4mm; position: relative; margin-bottom: 1.4mm; text-align: left;
+}
+.cv-bullets li::before {
+  content: ""; position: absolute; left: 0; top: 0.75em;
+  width: 3.4px; height: 3.4px; border-radius: 50%; background: var(--cv-acento);
+}
+.cv-bullets li strong { color: var(--cv-texto); }
+.cv-bullets.cv-bullets-tools li strong { color: var(--cv-texto); }
+
+.cv-educ-titulo { font-size: 10pt; font-weight: 700; margin: 0; }
+.cv-educ-sub { font-size: 8.6pt; color: var(--cv-tenue); margin: 1mm 0 1.6mm; }
+
+/* estado vacío (sección sin entradas: no se muestra en absoluto) */
+.cv-oculto { display: none !important; }
+
+/* ---------------- responsive liviano del editor ---------------- */
+@media (max-width: 980px) {
+  .app-layout { flex-direction: column; }
+  .editor { width: 100%; flex-basis: auto; height: auto; border-right: none; border-bottom: 1px solid var(--app-borde); }
+  .vista-envoltorio { min-height: auto; padding: 24px 14px 60px; }
+}
+
+/* ============================================================
+   IMPRESIÓN — sólo .cv-pagina sobrevive; tamaño A4 exacto, sin
+   sombras ni fondo de pantalla, con saltos de página prolijos.
+   ============================================================ */
+@page { size: A4; margin: 0; }
+
+@media print {
+  html, body { background: #ffffff; }
+  .app-header, .editor { display: none !important; }
+  .vista-envoltorio { padding: 0; min-height: 0; background: none; display: block; }
+  .cv-pagina { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; }
+
+  /* evita que un bloque (una experiencia, un título de sección) se corte
+     a la mitad justo en el salto de página — se empuja entero a la
+     siguiente. */
+  .cv-experiencia, .cv-educ-principal-item, .cv-lateral-bloque,
+  .cv-bloque-principal, .cv-titulo-seccion { break-inside: avoid; }
+}
