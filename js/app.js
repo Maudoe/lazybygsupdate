@@ -251,6 +251,8 @@ function guardar() {
 const MODELOS = {
   modelo1: { nombre: "Modelo 1", render: renderModelo1 },
   modelo2: { nombre: "Modelo 2", render: renderModelo2 },
+  modelo3: { nombre: "Modelo 3", render: renderModelo3 },
+  modelo4: { nombre: "Modelo 4", render: renderModelo4 },
 };
 
 function renderPreview() {
@@ -348,6 +350,8 @@ function renderModelo1() {
 function igualarAlturaLateral() {
   igualarAlturaPar("#cv-principal", "#cv-lateral");
   igualarAlturaPar("#cv-m2-col-der", "#cv-m2-col-izq");
+  igualarAlturaPar("#cv-m3-principal", "#cv-m3-lateral");
+  igualarAlturaPar("#cv-m4-principal", "#cv-m4-lateral");
 }
 function igualarAlturaPar(idLargo, idCorto) {
   const largo = $(idLargo);
@@ -558,9 +562,11 @@ function renderModelo2() {
   igualarAlturaLateral();
 }
 
+// Orden pedido explícitamente: Skills, Languages, Soft Skills y recién al
+// final About Me (el perfil) — antes el perfil iba primero, arriba de
+// todo, sin título propio.
 function renderColIzqModelo2() {
   let html = "";
-  if (estado.perfil.trim()) html += `<p class="cv-m2-intro">${escPárrafo(estado.perfil)}</p>`;
   if (estado.habilidades.length) {
     html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner">Skills</h2><ul class="cv-lista-simple">${estado.habilidades.map((h) => `<li>${esc(h.texto)}</li>`).join("")}</ul></div>`;
   }
@@ -572,6 +578,9 @@ function renderColIzqModelo2() {
   // en vez de etiquetarlas como algo que no son.
   if (estado.blandas.length) {
     html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner">Soft Skills</h2><ul class="cv-lista-simple">${estado.blandas.map((h) => `<li>${esc(h.texto)}</li>`).join("")}</ul></div>`;
+  }
+  if (estado.perfil.trim()) {
+    html += `<div class="cv-m2-bloque"><h2 class="cv-m2-banner">About Me</h2><p class="cv-m2-intro">${escPárrafo(estado.perfil)}</p></div>`;
   }
   return html;
 }
@@ -610,6 +619,323 @@ function renderColDerModelo2() {
     }
     html += `</div>`;
   }
+  return html;
+}
+
+// ---- Modelo 3: foto en arco, barras de progreso en Skills/Languages,
+// línea de tiempo con fecha + título + descripción a la derecha ----
+//
+// Las barras de "Work Skills" no representan una medición real (el
+// editor no tiene un campo de "nivel" para habilidades, sólo texto) —
+// son puramente decorativas, con un ancho derivado de un hash del propio
+// texto (siempre el mismo para la misma habilidad, no cambian solas en
+// cada render). Es el mismo criterio que ya usa la plantilla de
+// referencia: sus placeholders también traen porcentajes de ejemplo
+// (79%, 85%, 90%...) sin que representen nada medido. Las barras de
+// "Languages" sí están ancladas a un dato real (el nivel que el usuario
+// escribió, ej. "B2+"), mapeado a un porcentaje aproximado.
+function anchoBarraPorTexto(texto, min = 55, max = 95) {
+  let h = 0;
+  for (let i = 0; i < texto.length; i++) h = (h * 31 + texto.charCodeAt(i)) >>> 0;
+  return min + (h % (max - min + 1));
+}
+const NIVEL_IDIOMA_A_PORCENTAJE = {
+  "nativo": 96, "native": 96, "lengua materna": 96,
+  "c2": 92, "fluido": 88, "fluent": 88,
+  "c1": 82, "avanzado": 78, "advanced": 78,
+  "b2+": 72, "b2": 64,
+  "intermedio": 55, "intermediate": 55, "b1": 52,
+  "a2": 38, "básico": 35, "basico": 35, "principiante": 28, "beginner": 28, "a1": 25,
+};
+function porcentajeIdioma(nivelTexto) {
+  const clave = (nivelTexto || "").trim().toLowerCase();
+  return NIVEL_IDIOMA_A_PORCENTAJE[clave] ?? anchoBarraPorTexto(clave || "idioma", 50, 85);
+}
+
+function tituloIconoM3(icono, texto, oscuro) {
+  return `<div class="cv-m3-seccion-titulo${oscuro ? " cv-m3-seccion-titulo-oscura" : ""}"><span class="cv-m3-seccion-icono">${icono}</span><span>${esc(texto)}</span></div>`;
+}
+function barraM3(etiqueta, porcentaje) {
+  return `<div class="cv-m3-barra-fila">
+    <div class="cv-m3-barra-etiqueta">${esc(etiqueta)}</div>
+    <div class="cv-m3-barra-linea">
+      <div class="cv-m3-barra-pista"><div class="cv-m3-barra-relleno" style="width:${porcentaje}%"></div></div>
+      <span class="cv-m3-barra-pct">${porcentaje}%</span>
+    </div>
+  </div>`;
+}
+
+function asegurarEsqueletoModelo3() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo3") return;
+  pagina.dataset.esqueleto = "modelo3";
+  pagina.innerHTML = `
+    <div class="cv-m3-lateral" id="cv-m3-lateral">
+      <div class="cv-m3-foto-marco">
+        <img class="cv-m3-foto" id="cv-m3-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m3-foto-placeholder" id="cv-m3-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m3-lateral-bloques" id="cv-m3-lateral-bloques"></div>
+    </div>
+    <div class="cv-m3-principal" id="cv-m3-principal">
+      <div class="cv-m3-encabezado">
+        <h1 class="cv-m3-nombre"><span id="cv-m3-nombre-nombre">Nombre</span> <span class="cv-nombre-acento" id="cv-m3-nombre-apellido">Apellido</span><span class="cv-m3-punto">.</span></h1>
+        <p class="cv-m3-puesto"><span id="cv-m3-puesto-texto">Puesto</span><span id="cv-m3-puesto-sub-envoltorio"> | <span id="cv-m3-puesto-sub"></span></span></p>
+      </div>
+      <div id="cv-m3-principal-bloques"></div>
+    </div>
+  `;
+}
+
+function renderModelo3() {
+  asegurarEsqueletoModelo3();
+  $("#cv-m3-nombre-nombre").textContent = estado.nombre || "Nombre";
+  $("#cv-m3-nombre-apellido").textContent = estado.apellido || "Apellido";
+  $("#cv-m3-puesto-texto").textContent = estado.puesto || "Puesto";
+  $("#cv-m3-puesto-sub").textContent = estado.subtitulo || "";
+  $("#cv-m3-puesto-sub-envoltorio").classList.toggle("cv-oculto", !estado.subtitulo);
+
+  const foto = $("#cv-m3-foto"), placeholder = $("#cv-m3-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m3-lateral-bloques").innerHTML = renderLateralModelo3();
+  $("#cv-m3-principal-bloques").innerHTML = renderPrincipalModelo3();
+  igualarAlturaLateral();
+}
+
+function renderLateralModelo3() {
+  let html = "";
+  if (estado.habilidades.length) {
+    html += `<div class="cv-m3-bloque">${tituloIconoM3("◆", "Work Skills")}`;
+    html += estado.habilidades.map((h) => barraM3(h.texto, anchoBarraPorTexto(h.texto))).join("");
+    html += `</div>`;
+  }
+  if (estado.idiomas.length) {
+    html += `<div class="cv-m3-bloque">${tituloIconoM3("◎", "Languages")}`;
+    html += estado.idiomas.map((i) => barraM3(i.nivel ? `${i.nombre} (${i.nivel})` : i.nombre, porcentajeIdioma(i.nivel))).join("");
+    html += `</div>`;
+  }
+  if (estado.contacto.length) {
+    html += `<div class="cv-m3-bloque">${tituloIconoM3("☎", "Contact")}<ul class="cv-lista-simple">`;
+    html += estado.contacto.map((c) => `<li>${c.etiqueta ? esc(c.etiqueta) + ": " : ""}${esc(c.valor)}</li>`).join("");
+    html += `</ul></div>`;
+  }
+  if (estado.referencias.length) {
+    html += `<div class="cv-m3-bloque">${tituloIconoM3("●", "Reference")}`;
+    for (const r of estado.referencias) {
+      html += `<div class="cv-ref-item">
+        <span class="cv-ref-nombre">${esc(r.nombre)}</span>
+        ${r.rol ? `<span class="cv-ref-rol">${esc(r.rol)}</span>` : ""}
+        ${r.email ? `<span class="cv-ref-rol">${esc(r.email)}</span>` : ""}
+      </div>`;
+    }
+    html += `</div>`;
+  }
+  return html;
+}
+
+// items: [{fecha, titulo, sub, desc}] — cualquiera de los 4 campos puede
+// venir vacío, cada uno se omite solo si no hay nada que mostrar. Cada
+// entrada es una fila de dos columnas (fecha angosta a la izquierda,
+// contenido a la derecha con un puntito antes del título) — no una línea
+// de tiempo vertical con línea+punto en el margen como el Modelo 1.
+function seccionTimelineM3(icono, titulo, items) {
+  if (!items.length) return "";
+  let html = `<div class="cv-m3-bloque-principal">${tituloIconoM3(icono, titulo, true)}<div class="cv-m3-timeline">`;
+  for (const it of items) {
+    html += `<div class="cv-m3-timeline-item">
+      <span class="cv-m3-timeline-fecha">${it.fecha ? esc(it.fecha) : ""}</span>
+      <div class="cv-m3-timeline-contenido">
+        ${it.titulo ? `<p class="cv-m3-timeline-titulo-fila"><span class="cv-m3-timeline-punto"></span>${esc(it.titulo)}</p>` : ""}
+        ${it.sub ? `<p class="cv-m3-timeline-sub">${esc(it.sub)}</p>` : ""}
+        ${it.desc ? `<p class="cv-m3-timeline-desc">${esc(it.desc)}</p>` : ""}
+      </div>
+    </div>`;
+  }
+  html += `</div></div>`;
+  return html;
+}
+
+function renderPrincipalModelo3() {
+  let html = "";
+  if (estado.perfil.trim()) html += `<p class="cv-m3-intro">${escPárrafo(estado.perfil)}</p>`;
+
+  const educacion = [
+    ...estado.educacion.map((e) => ({ fecha: e.fecha, titulo: e.institucion, sub: "", desc: e.bullets.map((b) => b.texto).join(" · ") })),
+    ...estado.certificaciones.map((c) => ({ fecha: "", titulo: c.titulo, sub: "", desc: c.subtitulo })),
+  ];
+  html += seccionTimelineM3("▲", "Education", educacion);
+
+  const experiencia = estado.experiencia.map((x) => ({
+    fecha: x.fecha, titulo: x.rol || x.empresa, sub: x.rol ? x.empresa : "",
+    desc: [x.descripcion, ...x.bullets.map((b) => b.texto)].filter(Boolean).join(" "),
+  }));
+  html += seccionTimelineM3("■", "Work Experience", experiencia);
+
+  const logros = estado.logros.map((l) => ({ fecha: "", titulo: "", sub: "", desc: l.texto }));
+  html += seccionTimelineM3("★", "Personal Achievement", logros);
+
+  return html;
+}
+
+// ---- Modelo 4: blanco y negro, franja lateral con el canto "escalopado"
+// (una fila de círculos oscuros fundiéndose en un borde ondulado, en vez
+// de un corte recto) — el detalle que se pidió remarcar explícitamente de
+// la referencia. Se genera con un degradé radial repetido verticalmente
+// (ver .cv-m4-lateral-borde en css/style.css), no con un trazo fijo tipo
+// el de la ola del Modelo 2: así se adapta solo a cualquier alto de
+// franja lateral, sin tener que recalcular el patrón a mano. ----
+function tituloM4(icono, texto, oscuro) {
+  return `<div class="cv-m4-titulo${oscuro ? " cv-m4-titulo-oscura" : ""}"><span class="cv-m4-titulo-icono">${icono}</span><span>${esc(texto)}</span></div>`;
+}
+
+function asegurarEsqueletoModelo4() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo4") return;
+  pagina.dataset.esqueleto = "modelo4";
+  pagina.innerHTML = `
+    <div class="cv-m4-lateral" id="cv-m4-lateral">
+      <div class="cv-m4-header-panel">
+        <div class="cv-m4-encabezado">
+          <h1 class="cv-m4-nombre"><span id="cv-m4-nombre-nombre">Nombre</span> <span class="cv-nombre-acento" id="cv-m4-nombre-apellido">Apellido</span></h1>
+          <p class="cv-m4-puesto"><span id="cv-m4-puesto-texto">Puesto</span><span id="cv-m4-puesto-sub-envoltorio"> | <span id="cv-m4-puesto-sub"></span></span></p>
+        </div>
+        <div class="cv-m4-foto-marco">
+          <img class="cv-m4-foto" id="cv-m4-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-m4-foto-placeholder" id="cv-m4-foto-placeholder">🙂</div>
+        </div>
+      </div>
+      <div class="cv-m4-panel-b" id="cv-m4-panel-b"></div>
+    </div>
+    <div class="cv-m4-principal" id="cv-m4-principal">
+      <div id="cv-m4-principal-bloques"></div>
+    </div>
+  `;
+}
+
+function renderModelo4() {
+  asegurarEsqueletoModelo4();
+  $("#cv-m4-nombre-nombre").textContent = estado.nombre || "Nombre";
+  $("#cv-m4-nombre-apellido").textContent = estado.apellido || "Apellido";
+  $("#cv-m4-puesto-texto").textContent = estado.puesto || "Puesto";
+  $("#cv-m4-puesto-sub").textContent = estado.subtitulo || "";
+  $("#cv-m4-puesto-sub-envoltorio").classList.toggle("cv-oculto", !estado.subtitulo);
+
+  const foto = $("#cv-m4-foto"), placeholder = $("#cv-m4-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m4-panel-b").innerHTML = renderLateralModelo4PanelB();
+  $("#cv-m4-principal-bloques").innerHTML = renderPrincipalModelo4();
+  igualarAlturaLateral();
+}
+
+// La franja lateral son dos rectángulos, no uno solo ni una ola/textura
+// repetida (los dos primeros intentos, corregidos después de no
+// parecerse en nada a la referencia): el de arriba es el de la foto +
+// nombre, termina en curva justo debajo — la curva "de arriba" queda
+// pegada a la foto, agrupada con ella, en vez de aparecer recién después
+// de Educación. Después hay un espacio en blanco (separación real, ver
+// margin-bottom en css/style.css) y el segundo rectángulo (contacto +
+// educación + referencias, todo junto) empieza en curva arriba a la
+// derecha y crece para seguir llenando de oscuro hasta el final de la
+// página — sólo dos curvas en total, con aire entre ambas.
+function renderLateralModelo4PanelB() {
+  let html = "";
+
+  if (estado.contacto.length) {
+    html += `<div class="cv-m4-bloque">${tituloM4("☎", "Contact Me")}<ul class="cv-lista-simple">`;
+    html += estado.contacto.map((c) => `<li>${c.etiqueta ? esc(c.etiqueta) + ": " : ""}${esc(c.valor)}</li>`).join("");
+    html += `</ul></div>`;
+  }
+
+  // Educación + certificaciones fundidas en una sola lista, mismo criterio
+  // que ya se usa en el Modelo 3 (la referencia no tiene un bloque propio
+  // para certificaciones separado de educación).
+  const educacion = [
+    ...estado.educacion.map((e) => ({ titulo: e.institucion, fecha: e.fecha, bullets: e.bullets.map((b) => b.texto) })),
+    ...estado.certificaciones.map((c) => ({ titulo: c.titulo, fecha: "", bullets: c.subtitulo ? [c.subtitulo] : [] })),
+  ];
+  if (educacion.length) {
+    html += `<div class="cv-m4-bloque">${tituloM4("◈", "Education")}`;
+    for (const e of educacion) {
+      html += `<div class="cv-edu-item">
+        <span class="cv-edu-titulo">${esc(e.titulo)}</span>
+        ${e.fecha ? `<span class="cv-edu-fecha">${esc(e.fecha)}</span>` : ""}
+        ${e.bullets.length ? `<ul class="cv-lista-simple">${e.bullets.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  if (estado.referencias.length) {
+    html += `<div class="cv-m4-bloque">${tituloM4("❝", "References")}`;
+    for (const r of estado.referencias) {
+      html += `<div class="cv-ref-item">
+        <span class="cv-ref-nombre">${esc(r.nombre)}</span>
+        ${r.rol ? `<span class="cv-ref-rol">${esc(r.rol)}</span>` : ""}
+        ${r.email ? `<span class="cv-ref-rol">${esc(r.email)}</span>` : ""}
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function renderPrincipalModelo4() {
+  let html = "";
+
+  if (estado.perfil.trim()) {
+    html += `<div class="cv-m4-bloque-principal">${tituloM4("●", "About Me", true)}<p class="cv-m4-about-texto">${escPárrafo(estado.perfil)}</p></div>`;
+  }
+
+  if (estado.experiencia.length) {
+    html += `<div class="cv-m4-bloque-principal">${tituloM4("▣", "Job Experience", true)}`;
+    for (const x of estado.experiencia) {
+      html += `<div class="cv-m4-exp-item">
+        <div class="cv-m4-exp-fila">
+          <span class="cv-m4-exp-titulo">${esc(x.rol || x.empresa)}</span>
+          ${x.fecha ? `<span class="cv-m4-exp-fecha">${esc(x.fecha)}</span>` : ""}
+        </div>
+        ${x.rol ? `<p class="cv-m4-exp-empresa">${esc(x.empresa)}</p>` : ""}
+        ${x.descripcion.trim() ? `<p class="cv-m4-exp-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-bullets">${x.bullets.map((b) => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  // Barras decorativas, no un puntaje real — mismo criterio que
+  // anchoBarraPorTexto() ya documenta en el Modelo 3: acá no hay un dato
+  // de "qué tan bueno sos" para cada habilidad, así que el ancho es un
+  // hash determinístico del propio texto (mismo look que la referencia,
+  // que también usa porcentajes de ejemplo arbitrarios).
+  if (estado.habilidades.length) {
+    html += `<div class="cv-m4-bloque-principal">${tituloM4("◆", "Skills", true)}<div class="cv-m4-skills-grid">`;
+    html += estado.habilidades.map((h) => `<div class="cv-m4-skill">
+      <span class="cv-m4-skill-nombre">${esc(h.texto)}</span>
+      <div class="cv-m4-skill-linea"><div class="cv-m4-skill-relleno" style="width:${anchoBarraPorTexto(h.texto)}%"></div></div>
+    </div>`).join("");
+    html += `</div></div>`;
+  }
+
+  if (estado.idiomas.length || estado.blandas.length) {
+    html += `<div class="cv-m4-fila-dos">`;
+    if (estado.idiomas.length) {
+      html += `<div class="cv-m4-bloque-principal">${tituloM4("◎", "Language", true)}<ul class="cv-lista-simple cv-m4-lista-clara">`;
+      html += estado.idiomas.map((i) => `<li>${esc(i.nombre)}${i.nivel ? ` — ${esc(i.nivel)}` : ""}</li>`).join("");
+      html += `</ul></div>`;
+    }
+    if (estado.blandas.length) {
+      html += `<div class="cv-m4-bloque-principal">${tituloM4("✦", "Soft Skills", true)}<ul class="cv-lista-simple cv-m4-lista-clara">`;
+      html += estado.blandas.map((b) => `<li>${esc(b.texto)}</li>`).join("");
+      html += `</ul></div>`;
+    }
+    html += `</div>`;
+  }
+
   return html;
 }
 

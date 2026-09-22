@@ -53,6 +53,10 @@
 .cv-pagina[data-tema="verde"]   { --cv-acento: #1f8f5c; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
 .cv-pagina[data-tema="bordo"]   { --cv-acento: #8a1f30; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
 .cv-pagina[data-tema="violeta"] { --cv-acento: #6a2fa0; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+/* coral + turquesa/teal: complementarios en la rueda de color (cálido vs.
+   frío), combinación clásica de diseño — más armónica acá que el dorado,
+   que compite en calidez con el coral en vez de contrastar. */
+.cv-pagina[data-tema="coral"]   { --cv-acento: #e8613f; --cv-acento-2: #2a9d8f; --cv-badge-texto: #ffffff; }
 
 * { box-sizing: border-box; }
 .oculto { display: none !important; }
@@ -258,7 +262,9 @@ input, textarea { font-family: inherit; }
    cualquier otro modelo con una estructura distinta (como el banner de
    arriba del Modelo 2) quedaría metido a la fuerza en esas mismas dos
    columnas en vez de apilarse verticalmente como corresponde. */
-.cv-pagina[data-modelo="modelo1"] { display: grid; grid-template-columns: 70mm 1fr; }
+.cv-pagina[data-modelo="modelo1"],
+.cv-pagina[data-modelo="modelo3"] { display: grid; grid-template-columns: 70mm 1fr; }
+.cv-pagina[data-modelo="modelo4"] { display: grid; grid-template-columns: 68mm 1fr; }
 
 /* Las combinaciones de fuente ya NO van acá — con 30 opciones (ver
    FUENTES en app.js), escribir una regla CSS por cada una sería un
@@ -299,6 +305,7 @@ input, textarea { font-family: inherit; }
 .cv-lista-simple li {
   font-size: 8.6pt; line-height: 1.55; color: var(--cv-lateral-tenue);
   padding-left: 3.4mm; position: relative; margin-bottom: 1mm;
+  word-break: break-word;
 }
 .cv-lista-simple li::before {
   content: ""; position: absolute; left: 0; top: 0.85em;
@@ -530,4 +537,183 @@ input, textarea { font-family: inherit; }
 @media (max-width: 980px) {
   .cv-m2-header { flex-wrap: wrap; }
   .cv-m2-cuerpo { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   MODELO 3 — foto en arco, barras de progreso en Skills/Languages,
+   línea de tiempo (fecha + título + texto) en la columna principal.
+   Reusa el mismo grid de dos columnas que el Modelo 1 (ver
+   .cv-pagina[data-modelo] más arriba) — acá sólo van las diferencias.
+   ============================================================ */
+.cv-m3-lateral { background: var(--cv-lateral-fondo); color: var(--cv-lateral-texto); padding: 11mm 8mm; }
+
+/* la "forma de arco": arriba bien redondeado (casi un semicírculo),
+   abajo apenas — no es un círculo como el Modelo 1 ni el óvalo con anillo
+   del Modelo 2, es su propia silueta. 999px fuerza el redondeo máximo
+   posible arriba (el navegador lo recorta solo al máximo real, la mitad
+   del ancho) sin tener que calcular a mano el radio justo. Borde de
+   COLOR completo alrededor — antes sólo tenía un filete abajo, y en la
+   referencia el borde le da toda la vuelta. */
+.cv-m3-foto-marco {
+  width: calc(38mm * var(--cv-escala-foto, 1)); height: calc(46mm * var(--cv-escala-foto, 1));
+  margin: 0 auto 6mm; overflow: hidden; background: #23262c;
+  border-radius: 999px 999px 10px 10px;
+  border: 1mm solid var(--cv-acento);
+  display: grid; place-items: center;
+}
+.cv-m3-foto { width: 100%; height: 100%; object-fit: cover; }
+.cv-m3-foto-placeholder { font-size: 2.4rem; opacity: 0.5; }
+
+.cv-m3-bloque { margin-bottom: 7mm; }
+.cv-m3-bloque:last-child { margin-bottom: 0; }
+.cv-m3-seccion-titulo { display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3.4mm; }
+.cv-m3-seccion-icono {
+  width: calc(6mm * var(--cv-escala-iconos, 1)); height: calc(6mm * var(--cv-escala-iconos, 1));
+  border-radius: 50%; background: var(--cv-acento); color: #ffffff;
+  display: grid; place-items: center; font-size: calc(7pt * var(--cv-escala-iconos, 1)); flex: 0 0 auto;
+}
+.cv-m3-seccion-titulo span:last-child {
+  font-family: var(--cv-font-titulos); font-weight: 700; font-size: 9pt;
+  letter-spacing: 0.5px; text-transform: uppercase; color: var(--cv-lateral-texto);
+}
+/* misma cabecera de sección, pero para cuando aparece en la columna
+   blanca (Education/Work Experience/Personal Achievement): el texto es
+   oscuro en vez de claro, y le sigue una línea fina gris que separa el
+   título del contenido — pedido explícito, faltaba esa línea. */
+.cv-m3-seccion-titulo-oscura { padding-bottom: 2.4mm; border-bottom: 1px solid var(--cv-linea); margin-bottom: 5mm; }
+.cv-m3-seccion-titulo-oscura span:last-child { color: var(--cv-texto); }
+
+.cv-m3-barra-fila { margin-bottom: 3mm; }
+.cv-m3-barra-fila:last-child { margin-bottom: 0; }
+.cv-m3-barra-etiqueta { font-size: 8pt; color: var(--cv-lateral-texto); margin-bottom: 1.2mm; }
+.cv-m3-barra-linea { display: flex; align-items: center; gap: 2mm; }
+.cv-m3-barra-pista { flex: 1 1 auto; height: 1.4mm; background: rgba(255, 255, 255, 0.18); border-radius: 2mm; overflow: hidden; }
+.cv-m3-barra-relleno { height: 100%; background: var(--cv-acento); border-radius: 2mm; }
+.cv-m3-barra-pct { flex: 0 0 auto; font-size: 7pt; color: var(--cv-lateral-tenue); min-width: 7mm; text-align: right; }
+
+.cv-m3-principal { padding: 13mm 12mm; }
+.cv-m3-encabezado { margin-bottom: 8mm; }
+.cv-m3-nombre {
+  font-family: var(--cv-font-titulos); font-weight: 800; font-size: 18pt;
+  margin: 0; color: var(--cv-texto); text-transform: uppercase; line-height: 1.05;
+}
+.cv-m3-punto { color: var(--cv-acento); }
+.cv-m3-puesto { font-size: 9pt; letter-spacing: 1px; color: var(--cv-tenue); text-transform: uppercase; margin: 1.6mm 0 0; }
+.cv-m3-intro { font-size: 8.6pt; line-height: 1.6; color: var(--cv-tenue); margin: 0 0 8mm; }
+
+.cv-m3-bloque-principal { margin-bottom: 8mm; }
+.cv-m3-bloque-principal:last-child { margin-bottom: 0; }
+/* cada entrada es una fila de dos columnas — fecha angosta a la
+   izquierda, contenido a la derecha — en vez de la línea de tiempo
+   vertical con línea+punto en el margen del Modelo 1 (pedido explícito:
+   "las líneas temporales... son diferentes" en la referencia). */
+.cv-m3-timeline-item { display: grid; grid-template-columns: 20mm 1fr; column-gap: 3mm; margin-bottom: 5.5mm; }
+.cv-m3-timeline-item:last-child { margin-bottom: 0; }
+.cv-m3-timeline-fecha { font-size: 8pt; font-weight: 700; color: var(--cv-tenue); }
+.cv-m3-timeline-titulo-fila { display: flex; align-items: center; gap: 2.2mm; margin: 0; }
+.cv-m3-timeline-punto {
+  width: 2.6mm; height: 2.6mm; border-radius: 50%; flex: 0 0 auto;
+  border: 1.4px solid var(--cv-acento); background: #ffffff;
+}
+.cv-m3-timeline-titulo-fila { font-size: 9.4pt; font-weight: 700; color: var(--cv-texto); }
+.cv-m3-timeline-sub { font-size: 8.2pt; color: var(--cv-tenue); margin: 0.8mm 0 1mm 4.8mm; }
+.cv-m3-timeline-desc { font-size: 8.6pt; line-height: 1.55; color: var(--cv-tenue); margin: 0 0 0 4.8mm; }
+
+@media print {
+  .cv-m3-bloque, .cv-m3-bloque-principal, .cv-m3-timeline-item { break-inside: avoid; }
+}
+
+/* ---- Modelo 4: blanco y negro, franja lateral con dos rectángulos ---- */
+/* La franja lateral NO es un único rectángulo oscuro parejo con una
+   textura ondulada en el borde (primer y segundo intento, corregidos
+   después de que no se pareciera en nada a la referencia), y tampoco son
+   dos bloques pegados uno arriba del otro (tercer intento: quedaban los
+   dos "apretados" cerca del medio de la página, sin aire entre ellos, y
+   la curva de arriba aparecía recién después de Educación en vez de al
+   lado de la foto). Versión final: el bloque de arriba es SÓLO la
+   foto+nombre — termina en curva justo debajo, pegada a la foto — y
+   después de un espacio en blanco real (margin-bottom, ver más abajo)
+   viene el segundo bloque (contacto+educación+referencias juntos) que
+   empieza en curva y crece (flex:1) para seguir llenando de oscuro hasta
+   el final de la página, incluso en una impresión de varias hojas donde
+   la columna principal es más larga que el contenido real de la franja. */
+.cv-m4-lateral {
+  position: relative; z-index: 1; overflow: visible;
+  display: flex; flex-direction: column;
+  color: var(--cv-lateral-texto);
+}
+.cv-m4-header-panel {
+  background: var(--cv-lateral-fondo); text-align: center;
+  padding: 14mm 9mm 10mm 11mm;
+  border-bottom-right-radius: 22mm;
+  margin-bottom: 8mm;
+}
+.cv-m4-encabezado { margin-bottom: 7mm; }
+.cv-m4-nombre {
+  font-family: var(--cv-font-titulos); font-weight: 800; font-size: 15pt;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #ffffff; margin: 0; line-height: 1.15;
+}
+.cv-m4-puesto { font-size: 7.6pt; letter-spacing: 1.6px; text-transform: uppercase; color: var(--cv-lateral-tenue); margin: 2mm 0 0; }
+/* centrada normal, igual que en el Modelo 1/3 — no corrida hacia la
+   derecha (un intento anterior la corría con un right negativo para que
+   "montara" sobre el borde, pero se veía descentrada, no como se pidió). */
+.cv-m4-foto-marco {
+  width: calc(34mm * var(--cv-escala-foto, 1)); height: calc(34mm * var(--cv-escala-foto, 1)); border-radius: 50%;
+  margin: 0 auto; overflow: hidden; background: #23262c;
+  border: 2.8px solid #ffffff; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  display: grid; place-items: center;
+}
+.cv-m4-foto { width: 100%; height: 100%; object-fit: cover; }
+.cv-m4-foto-placeholder { font-size: 2.4rem; opacity: 0.5; }
+
+.cv-m4-panel-b {
+  background: var(--cv-lateral-fondo); text-align: left;
+  padding: 10mm 9mm 12mm 11mm;
+  border-top-right-radius: 22mm;
+  flex: 1 1 auto;
+}
+.cv-m4-bloque { margin-bottom: 7mm; }
+.cv-m4-bloque:last-child { margin-bottom: 0; }
+
+/* título con ícono en cápsula circular — se usa tal cual en la franja
+   oscura (texto claro por defecto) y con el modificador -oscura en la
+   columna blanca (texto oscuro), mismo mecanismo que tituloIconoM3(). */
+.cv-m4-titulo { display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3.4mm; }
+.cv-m4-titulo-icono {
+  width: calc(6mm * var(--cv-escala-iconos, 1)); height: calc(6mm * var(--cv-escala-iconos, 1));
+  border-radius: 50%; background: var(--cv-acento); color: #ffffff;
+  display: grid; place-items: center; font-size: calc(7pt * var(--cv-escala-iconos, 1)); flex: 0 0 auto;
+}
+.cv-m4-titulo span:last-child {
+  font-family: var(--cv-font-titulos); font-weight: 700; font-size: 9pt;
+  letter-spacing: 0.5px; text-transform: uppercase; color: #ffffff;
+}
+.cv-m4-titulo-oscura span:last-child { color: var(--cv-texto); }
+
+.cv-m4-principal { position: relative; z-index: 0; padding: 13mm 12mm; }
+.cv-m4-bloque-principal { margin-bottom: 8mm; }
+.cv-m4-bloque-principal:last-child { margin-bottom: 0; }
+.cv-m4-about-texto { font-size: 8.8pt; line-height: 1.65; color: var(--cv-tenue); margin: 0; }
+
+.cv-m4-exp-item { margin-bottom: 6mm; }
+.cv-m4-exp-item:last-child { margin-bottom: 0; }
+.cv-m4-exp-fila { display: flex; align-items: baseline; justify-content: space-between; gap: 4mm; flex-wrap: wrap; }
+.cv-m4-exp-titulo { font-size: 9.6pt; font-weight: 700; color: var(--cv-texto); }
+.cv-m4-exp-fecha { font-size: 7.8pt; font-weight: 600; color: var(--cv-acento); white-space: nowrap; }
+.cv-m4-exp-empresa { font-size: 8.4pt; color: var(--cv-tenue); margin: 0.8mm 0 1.6mm; font-style: italic; }
+.cv-m4-exp-desc { font-size: 8.6pt; line-height: 1.6; color: var(--cv-tenue); margin: 0 0 1.6mm; }
+
+/* barras finas y minimalistas, sin número de porcentaje — la referencia
+   sólo muestra una línea corta debajo de cada skill, sin dato numérico. */
+.cv-m4-skills-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; row-gap: 4mm; }
+.cv-m4-skill-nombre { display: block; font-size: 8.2pt; color: var(--cv-texto); margin-bottom: 1.4mm; }
+.cv-m4-skill-linea { height: 1.2mm; background: var(--cv-linea); border-radius: 2mm; overflow: hidden; }
+.cv-m4-skill-relleno { height: 100%; background: var(--cv-acento); border-radius: 2mm; }
+
+.cv-m4-fila-dos { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; }
+.cv-m4-lista-clara li { color: var(--cv-tenue); }
+.cv-m4-lista-clara li::before { background: var(--cv-acento); }
+
+@media print {
+  .cv-m4-bloque, .cv-m4-bloque-principal, .cv-m4-exp-item { break-inside: avoid; }
 }
