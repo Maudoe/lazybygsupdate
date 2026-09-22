@@ -338,14 +338,25 @@ function renderModelo1() {
 // min-height EXPLÍCITO en píxeles, igual a la altura real de la columna
 // principal — así la caja de la lateral es alta de verdad (no depende de
 // que el motor de impresión "adivine" que debería estirarse).
+// Misma lógica para cualquier par columna-corta/columna-larga — el
+// Modelo 2 también tiene una columna oscura (la de la izquierda, con
+// Skills/Languages) que necesita el mismo arreglo: sin esto, en la
+// segunda página en adelante esa columna se corta a blanco apenas se le
+// termina el contenido, en vez de seguir oscura como el Modelo 1
+// (mismo bug, mismo fix — ver el comentario largo de arriba... movido
+// acá abajo para no repetirlo dos veces).
 function igualarAlturaLateral() {
-  const principal = $("#cv-principal");
-  const lateral = $("#cv-lateral");
-  // Sólo existen si el Modelo 1 está activo (otros modelos arman su
+  igualarAlturaPar("#cv-principal", "#cv-lateral");
+  igualarAlturaPar("#cv-m2-col-der", "#cv-m2-col-izq");
+}
+function igualarAlturaPar(idLargo, idCorto) {
+  const largo = $(idLargo);
+  const corto = $(idCorto);
+  // Sólo existen si ese modelo está activo (el otro modelo arma su
   // propio esqueleto, sin estos ids) — sin este guard, imprimir estando
   // en otro modelo tiraba un error acá.
-  if (!principal || !lateral) return;
-  lateral.style.minHeight = principal.scrollHeight + "px";
+  if (!largo || !corto) return;
+  corto.style.minHeight = largo.scrollHeight + "px";
 }
 // Recalcular una vez más justo antes de imprimir: las fuentes (Google
 // Fonts) pueden terminar de cargar después del primer render y cambiar
@@ -506,16 +517,23 @@ function asegurarEsqueletoModelo2() {
         <p class="cv-m2-puesto" id="cv-m2-puesto">Puesto</p>
       </div>
       <ul class="cv-m2-contacto" id="cv-m2-contacto"></ul>
-      <svg class="cv-m2-ola" viewBox="0 0 1000 50" preserveAspectRatio="none">
-        <path d="M${ondaPrincipal} L1000,50 L0,50 Z" style="fill:#ffffff;"></path>
-        <path d="M${ondaFondo2}" style="fill:none; stroke:var(--cv-acento); stroke-width:1.2; stroke-linecap:round; opacity:0.28;"></path>
-        <path d="M${ondaFondo1}" style="fill:none; stroke:var(--cv-acento); stroke-width:2.6; stroke-linecap:round; opacity:0.5;"></path>
-        <path d="M${ondaPrincipal}" style="fill:none; stroke:var(--cv-acento); stroke-width:4; stroke-linecap:round;"></path>
-      </svg>
     </div>
     <div class="cv-m2-cuerpo">
       <div class="cv-m2-col-izq" id="cv-m2-col-izq"></div>
-      <div class="cv-m2-col-der" id="cv-m2-col-der"></div>
+      <div class="cv-m2-col-der-envoltorio">
+        <!-- La ola sólo cubre el ancho de esta columna, no la página
+             entera — pedido explícito: la columna de la izquierda tiene
+             que seguir oscura como el header (misma franja continua, sin
+             costura), la ola separa nada más el header de la columna
+             BLANCA de la derecha. -->
+        <svg class="cv-m2-ola" viewBox="0 0 1000 50" preserveAspectRatio="none">
+          <path d="M${ondaPrincipal} L1000,50 L0,50 Z" style="fill:var(--cv-fondo-cuerpo);"></path>
+          <path d="M${ondaFondo2}" style="fill:none; stroke:var(--cv-acento); stroke-width:1.2; stroke-linecap:round; opacity:0.28;"></path>
+          <path d="M${ondaFondo1}" style="fill:none; stroke:var(--cv-acento); stroke-width:2.6; stroke-linecap:round; opacity:0.5;"></path>
+          <path d="M${ondaPrincipal}" style="fill:none; stroke:var(--cv-acento); stroke-width:4; stroke-linecap:round;"></path>
+        </svg>
+        <div class="cv-m2-col-der" id="cv-m2-col-der"></div>
+      </div>
     </div>
   `;
 }
@@ -537,6 +555,7 @@ function renderModelo2() {
 
   $("#cv-m2-col-izq").innerHTML = renderColIzqModelo2();
   $("#cv-m2-col-der").innerHTML = renderColDerModelo2();
+  igualarAlturaLateral();
 }
 
 function renderColIzqModelo2() {

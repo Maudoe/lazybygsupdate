@@ -481,23 +481,32 @@ input, textarea { font-family: inherit; }
   padding: 0 0.8mm; color: #ffffff; line-height: 1;
 }
 
-/* la onda en sí (relleno blanco + una línea fina de acento encima) va con
-   estilos inline en el propio <path> — ver asegurarEsqueletoModelo2() en
-   app.js — así no hay dudas de que el color pega bien. Después de probar
-   una versión con más amplitud y con "cintas" de ancho variable, y que
-   se viera fea/en zigzag ("tiene que ser más sutil"), se volvió a algo
-   simple: una franja bien angosta con una curva suave. */
-.cv-m2-ola { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 15mm; display: block; }
+/* la onda en sí (relleno del color del cuerpo + una línea fina de acento
+   encima) va con estilos inline en el propio <path> — ver
+   asegurarEsqueletoModelo2() en app.js — así no hay dudas de que el color
+   pega bien. Ahora vive DENTRO de .cv-m2-col-der-envoltorio (ver abajo),
+   no del header entero — pedido explícito: la columna de la izquierda
+   tiene que seguir oscura como el header, sin blanco de por medio; la
+   ola separa nada más el header de la columna blanca de la derecha. */
+/* top más corto que el padding-bottom del header (11mm contra 15mm de
+   arriba): deja aire de sobra para que la ola no le pise el último renglón
+   de contacto (el ícono de LinkedIn). height 1mm más que ese "-11mm" para
+   que el borde de abajo se meta un pelo DENTRO de .cv-m2-col-der (mismo
+   color de fondo en los dos) — sin ese solape quedaba un hairline gris
+   entre el SVG y el div de abajo por redondeo de subpíxel. */
+.cv-m2-ola { position: absolute; left: 0; right: 0; top: -11mm; width: 100%; height: 12mm; display: block; }
 
 .cv-m2-cuerpo { display: grid; grid-template-columns: 62mm 1fr; }
-.cv-m2-col-izq { padding: 6mm 8mm 12mm 12mm; }
-.cv-m2-col-der { padding: 6mm 12mm 12mm 8mm; }
-/* las listas del Modelo 1 (.cv-lista-simple) se pensaron para texto claro
-   sobre la franja oscura — reusarlas acá (columna blanca) con ese mismo
-   gris claro las dejaría casi invisibles, por eso el color se pisa. */
-.cv-m2-col-izq .cv-lista-simple li { color: var(--cv-tenue); }
+/* misma franja oscura que el header, sin costura — no es una columna
+   nueva de otro color, es la continuación visual de la misma franja. */
+.cv-m2-col-izq {
+  background: var(--cv-lateral-fondo); color: var(--cv-lateral-texto);
+  padding: 6mm 8mm 12mm 12mm;
+}
+.cv-m2-col-der-envoltorio { position: relative; overflow: visible; }
+.cv-m2-col-der { background: var(--cv-fondo-cuerpo); height: 100%; padding: 10mm 12mm 12mm 8mm; }
 
-.cv-m2-intro { font-size: 8.6pt; line-height: 1.6; color: var(--cv-tenue); margin: 0 0 8mm; }
+.cv-m2-intro { font-size: 8.6pt; line-height: 1.6; color: var(--cv-lateral-tenue); margin: 0 0 8mm; }
 
 .cv-m2-bloque { margin-bottom: 7mm; }
 .cv-m2-bloque:last-child { margin-bottom: 0; }
