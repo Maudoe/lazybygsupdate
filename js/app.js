@@ -204,7 +204,7 @@ const TEMAS_FONDOS = {
 // docs/plantilla-datos-cv.json (ese archivo es el que la gente puede
 // descargar/inspeccionar directo, este es el que arma el prompt).
 const PLANTILLA_JSON_EJEMPLO = {
-  _instrucciones: "Esto NO es un dato del CV — es solo una guía para quien complete este archivo (vos o un asistente de IA como ChatGPT/Claude). Borrá esta clave '_instrucciones' antes de importar, o dejala: la app la ignora sin problema. Campos que podés dejar tal cual (son de diseño, se cambian después desde la app si querés): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valores válidos — modelo: 'modelo1' a 'modelo20'. modeloCarta: 'carta1' a 'carta6' (sólo se usa si tipoDocumento es 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (hay más de 50 temas adicionales, ver el selector de la app — dejalo en 'turquesa' si no sabés cuál elegir). idiomaCv: 'en' o 'es' (idioma de los TÍTULOS DE SECCIÓN del CV impreso, no de tu contenido). tipoDocumento: 'cv' o 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url es opcional, solo tiene efecto en el tipo 'linkedin' (convierte tu nombre en un link a tu perfil). experiencia[].empresaUrl es opcional (convierte el nombre de la empresa en un link a su sitio). experiencia[].ubicacion es opcional (ciudad y país donde trabajaste ese puesto, ej. 'Buenos Aires, Argentina'; dejalo vacío si no querés mostrarlo). El bloque 'carta' son los datos propios de la carta de presentación (el nombre/contacto/foto los toma del resto del archivo). Todo lo demás es texto libre en el idioma que quieras (inglés recomendado, es lo más común en CVs). 'foto' se deja en null — la foto se carga por separado, arrastrándola en la app, no va en este archivo.",
+  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo20'. modeloCarta: 'carta1' through 'carta6' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
   modelo: "modelo1", modeloCarta: "carta1", tipoDocumento: "cv",
   tema: "turquesa", fuente: "jakarta", iconos: "emoji1",
   colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
@@ -276,61 +276,62 @@ const PLANTILLA_JSON_EJEMPLO = {
 // a un asistente de IA junto con el CV viejo del usuario.
 function armarPromptPlantillaJson() {
   const json = JSON.stringify(PLANTILLA_JSON_EJEMPLO, null, 2);
-  return `Necesito que completes la siguiente plantilla JSON con mis datos, para generar mi CV con una herramienta que uso. Te voy a pegar mi CV viejo y/o mi perfil de LinkedIn más abajo — usalo como fuente para completar cada campo.
+  return `I need you to fill in the following JSON template with my data, to generate my CV with a tool I use. I'll paste my old CV and/or my LinkedIn profile below — use it as the source to fill in each field.
 
-Reglas importantes:
-- Respetá EXACTAMENTE esta estructura: las mismas claves, los mismos tipos de dato (una lista sigue siendo una lista, un texto sigue siendo texto). No agregues ni quites claves.
-- Borrá la clave "_instrucciones" del resultado final (es sólo una guía para vos, no un dato del CV).
-- Los campos de diseño (modelo, modeloCarta, tipoDocumento, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv) dejalos tal cual están en la plantilla — no los toques.
-- Escribí el contenido en inglés (es el estándar para CVs), salvo que yo te pida otro idioma más abajo.
-- Si algún dato no lo tenés porque no estaba en lo que te pasé, dejá el campo vacío ("") en vez de inventar información.
-- Devolveme ÚNICAMENTE el JSON completo dentro de un bloque de código \`\`\`json, sin explicaciones antes ni después.
+Important rules:
+- Follow this EXACT structure: same keys, same data types (a list stays a list, text stays text). Don't add or remove keys.
+- Delete the "_instrucciones" key from the final result (it's just a guide for you, not CV data).
+- Leave the design fields (modelo, modeloCarta, tipoDocumento, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv) exactly as they are in the template — don't touch them.
+- Write the content in English (the standard for CVs), unless I ask for a different language below.
+- If I didn't give you some piece of data because it wasn't in what I pasted, leave that field empty ("") instead of making information up.
+- Reply with ONLY the complete JSON inside a \`\`\`json code block, no explanation before or after.
 
-Para que el contenido pase mejor los filtros automáticos (ATS) que usan muchas empresas antes de que un humano vea el CV:
-- Si más abajo te paso el aviso de un puesto específico, usá la MISMA terminología que usa ese aviso (los ATS suelen buscar coincidencias literales, no sinónimos) y metela temprano — en "perfil" y en el primer bullet de cada experiencia relevante.
-- En "puesto" y en el "rol" de cada experiencia, usá el título de puesto real/estándar de la industria (el que buscaría un reclutador o el que usa el aviso), no uno creativo o inventado.
-- Los nombres de herramientas/tecnologías (en "herramientas") escribilos tal cual figuran oficialmente (ej. "Adobe Creative Cloud", no una abreviación propia) — así coinciden con cómo los busca el ATS.
-- Las siglas de rol/área (QA, PM, BA, etc.) escribilas completas la primera vez que aparecen y con la sigla al lado, ej. "Quality Assurance (QA)" — después ya podés usar sólo la sigla.
-- Usá el mismo formato de fecha en TODAS las experiencias/educación (ej. "Jan 2023 - Present" en todos lados, no mezcles formatos).
-- No repitas la misma palabra clave de forma forzada varias veces — un párrafo o bullet con keywords metidas con calzador se nota y no suma.
-- No uses emojis ni símbolos decorativos dentro del texto (perfil, descripciones, bullets) — el diseño visual (íconos, viñetas, colores) ya lo pone la plantilla aparte, así que ahí sólo va texto plano.
+To help the content pass the automated filters (ATS) that many companies use before a human ever sees the CV:
+- If I paste a specific job posting below, use the SAME terminology that posting uses (ATS systems often look for literal matches, not synonyms) and work it in early — in "perfil" and in the first bullet of each relevant experience.
+- In "puesto" and in the "rol" of each experience, use the real/standard industry job title (the one a recruiter would search for, or the one the posting uses), not a creative or made-up one.
+- Write tool/technology names (in "herramientas") exactly as they're officially spelled (e.g. "Adobe Creative Cloud", not your own shorthand) — so they match how an ATS searches for them.
+- Spell out role/area acronyms (QA, PM, BA, etc.) in full the first time they appear, with the acronym next to it, e.g. "Quality Assurance (QA)" — after that you can just use the acronym.
+- Use the same date format across ALL experience/education entries (e.g. "Jan 2023 - Present" everywhere, don't mix formats).
+- Don't repeat the same keyword unnaturally over and over — a paragraph or bullet stuffed with keywords is obvious and doesn't help.
+- Don't use emojis or decorative symbols inside the text (perfil, descripciones, bullets) — the visual design (icons, bullet styling, colors) is already handled by the template, so this text should stay plain.
 
-Plantilla a completar:
+Template to fill in:
 \`\`\`json
 ${json}
 \`\`\`
 
-Mi CV viejo y/o mi perfil de LinkedIn (pegalo acá abajo):
-[PEGÁ ACÁ TU INFO]
+My old CV and/or my LinkedIn profile (paste it below):
+[PASTE YOUR INFO HERE]
 
-(Opcional) El aviso del puesto al que estoy aplicando, para que ajustes la terminología a ese puesto específico:
-[PEGÁ ACÁ EL AVISO, O BORRÁ ESTA LÍNEA SI NO APLICA]
+(Optional) The job posting I'm applying to, so you can tailor the terminology to that specific role:
+[PASTE THE POSTING HERE, OR DELETE THIS LINE IF IT DOESN'T APPLY]
 `;
 }
 
-// Prompt "de preparación" — para quien todavía no tiene un CV viejo ni un
-// LinkedIn armado a mano: en vez de pedirle que complete el JSON directo,
-// le pide al asistente que lo ENTREVISTE (pregunta por pregunta) y arme un
-// resumen ordenado con las respuestas — ese resumen es lo que después se
-// pega como "mi CV viejo" en armarPromptPlantillaJson().
+// "Prep" prompt — for someone who doesn't have an old CV or a LinkedIn
+// profile put together yet: instead of asking the assistant to fill in
+// the JSON directly, it asks the assistant to INTERVIEW them (question by
+// question) and compile an organized summary from the answers — that
+// summary is what later gets pasted as "my old CV" into
+// armarPromptPlantillaJson().
 function armarPromptPreparacion() {
-  return `Quiero armar mi currículum pero todavía no tengo mis datos ordenados. Ayudame a juntarlos: hacéme preguntas UNA POR VEZ (no todas juntas), esperá mi respuesta antes de pasar a la siguiente, y cubrí estos temas en este orden:
+  return `I want to put together my resume but I don't have my data organized yet. Help me gather it: ask me questions ONE AT A TIME (not all at once), wait for my answer before moving to the next one, and cover these topics in this order:
 
-0. Si tengo un puesto específico en mente al que quiero aplicar, pedime que te pase el aviso (o el nombre del puesto y la industria si no tengo el aviso a mano) — lo vas a usar más adelante para que mis respuestas usen la misma terminología que ese puesto, así el CV pasa mejor los filtros automáticos (ATS) que usan muchas empresas.
-1. Datos de contacto: teléfono, email, ciudad y país, LinkedIn.
-2. Puesto actual o al que aspiro (el título real/estándar de la industria, no uno creativo — el que buscaría un reclutador), y un subtítulo corto si quiero uno (ej. un nivel de idioma).
-3. Resumen profesional: quién soy, cuántos años de experiencia tengo, mi especialidad, qué tipo de impacto genero.
-4. Cada experiencia laboral, una por una: empresa, ciudad/país, fechas (pedime que use el mismo formato de fecha en todas, ej. "Jan 2023 - Present"), mi rol (título real del puesto, no uno inventado), 1-3 frases de contexto del equipo/mandato, y entre 4 y 8 logros o responsabilidades concretas (pedime números o resultados si los tengo), más las herramientas/tecnologías que usé, agrupadas por categoría — con el nombre exacto de cada herramienta (ej. "Adobe Creative Cloud", no una forma abreviada distinta a como la escribiría un aviso de trabajo).
-5. Educación: institución, fechas, título o detalles relevantes.
-6. Certificaciones.
-7. Habilidades técnicas y habilidades blandas.
-8. Idiomas y nivel.
-9. Logros destacados aparte (con números si se puede).
-10. Referencias, si quiero incluir alguna.
+0. If I have a specific job in mind that I want to apply to, ask me to paste the posting (or the job title and industry if I don't have the posting handy) — you'll use it later so my answers reuse that job's terminology, which helps the CV pass the automated filters (ATS) many companies use.
+1. Contact info: phone, email, city and country, LinkedIn.
+2. Current job title or the one I'm aiming for (the real/standard industry title, not a creative one — the one a recruiter would search for), and a short subtitle if I want one (e.g. a language level).
+3. Professional summary: who I am, how many years of experience I have, my specialty, what kind of impact I make.
+4. Each work experience, one at a time: company, city/country, dates (ask me to use the same date format across all of them, e.g. "Jan 2023 - Present"), my role (real job title, not a made-up one), 1-3 sentences of context about the team/mandate, and 4 to 8 concrete achievements or responsibilities (ask me for numbers or results if I have them), plus the tools/technologies I used, grouped by category — with the exact name of each tool (e.g. "Adobe Creative Cloud", not a shorthand different from how a job posting would write it).
+5. Education: institution, dates, degree or relevant details.
+6. Certifications.
+7. Technical skills and soft skills.
+8. Languages and level.
+9. Standout achievements, separately (with numbers if possible).
+10. References, if I want to include any.
 
-No inventes ningún dato — si en algún tema no tengo nada para decir, anotalo como vacío y seguí. Cuando terminemos de repasar todos los temas, armame un resumen ordenado con TODAS mis respuestas, agrupado por esas mismas categorías, en texto plano (no hace falta JSON todavía) — listo para que yo se lo pegue después a otro prompt que arma el archivo final. Si te pasé un puesto/aviso objetivo en la pregunta 0, agregalo también al final del resumen para no perderlo.
+Don't make up any data — if I have nothing to say on some topic, mark it empty and move on. Once we've gone through all the topics, put together an organized summary with ALL my answers, grouped by those same categories, in plain text (no need for JSON yet) — ready for me to paste later into another prompt that builds the final file. If I gave you a target job/posting in question 0, add it to the end of the summary too so it doesn't get lost.
 
-Empezá con la primera pregunta.
+Start with the first question.
 `;
 }
 
