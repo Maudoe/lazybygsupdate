@@ -286,6 +286,13 @@ Reglas importantes:
 - Si algún dato no lo tenés porque no estaba en lo que te pasé, dejá el campo vacío ("") en vez de inventar información.
 - Devolveme ÚNICAMENTE el JSON completo dentro de un bloque de código \`\`\`json, sin explicaciones antes ni después.
 
+Para que el contenido pase mejor los filtros automáticos (ATS) que usan muchas empresas antes de que un humano vea el CV:
+- Si más abajo te paso el aviso de un puesto específico, usá la MISMA terminología que usa ese aviso (los ATS suelen buscar coincidencias literales, no sinónimos) y metela temprano — en "perfil" y en el primer bullet de cada experiencia relevante.
+- Las siglas de rol/área (QA, PM, BA, etc.) escribilas completas la primera vez que aparecen y con la sigla al lado, ej. "Quality Assurance (QA)" — después ya podés usar sólo la sigla.
+- Usá el mismo formato de fecha en TODAS las experiencias/educación (ej. "Jan 2023 - Present" en todos lados, no mezcles formatos).
+- No repitas la misma palabra clave de forma forzada varias veces — un párrafo o bullet con keywords metidas con calzador se nota y no suma.
+- No uses emojis ni símbolos decorativos dentro del texto (perfil, descripciones, bullets) — el diseño visual (íconos, viñetas, colores) ya lo pone la plantilla aparte, así que ahí sólo va texto plano.
+
 Plantilla a completar:
 \`\`\`json
 ${json}
@@ -293,6 +300,9 @@ ${json}
 
 Mi CV viejo y/o mi perfil de LinkedIn (pegalo acá abajo):
 [PEGÁ ACÁ TU INFO]
+
+(Opcional) El aviso del puesto al que estoy aplicando, para que ajustes la terminología a ese puesto específico:
+[PEGÁ ACÁ EL AVISO, O BORRÁ ESTA LÍNEA SI NO APLICA]
 `;
 }
 
