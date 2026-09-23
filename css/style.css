@@ -261,6 +261,9 @@ a.btn { display: inline-block; text-decoration: none; }
 }
 .campo-fila { display: flex; gap: 8px; }
 .campo-fila .campo { flex: 1; }
+.campo-fila-con-boton { display: flex; gap: 8px; }
+.campo-fila-con-boton select { flex: 1; min-width: 0; }
+.campo-fila-con-boton .btn { flex: 0 0 auto; padding: 9px 12px; }
 
 /* ---- dropzone de la foto ---- */
 .campo-dropzone {
@@ -2077,6 +2080,20 @@ a.btn { display: inline-block; text-decoration: none; }
   color: var(--app-tenue); padding: 8px 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
 }
 .modal-tab.activo { background: linear-gradient(135deg, var(--app-acento), var(--app-acento-oscuro)); color: #06161a; border-color: transparent; }
+
+.modal-caja-ancha { width: min(920px, 100%); }
+.galeria-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px;
+  max-height: 62vh; overflow-y: auto; padding-right: 2px;
+}
+.galeria-item {
+  border: 1.5px solid var(--app-borde); border-radius: 10px; overflow: hidden; cursor: pointer;
+  background: var(--app-panel-2); transition: border-color 150ms ease, transform 150ms ease; text-align: left;
+}
+.galeria-item:hover { border-color: var(--app-acento); transform: translateY(-2px); }
+.galeria-item.activo { border-color: var(--app-acento); box-shadow: 0 0 0 2px var(--app-acento); }
+.galeria-item img { width: 100%; aspect-ratio: 260 / 356; object-fit: cover; display: block; }
+.galeria-item span { display: block; padding: 6px 8px; font-size: 0.74rem; font-weight: 600; color: var(--app-texto); }
 .modal-ejemplo { width: 100%; border-radius: 10px; border: 1px solid var(--app-borde); display: block; }
 .modal-ejemplo-caption { margin: 0; font-size: 0.78rem; color: var(--app-tenue); text-align: center; }
 #modal-importar-json .modal-caja { width: min(620px, 100%); }

@@ -4926,6 +4926,44 @@ function bindearControlesEstaticos() {
     URL.revokeObjectURL(url);
   });
 
+  // ---- modal "Galería de modelos" — miniaturas estáticas (ver
+  // img/plantillas/) en vez de elegir a ciegas por nombre en el <select>.
+  // La grilla se arma una sola vez, la primera vez que se abre, recorriendo
+  // MODELOS (mismo registro que arma el <select> original) — así no hace
+  // falta mantener la lista de 20 en un tercer lugar. ----
+  const modalGaleria = $("#modal-galeria-modelos");
+  let galeriaArmada = false;
+  function armarGaleriaModelos() {
+    const grid = $("#galeria-grid");
+    grid.innerHTML = Object.entries(MODELOS).map(([id, m]) => `
+      <button class="galeria-item" type="button" data-modelo="${id}">
+        <img src="img/plantillas/${id}.png" alt="${esc(m.nombre)}" loading="lazy">
+        <span>${esc(m.nombre)}</span>
+      </button>
+    `).join("");
+    grid.querySelectorAll(".galeria-item").forEach((boton) => {
+      boton.addEventListener("click", () => {
+        estado.modelo = boton.dataset.modelo;
+        $("#in-modelo").value = estado.modelo;
+        renderPreview(); guardar();
+        cerrarModalGaleria();
+      });
+    });
+    galeriaArmada = true;
+  }
+  function abrirModalGaleria() {
+    if (!galeriaArmada) armarGaleriaModelos();
+    $("#galeria-grid").querySelectorAll(".galeria-item").forEach((boton) => {
+      boton.classList.toggle("activo", boton.dataset.modelo === estado.modelo);
+    });
+    modalGaleria.classList.remove("oculto");
+  }
+  function cerrarModalGaleria() { modalGaleria.classList.add("oculto"); }
+  $("#btn-galeria-modelos").addEventListener("click", abrirModalGaleria);
+  $("#modal-galeria-cerrar").addEventListener("click", cerrarModalGaleria);
+  modalGaleria.addEventListener("click", (e) => { if (e.target === modalGaleria) cerrarModalGaleria(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modalGaleria.classList.contains("oculto")) cerrarModalGaleria(); });
+
   // ---- modal "Importar datos": mismo criterio que el de Plantilla JSON —
   // antes el botón abría el selector de archivos directo, sin avisar qué
   // iba a pasar. Ahora explica primero (reemplaza todo, cómo queda) y
