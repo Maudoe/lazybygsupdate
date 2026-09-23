@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="css/style.css?v=32">
+<link rel="stylesheet" href="css/style.css?v=33">
 </head>
 <body>
 
@@ -445,14 +445,22 @@
       <button class="modal-cerrar" id="modal-importar-json-cerrar" type="button" title="Cerrar">✕</button>
       <h2 id="modal-importar-json-titulo">⬆ Importar tus datos</h2>
       <p class="modal-ayuda">
-        Elegís un archivo <code>.json</code> — el que ya completaste con un asistente de IA (ver <strong>🧩 Plantilla JSON</strong>) o uno que hayas exportado antes con <strong>⬇ Exportar datos</strong> — y esta herramienta reemplaza <strong>todo</strong> lo que tenés cargado ahora mismo (nombre, experiencia, colores, foto, todo) por lo que traiga ese archivo.
-        Apenas lo elijas, tu CV se arma solo y aparece completo en la vista previa de la derecha, listo para revisar, ajustar el modelo/tema si querés, e imprimir.
+        Subís un archivo <code>.json</code> o pegás el texto directo — el que ya completaste con un asistente de IA (ver <strong>🧩 Plantilla JSON</strong>) o uno que hayas exportado antes con <strong>⬇ Exportar datos</strong> — y esta herramienta reemplaza <strong>todo</strong> lo que tenés cargado ahora mismo (nombre, experiencia, colores, foto, todo) por lo que traiga.
+        Apenas lo cargues, tu CV se arma solo y aparece completo en la vista previa de la derecha, listo para revisar, ajustar el modelo/tema si querés, e imprimir.
       </p>
       <img class="modal-ejemplo" src="docs/screenshot.png" alt="Ejemplo de cómo se ve el CV en la vista previa una vez importado">
       <p class="modal-ejemplo-caption">Así se ve una vez importado: el editor a la izquierda queda cargado con tus datos, la vista previa a la derecha ya es tu CV listo.</p>
       <div class="modal-acciones">
         <button class="btn btn-acento" id="modal-importar-json-elegir" type="button">📂 Elegir archivo .json</button>
         <button class="btn btn-fantasma" id="modal-importar-json-cancelar" type="button">Cancelar</button>
+      </div>
+      <div class="modal-separador"><span>o pegá el JSON directo</span></div>
+      <p class="modal-ayuda" style="margin-top:-6px;">
+        Si ChatGPT te dio el JSON como texto en el chat en vez de un archivo para descargar, copiá todo el bloque de código (desde la primera <code>{</code> hasta la última <code>}</code>) y pegalo acá:
+      </p>
+      <textarea id="modal-importar-json-pegar-texto" placeholder="Pegá acá el JSON completo..." spellcheck="false"></textarea>
+      <div class="modal-acciones">
+        <button class="btn btn-acento" id="modal-importar-json-pegar-cargar" type="button">✅ Cargar este JSON</button>
       </div>
     </div>
   </div>
@@ -470,7 +478,7 @@
        no rompe la página) y js/app.js sigue con el ejemplo lorem-ipsum.
        Tiene que ir ANTES de app.js: es lo único que decide qué datos
        arrancan como estado inicial. -->
-  <script src="js/datos-privados.js?v=32"></script>
-  <script src="js/app.js?v=32"></script>
+  <script src="js/datos-privados.js?v=33"></script>
+  <script src="js/app.js?v=33"></script>
 </body>
 </html>

@@ -284,7 +284,7 @@ Important rules:
 - Leave the design fields (modelo, modeloCarta, tipoDocumento, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv) exactly as they are in the template — don't touch them.
 - Write the content in English (the standard for CVs), unless I ask for a different language below.
 - If I didn't give you some piece of data because it wasn't in what I pasted, leave that field empty ("") instead of making information up.
-- Reply with ONLY the complete JSON inside a \`\`\`json code block, no explanation before or after.
+- Give me the completed JSON as an actual downloadable .json file if you're able to create one (ChatGPT can do this with its file/code tool) — that's the easiest way for me to load it back into the app. If you can't create a file, reply with ONLY the complete JSON inside a \`\`\`json code block instead, no explanation before or after — I can copy that and paste it directly into the app too.
 
 To help the content pass the automated filters (ATS) that many companies use before a human ever sees the CV:
 - If I paste a specific job posting below, use the SAME terminology that posting uses (ATS systems often look for literal matches, not synonyms) and work it in early — in "perfil" and in the first bullet of each relevant experience.
@@ -4838,34 +4838,52 @@ function bindearControlesEstaticos() {
     a.remove();
     URL.revokeObjectURL(url);
   });
+  // Un solo punto de entrada para "cargar estos datos", sea que vengan de
+  // un archivo (input file) o de texto pegado directo (textarea) — ambos
+  // caminos terminan acá. Devuelve true si se aplicó, false si no
+  // (JSON inválido, forma inesperada, o el usuario canceló el confirm).
+  function aplicarDatosImportados(textoJson) {
+    let datos;
+    try { datos = JSON.parse(textoJson); }
+    catch { alert("Eso no es un JSON válido."); return false; }
+    // chequeo mínimo de forma, no una validación exhaustiva — si falta
+    // algo puntual el resto de la app igual sigue andando (los campos
+    // ausentes quedan vacíos, no rompen nada).
+    if (typeof datos !== "object" || datos === null || !Array.isArray(datos.experiencia)) {
+      alert("Ese JSON no tiene la forma esperada (¿es un export de esta misma herramienta?).");
+      return false;
+    }
+    if (!confirm("Esto reemplaza todo el contenido actual por lo que hay en el archivo. ¿Seguir?")) return false;
+    // "_instrucciones" es la guía que trae la plantilla en blanco (ver
+    // docs/plantilla-datos-cv.json) para quien la completa con un
+    // asistente de IA — no es un dato del CV, así que no debe quedar
+    // pegada en el estado (ni reexportarse después como si lo fuera).
+    delete datos._instrucciones;
+    estado = datos;
+    poblarDesdeEstado();
+    guardar();
+    return true;
+  }
+
   $("#importar-input").addEventListener("change", (e) => {
     const archivo = e.target.files[0];
     if (!archivo) return;
     const lector = new FileReader();
-    lector.onload = () => {
-      let datos;
-      try { datos = JSON.parse(lector.result); }
-      catch { alert("Ese archivo no es un .json válido."); e.target.value = ""; return; }
-      // chequeo mínimo de forma, no una validación exhaustiva — si falta
-      // algo puntual el resto de la app igual sigue andando (los campos
-      // ausentes quedan vacíos, no rompen nada).
-      if (typeof datos !== "object" || datos === null || !Array.isArray(datos.experiencia)) {
-        alert("Ese .json no tiene la forma esperada (¿es un export de esta misma herramienta?).");
-        e.target.value = "";
-        return;
-      }
-      if (!confirm("Esto reemplaza todo el contenido actual por lo que hay en el archivo. ¿Seguir?")) { e.target.value = ""; return; }
-      // "_instrucciones" es la guía que trae la plantilla en blanco (ver
-      // docs/plantilla-datos-cv.json) para quien la completa con un
-      // asistente de IA — no es un dato del CV, así que no debe quedar
-      // pegada en el estado (ni reexportarse después como si lo fuera).
-      delete datos._instrucciones;
-      estado = datos;
-      poblarDesdeEstado();
-      guardar();
-      e.target.value = "";
-    };
+    lector.onload = () => { aplicarDatosImportados(lector.result); e.target.value = ""; };
     lector.readAsText(archivo);
+  });
+
+  // ---- pegar el JSON directo, sin pasar por un archivo — para cuando
+  // ChatGPT (u otro asistente) lo tira en el chat como texto en vez de
+  // como archivo descargable, o simplemente es más rápido que guardar y
+  // volver a subir un .json. ----
+  $("#modal-importar-json-pegar-cargar").addEventListener("click", () => {
+    const texto = $("#modal-importar-json-pegar-texto").value.trim();
+    if (!texto) { alert("Pegá el JSON en el cuadro de texto primero."); return; }
+    if (aplicarDatosImportados(texto)) {
+      $("#modal-importar-json-pegar-texto").value = "";
+      cerrarModalImportar();
+    }
   });
 }
 
