@@ -204,7 +204,7 @@ const TEMAS_FONDOS = {
 // docs/plantilla-datos-cv.json (ese archivo es el que la gente puede
 // descargar/inspeccionar directo, este es el que arma el prompt).
 const PLANTILLA_JSON_EJEMPLO = {
-  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo20'. modeloCarta: 'carta1' through 'carta6' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
+  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo40'. modeloCarta: 'carta1' through 'carta6' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
   modelo: "modelo1", modeloCarta: "carta1", tipoDocumento: "cv",
   tema: "turquesa", fuente: "jakarta", iconos: "emoji1",
   colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
@@ -682,6 +682,26 @@ const MODELOS = {
   modelo18: { nombre: "Modelo 18 — Bloom", render: renderModelo18 },
   modelo19: { nombre: "Modelo 19 — Monolith", render: renderModelo19 },
   modelo20: { nombre: "Modelo 20 — Odyssey", render: renderModelo20 },
+  modelo21: { nombre: "Modelo 21 — Architect", render: renderModelo21 },
+  modelo22: { nombre: "Modelo 22 — Baker", render: renderModelo22 },
+  modelo23: { nombre: "Modelo 23 — Security Guard", render: renderModelo23 },
+  modelo24: { nombre: "Modelo 24 — Chef", render: renderModelo24 },
+  modelo25: { nombre: "Modelo 25 — Nurse", render: renderModelo25 },
+  modelo26: { nombre: "Modelo 26 — Firefighter", render: renderModelo26 },
+  modelo27: { nombre: "Modelo 27 — Photographer", render: renderModelo27 },
+  modelo28: { nombre: "Modelo 28 — Musician", render: renderModelo28 },
+  modelo29: { nombre: "Modelo 29 — Personal Trainer", render: renderModelo29 },
+  modelo30: { nombre: "Modelo 30 — Lawyer", render: renderModelo30 },
+  modelo31: { nombre: "Modelo 31 — Teacher", render: renderModelo31 },
+  modelo32: { nombre: "Modelo 32 — Pilot", render: renderModelo32 },
+  modelo33: { nombre: "Modelo 33 — Gardener", render: renderModelo33 },
+  modelo34: { nombre: "Modelo 34 — Barista", render: renderModelo34 },
+  modelo35: { nombre: "Modelo 35 — Fashion Designer", render: renderModelo35 },
+  modelo36: { nombre: "Modelo 36 — Veterinarian", render: renderModelo36 },
+  modelo37: { nombre: "Modelo 37 — Electrician", render: renderModelo37 },
+  modelo38: { nombre: "Modelo 38 — Real Estate", render: renderModelo38 },
+  modelo39: { nombre: "Modelo 39 — DJ", render: renderModelo39 },
+  modelo40: { nombre: "Modelo 40 — Farmer", render: renderModelo40 },
 };
 
 // ---------------- registro de cartas de presentación ----------------
@@ -4038,6 +4058,3469 @@ function renderModelo20() {
     </div>
   `).join("");
   _m20Mostrar("#cv-m20-sec-referencias", (estado.referencias || []).length > 0);
+}
+
+// ============================================================
+// MODELOS 21-40 — 20 modelos más, cada uno inspirado en una profesión
+// distinta (arquitecto, panadero, guardia de seguridad, etc.) con
+// estructura genuinamente propia, no un reskin de color de los modelos
+// 1-20. Usan las mismas variables --cv-* de siempre, así que los 56
+// temas de color ya existentes se aplican automáticamente acá también.
+// ============================================================
+
+// ---- Modelo 21 — Architect (Blueprint / Drafting) ----
+function asegurarEsqueletoModelo21() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo21") return;
+  pagina.dataset.esqueleto = "modelo21";
+  pagina.innerHTML = `
+    <aside class="cv-m21-sidebar">
+      <div class="cv-m21-foto-marco">
+        <img class="cv-m21-foto" id="cv-m21-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m21-foto-placeholder" id="cv-m21-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m21-sello">ESC. 1:1 · REV. A</div>
+
+      <div class="cv-m21-bloque" id="cv-m21-contacto-bloque">
+        <h3 class="cv-m21-tit-lateral" id="cv-m21-tit-contacto"></h3>
+        <ul class="cv-m21-contacto" id="cv-m21-contacto"></ul>
+      </div>
+      <div class="cv-m21-bloque" id="cv-m21-habilidades-bloque">
+        <h3 class="cv-m21-tit-lateral" id="cv-m21-tit-habilidades"></h3>
+        <div class="cv-m21-tags" id="cv-m21-habilidades"></div>
+      </div>
+      <div class="cv-m21-bloque" id="cv-m21-blandas-bloque">
+        <h3 class="cv-m21-tit-lateral" id="cv-m21-tit-blandas"></h3>
+        <div class="cv-m21-tags" id="cv-m21-blandas"></div>
+      </div>
+      <div class="cv-m21-bloque" id="cv-m21-idiomas-bloque">
+        <h3 class="cv-m21-tit-lateral" id="cv-m21-tit-idiomas"></h3>
+        <ul class="cv-m21-idiomas" id="cv-m21-idiomas"></ul>
+      </div>
+      <div class="cv-m21-bloque" id="cv-m21-educacion-bloque">
+        <h3 class="cv-m21-tit-lateral" id="cv-m21-tit-educacion"></h3>
+        <div id="cv-m21-educacion"></div>
+      </div>
+    </aside>
+
+    <div class="cv-m21-main">
+      <header class="cv-m21-titleblock">
+        <div class="cv-m21-tb-etiqueta">PROYECTO / NOMBRE</div>
+        <h1 class="cv-m21-nombre" id="cv-m21-nombre"></h1>
+        <div class="cv-m21-tb-etiqueta">ROL</div>
+        <div class="cv-m21-puesto" id="cv-m21-puesto"></div>
+        <div class="cv-m21-subtitulo" id="cv-m21-subtitulo"></div>
+        <div class="cv-m21-regla" aria-hidden="true"></div>
+      </header>
+
+      <section class="cv-m21-bloque" id="cv-m21-perfil-bloque">
+        <h2 class="cv-m21-tit" id="cv-m21-tit-perfil"></h2>
+        <p class="cv-m21-nota" id="cv-m21-perfil"></p>
+      </section>
+
+      <section class="cv-m21-bloque" id="cv-m21-experiencia-bloque">
+        <h2 class="cv-m21-tit" id="cv-m21-tit-experiencia"></h2>
+        <div class="cv-m21-exp-list" id="cv-m21-experiencia"></div>
+      </section>
+
+      <section class="cv-m21-bloque" id="cv-m21-logros-bloque">
+        <h2 class="cv-m21-tit" id="cv-m21-tit-logros"></h2>
+        <ul class="cv-m21-logros" id="cv-m21-logros"></ul>
+      </section>
+
+      <section class="cv-m21-bloque" id="cv-m21-certificaciones-bloque">
+        <h2 class="cv-m21-tit" id="cv-m21-tit-certificaciones"></h2>
+        <div class="cv-m21-cert-grid" id="cv-m21-certificaciones"></div>
+      </section>
+
+      <section class="cv-m21-bloque" id="cv-m21-referencias-bloque">
+        <h2 class="cv-m21-tit" id="cv-m21-tit-referencias"></h2>
+        <div class="cv-m21-referencias" id="cv-m21-referencias"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo21() {
+  asegurarEsqueletoModelo21();
+
+  $("#cv-m21-tit-contacto").textContent = t("contacto");
+  $("#cv-m21-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m21-tit-blandas").textContent = t("blandas");
+  $("#cv-m21-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m21-tit-educacion").textContent = t("educacion");
+  $("#cv-m21-tit-perfil").textContent = t("perfil");
+  $("#cv-m21-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m21-tit-logros").textContent = t("logros");
+  $("#cv-m21-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m21-tit-referencias").textContent = t("referencias");
+
+  $("#cv-m21-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-m21-puesto").textContent = estado.puesto || "";
+  $("#cv-m21-subtitulo").textContent = estado.subtitulo || "";
+
+  const foto = $("#cv-m21-foto"), placeholder = $("#cv-m21-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  const contactoBloque = $("#cv-m21-contacto-bloque");
+  if (estado.contacto.length) {
+    contactoBloque.hidden = false;
+    $("#cv-m21-contacto").innerHTML = estado.contacto.map(c => `
+      <li class="cv-m21-contacto-item">
+        <span class="cv-m21-ico">${iconoDe(c.tipo)}</span>
+        <span>${contactoValorHTML(c)}</span>
+      </li>
+    `).join("");
+  } else contactoBloque.hidden = true;
+
+  const habBloque = $("#cv-m21-habilidades-bloque");
+  if (estado.habilidades.length) {
+    habBloque.hidden = false;
+    $("#cv-m21-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m21-chip">${esc(h.texto)}</span>`).join("");
+  } else habBloque.hidden = true;
+
+  const blandasBloque = $("#cv-m21-blandas-bloque");
+  if (estado.blandas.length) {
+    blandasBloque.hidden = false;
+    $("#cv-m21-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m21-chip cv-m21-chip-alt">${esc(h.texto)}</span>`).join("");
+  } else blandasBloque.hidden = true;
+
+  const idiomasBloque = $("#cv-m21-idiomas-bloque");
+  if (estado.idiomas.length) {
+    idiomasBloque.hidden = false;
+    $("#cv-m21-idiomas").innerHTML = estado.idiomas.map(i => `
+      <li class="cv-m21-idioma">
+        <div class="cv-m21-idioma-cab"><span>${esc(i.nombre)}</span><span class="cv-m21-idioma-nivel">${esc(i.nivel)}</span></div>
+        <div class="cv-m21-regla-mini" aria-hidden="true"></div>
+      </li>
+    `).join("");
+  } else idiomasBloque.hidden = true;
+
+  const eduBloque = $("#cv-m21-educacion-bloque");
+  if (estado.educacion.length) {
+    eduBloque.hidden = false;
+    $("#cv-m21-educacion").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m21-edu">
+        <div class="cv-m21-edu-inst">${esc(e.institucion)}</div>
+        <div class="cv-m21-edu-fecha">${esc(e.fecha)}</div>
+        ${e.bullets.length ? `<ul class="cv-m21-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  } else eduBloque.hidden = true;
+
+  const expBloque = $("#cv-m21-experiencia-bloque");
+  if (estado.experiencia.length) {
+    expBloque.hidden = false;
+    $("#cv-m21-experiencia").innerHTML = estado.experiencia.map(x => `
+      <div class="cv-m21-exp-item">
+        <div class="cv-m21-exp-sheet"></div>
+        <div class="cv-m21-exp-body">
+          <div class="cv-m21-job-head">
+            <div>
+              <div class="cv-m21-exp-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</div>
+              <div class="cv-m21-exp-rol">${esc(x.rol)}</div>
+            </div>
+            <div class="cv-m21-exp-fecha">${esc(x.fecha)}</div>
+          </div>
+          ${x.descripcion ? `<p class="cv-m21-exp-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+          ${x.bullets.length ? `<ul class="cv-m21-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+          ${x.herramientas.length ? `<div class="cv-m21-herramientas">${x.herramientas.map(h => `<span class="cv-m21-chip cv-m21-chip-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : ""}
+        </div>
+      </div>
+    `).join("");
+  } else expBloque.hidden = true;
+
+  const logrosBloque = $("#cv-m21-logros-bloque");
+  if (estado.logros.length) {
+    logrosBloque.hidden = false;
+    $("#cv-m21-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  } else logrosBloque.hidden = true;
+
+  const certBloque = $("#cv-m21-certificaciones-bloque");
+  if (estado.certificaciones.length) {
+    certBloque.hidden = false;
+    $("#cv-m21-certificaciones").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m21-cert">
+        <div class="cv-m21-cert-tit">${esc(c.titulo)}</div>
+        <div class="cv-m21-cert-sub">${esc(c.subtitulo)}</div>
+      </div>
+    `).join("");
+  } else certBloque.hidden = true;
+
+  const refBloque = $("#cv-m21-referencias-bloque");
+  if (estado.referencias.length) {
+    refBloque.hidden = false;
+    $("#cv-m21-referencias").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m21-ref">
+        <div class="cv-m21-ref-nombre">${esc(r.nombre)}</div>
+        <div class="cv-m21-ref-rol">${esc(r.rol)}</div>
+        ${r.email ? `<div class="cv-m21-ref-dato">${esc(r.email)}</div>` : ""}
+        ${r.linkedin ? `<div class="cv-m21-ref-dato">${esc(r.linkedin)}</div>` : ""}
+      </div>
+    `).join("");
+  } else refBloque.hidden = true;
+}
+
+// ---- Modelo 22 — Baker / Pastry Chef ----
+function asegurarEsqueletoModelo22() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo22") return;
+  pagina.dataset.esqueleto = "modelo22";
+  pagina.innerHTML = `
+    <header class="cv-m22-banner">
+      <div class="cv-m22-foto-marco">
+        <img class="cv-m22-foto" id="cv-m22-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m22-foto-placeholder" id="cv-m22-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m22-banner-texto">
+        <h1 class="cv-m22-nombre" id="cv-m22-nombre"></h1>
+        <div class="cv-m22-puesto" id="cv-m22-puesto"></div>
+        <div class="cv-m22-subtitulo" id="cv-m22-subtitulo"></div>
+      </div>
+      <div class="cv-m22-scallop" aria-hidden="true"></div>
+    </header>
+
+    <div class="cv-m22-cuerpo">
+      <aside class="cv-m22-columna">
+        <div class="cv-m22-tarjeta" id="cv-m22-contacto-bloque">
+          <h3 class="cv-m22-tit-tarjeta" id="cv-m22-tit-contacto"></h3>
+          <ul class="cv-m22-contacto" id="cv-m22-contacto"></ul>
+        </div>
+        <div class="cv-m22-tarjeta" id="cv-m22-habilidades-bloque">
+          <h3 class="cv-m22-tit-tarjeta" id="cv-m22-tit-habilidades"></h3>
+          <ul class="cv-m22-ingredientes" id="cv-m22-habilidades"></ul>
+        </div>
+        <div class="cv-m22-tarjeta" id="cv-m22-blandas-bloque">
+          <h3 class="cv-m22-tit-tarjeta" id="cv-m22-tit-blandas"></h3>
+          <ul class="cv-m22-ingredientes" id="cv-m22-blandas"></ul>
+        </div>
+        <div class="cv-m22-tarjeta" id="cv-m22-idiomas-bloque">
+          <h3 class="cv-m22-tit-tarjeta" id="cv-m22-tit-idiomas"></h3>
+          <ul class="cv-m22-ingredientes" id="cv-m22-idiomas"></ul>
+        </div>
+        <div class="cv-m22-tarjeta" id="cv-m22-educacion-bloque">
+          <h3 class="cv-m22-tit-tarjeta" id="cv-m22-tit-educacion"></h3>
+          <div id="cv-m22-educacion"></div>
+        </div>
+        <div class="cv-m22-tarjeta" id="cv-m22-certificaciones-bloque">
+          <h3 class="cv-m22-tit-tarjeta" id="cv-m22-tit-certificaciones"></h3>
+          <div id="cv-m22-certificaciones"></div>
+        </div>
+      </aside>
+
+      <main class="cv-m22-principal">
+        <section class="cv-m22-tarjeta" id="cv-m22-perfil-bloque">
+          <h2 class="cv-m22-tit-receta" id="cv-m22-tit-perfil"></h2>
+          <p class="cv-m22-perfil" id="cv-m22-perfil"></p>
+        </section>
+
+        <section id="cv-m22-experiencia-bloque">
+          <h2 class="cv-m22-tit-receta" id="cv-m22-tit-experiencia"></h2>
+          <div id="cv-m22-experiencia"></div>
+        </section>
+
+        <section class="cv-m22-tarjeta" id="cv-m22-logros-bloque">
+          <h2 class="cv-m22-tit-receta" id="cv-m22-tit-logros"></h2>
+          <ul class="cv-m22-logros" id="cv-m22-logros"></ul>
+        </section>
+
+        <section class="cv-m22-tarjeta" id="cv-m22-referencias-bloque">
+          <h2 class="cv-m22-tit-receta" id="cv-m22-tit-referencias"></h2>
+          <div class="cv-m22-referencias" id="cv-m22-referencias"></div>
+        </section>
+      </main>
+    </div>
+  `;
+}
+
+function renderModelo22() {
+  asegurarEsqueletoModelo22();
+
+  $("#cv-m22-tit-contacto").textContent = t("contacto");
+  $("#cv-m22-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m22-tit-blandas").textContent = t("blandas");
+  $("#cv-m22-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m22-tit-educacion").textContent = t("educacion");
+  $("#cv-m22-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m22-tit-perfil").textContent = t("perfil");
+  $("#cv-m22-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m22-tit-logros").textContent = t("logros");
+  $("#cv-m22-tit-referencias").textContent = t("referencias");
+
+  $("#cv-m22-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-m22-puesto").textContent = estado.puesto || "";
+  $("#cv-m22-subtitulo").textContent = estado.subtitulo || "";
+
+  const foto = $("#cv-m22-foto"), placeholder = $("#cv-m22-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  const contactoBloque = $("#cv-m22-contacto-bloque");
+  if (estado.contacto.length) {
+    contactoBloque.hidden = false;
+    $("#cv-m22-contacto").innerHTML = estado.contacto.map(c => `
+      <li><span class="cv-m22-ico">${iconoDe(c.tipo)}</span><span>${contactoValorHTML(c)}</span></li>
+    `).join("");
+  } else contactoBloque.hidden = true;
+
+  const habBloque = $("#cv-m22-habilidades-bloque");
+  if (estado.habilidades.length) {
+    habBloque.hidden = false;
+    $("#cv-m22-habilidades").innerHTML = estado.habilidades.map(h => `<li>${esc(h.texto)}</li>`).join("");
+  } else habBloque.hidden = true;
+
+  const blandasBloque = $("#cv-m22-blandas-bloque");
+  if (estado.blandas.length) {
+    blandasBloque.hidden = false;
+    $("#cv-m22-blandas").innerHTML = estado.blandas.map(h => `<li>${esc(h.texto)}</li>`).join("");
+  } else blandasBloque.hidden = true;
+
+  const idiomasBloque = $("#cv-m22-idiomas-bloque");
+  if (estado.idiomas.length) {
+    idiomasBloque.hidden = false;
+    $("#cv-m22-idiomas").innerHTML = estado.idiomas.map(i => `<li>${esc(i.nombre)} <span class="cv-m22-nivel">· ${esc(i.nivel)}</span></li>`).join("");
+  } else idiomasBloque.hidden = true;
+
+  const eduBloque = $("#cv-m22-educacion-bloque");
+  if (estado.educacion.length) {
+    eduBloque.hidden = false;
+    $("#cv-m22-educacion").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m22-edu">
+        <div class="cv-m22-edu-inst">${esc(e.institucion)}</div>
+        <div class="cv-m22-edu-fecha">${esc(e.fecha)}</div>
+        ${e.bullets.length ? `<ul class="cv-m22-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  } else eduBloque.hidden = true;
+
+  const certBloque = $("#cv-m22-certificaciones-bloque");
+  if (estado.certificaciones.length) {
+    certBloque.hidden = false;
+    $("#cv-m22-certificaciones").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m22-cert">
+        <div class="cv-m22-cert-tit">${esc(c.titulo)}</div>
+        <div class="cv-m22-cert-sub">${esc(c.subtitulo)}</div>
+      </div>
+    `).join("");
+  } else certBloque.hidden = true;
+
+  const expBloque = $("#cv-m22-experiencia-bloque");
+  if (estado.experiencia.length) {
+    expBloque.hidden = false;
+    $("#cv-m22-experiencia").innerHTML = estado.experiencia.map((x, idx) => `
+      <div class="cv-m22-paso">
+        <div class="cv-m22-paso-num">${idx + 1}</div>
+        <div class="cv-m22-paso-tarjeta">
+          <div class="cv-m22-job-head">
+            <div>
+              <div class="cv-m22-exp-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</div>
+              <div class="cv-m22-exp-rol">${esc(x.rol)}</div>
+            </div>
+            <div class="cv-m22-exp-fecha">${esc(x.fecha)}</div>
+          </div>
+          ${x.descripcion ? `<p class="cv-m22-exp-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+          ${x.bullets.length ? `<ul class="cv-m22-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+          ${x.herramientas.length ? `<div class="cv-m22-herramientas">${x.herramientas.map(h => `<span class="cv-m22-chip"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : ""}
+        </div>
+      </div>
+    `).join("");
+  } else expBloque.hidden = true;
+
+  const logrosBloque = $("#cv-m22-logros-bloque");
+  if (estado.logros.length) {
+    logrosBloque.hidden = false;
+    $("#cv-m22-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  } else logrosBloque.hidden = true;
+
+  const refBloque = $("#cv-m22-referencias-bloque");
+  if (estado.referencias.length) {
+    refBloque.hidden = false;
+    $("#cv-m22-referencias").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m22-ref">
+        <div class="cv-m22-ref-nombre">${esc(r.nombre)}</div>
+        <div class="cv-m22-ref-rol">${esc(r.rol)}</div>
+        ${r.email ? `<div class="cv-m22-ref-dato">${esc(r.email)}</div>` : ""}
+        ${r.linkedin ? `<div class="cv-m22-ref-dato">${esc(r.linkedin)}</div>` : ""}
+      </div>
+    `).join("");
+  } else refBloque.hidden = true;
+}
+
+// ---- Modelo 23 — Security Guard (Badge / Authority) ----
+function asegurarEsqueletoModelo23() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo23") return;
+  pagina.dataset.esqueleto = "modelo23";
+  pagina.innerHTML = `
+    <div class="cv-m23-franja" aria-hidden="true"></div>
+    <header class="cv-m23-header">
+      <div class="cv-m23-foto-marco">
+        <img class="cv-m23-foto" id="cv-m23-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m23-foto-placeholder" id="cv-m23-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m23-header-texto">
+        <div class="cv-m23-credencial">CREDENCIAL DE SERVICIO</div>
+        <h1 class="cv-m23-nombre" id="cv-m23-nombre"></h1>
+        <div class="cv-m23-puesto" id="cv-m23-puesto"></div>
+        <div class="cv-m23-subtitulo" id="cv-m23-subtitulo"></div>
+      </div>
+    </header>
+
+    <div class="cv-m23-franja" aria-hidden="true"></div>
+
+    <section class="cv-m23-bloque" id="cv-m23-contacto-bloque">
+      <h2 class="cv-m23-tit" id="cv-m23-tit-contacto"></h2>
+      <ul class="cv-m23-contacto" id="cv-m23-contacto"></ul>
+    </section>
+
+    <section class="cv-m23-bloque" id="cv-m23-perfil-bloque">
+      <h2 class="cv-m23-tit" id="cv-m23-tit-perfil"></h2>
+      <p class="cv-m23-perfil" id="cv-m23-perfil"></p>
+    </section>
+
+    <div class="cv-m23-grid-2">
+      <section class="cv-m23-bloque" id="cv-m23-habilidades-bloque">
+        <h2 class="cv-m23-tit" id="cv-m23-tit-habilidades"></h2>
+        <div class="cv-m23-tags" id="cv-m23-habilidades"></div>
+      </section>
+      <section class="cv-m23-bloque" id="cv-m23-blandas-bloque">
+        <h2 class="cv-m23-tit" id="cv-m23-tit-blandas"></h2>
+        <div class="cv-m23-tags" id="cv-m23-blandas"></div>
+      </section>
+    </div>
+
+    <section class="cv-m23-bloque" id="cv-m23-experiencia-bloque">
+      <h2 class="cv-m23-tit" id="cv-m23-tit-experiencia"></h2>
+      <div id="cv-m23-experiencia"></div>
+    </section>
+
+    <section class="cv-m23-bloque" id="cv-m23-logros-bloque">
+      <h2 class="cv-m23-tit" id="cv-m23-tit-logros"></h2>
+      <ul class="cv-m23-logros" id="cv-m23-logros"></ul>
+    </section>
+
+    <div class="cv-m23-grid-2">
+      <section class="cv-m23-bloque" id="cv-m23-educacion-bloque">
+        <h2 class="cv-m23-tit" id="cv-m23-tit-educacion"></h2>
+        <div id="cv-m23-educacion"></div>
+      </section>
+      <section class="cv-m23-bloque" id="cv-m23-certificaciones-bloque">
+        <h2 class="cv-m23-tit" id="cv-m23-tit-certificaciones"></h2>
+        <div id="cv-m23-certificaciones"></div>
+      </section>
+    </div>
+
+    <section class="cv-m23-bloque" id="cv-m23-idiomas-bloque">
+      <h2 class="cv-m23-tit" id="cv-m23-tit-idiomas"></h2>
+      <ul class="cv-m23-idiomas" id="cv-m23-idiomas"></ul>
+    </section>
+
+    <section class="cv-m23-bloque" id="cv-m23-referencias-bloque">
+      <h2 class="cv-m23-tit" id="cv-m23-tit-referencias"></h2>
+      <div class="cv-m23-referencias" id="cv-m23-referencias"></div>
+    </section>
+  `;
+}
+
+function renderModelo23() {
+  asegurarEsqueletoModelo23();
+
+  $("#cv-m23-tit-contacto").textContent = t("contacto");
+  $("#cv-m23-tit-perfil").textContent = t("perfil");
+  $("#cv-m23-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m23-tit-blandas").textContent = t("blandas");
+  $("#cv-m23-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m23-tit-logros").textContent = t("logros");
+  $("#cv-m23-tit-educacion").textContent = t("educacion");
+  $("#cv-m23-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m23-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m23-tit-referencias").textContent = t("referencias");
+
+  $("#cv-m23-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-m23-puesto").textContent = estado.puesto || "";
+  $("#cv-m23-subtitulo").textContent = estado.subtitulo || "";
+
+  const foto = $("#cv-m23-foto"), placeholder = $("#cv-m23-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  const contactoBloque = $("#cv-m23-contacto-bloque");
+  if (estado.contacto.length) {
+    contactoBloque.hidden = false;
+    $("#cv-m23-contacto").innerHTML = estado.contacto.map(c => `
+      <li><span class="cv-m23-ico">${iconoDe(c.tipo)}</span><span>${contactoValorHTML(c)}</span></li>
+    `).join("");
+  } else contactoBloque.hidden = true;
+
+  const perfilBloque = $("#cv-m23-perfil-bloque");
+  if (estado.perfil) { perfilBloque.hidden = false; $("#cv-m23-perfil").innerHTML = escPárrafo(estado.perfil); }
+  else perfilBloque.hidden = true;
+
+  const habBloque = $("#cv-m23-habilidades-bloque");
+  if (estado.habilidades.length) {
+    habBloque.hidden = false;
+    $("#cv-m23-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m23-chip">${esc(h.texto)}</span>`).join("");
+  } else habBloque.hidden = true;
+
+  const blandasBloque = $("#cv-m23-blandas-bloque");
+  if (estado.blandas.length) {
+    blandasBloque.hidden = false;
+    $("#cv-m23-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m23-chip cv-m23-chip-alt">${esc(h.texto)}</span>`).join("");
+  } else blandasBloque.hidden = true;
+
+  const expBloque = $("#cv-m23-experiencia-bloque");
+  if (estado.experiencia.length) {
+    expBloque.hidden = false;
+    $("#cv-m23-experiencia").innerHTML = estado.experiencia.map((x, idx) => `
+      <div class="cv-m23-item">
+        <div class="cv-m23-item-caso">CASO N° ${String(idx + 1).padStart(3, "0")}</div>
+        <div class="cv-m23-job-head">
+          <div>
+            <div class="cv-m23-exp-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</div>
+            <div class="cv-m23-exp-rol">${esc(x.rol)}</div>
+          </div>
+          <div class="cv-m23-exp-fecha">${esc(x.fecha)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m23-exp-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m23-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${x.herramientas.length ? `<div class="cv-m23-herramientas">${x.herramientas.map(h => `<span class="cv-m23-chip cv-m23-chip-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : ""}
+        <div class="cv-m23-divisor" aria-hidden="true"></div>
+      </div>
+    `).join("");
+  } else expBloque.hidden = true;
+
+  const logrosBloque = $("#cv-m23-logros-bloque");
+  if (estado.logros.length) {
+    logrosBloque.hidden = false;
+    $("#cv-m23-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  } else logrosBloque.hidden = true;
+
+  const eduBloque = $("#cv-m23-educacion-bloque");
+  if (estado.educacion.length) {
+    eduBloque.hidden = false;
+    $("#cv-m23-educacion").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m23-edu">
+        <div class="cv-m23-edu-inst">${esc(e.institucion)}</div>
+        <div class="cv-m23-edu-fecha">${esc(e.fecha)}</div>
+        ${e.bullets.length ? `<ul class="cv-m23-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  } else eduBloque.hidden = true;
+
+  const certBloque = $("#cv-m23-certificaciones-bloque");
+  if (estado.certificaciones.length) {
+    certBloque.hidden = false;
+    $("#cv-m23-certificaciones").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m23-cert">
+        <div class="cv-m23-cert-tit">${esc(c.titulo)}</div>
+        <div class="cv-m23-cert-sub">${esc(c.subtitulo)}</div>
+      </div>
+    `).join("");
+  } else certBloque.hidden = true;
+
+  const idiomasBloque = $("#cv-m23-idiomas-bloque");
+  if (estado.idiomas.length) {
+    idiomasBloque.hidden = false;
+    $("#cv-m23-idiomas").innerHTML = estado.idiomas.map(i => `<li><span>${esc(i.nombre)}</span><span class="cv-m23-nivel">${esc(i.nivel)}</span></li>`).join("");
+  } else idiomasBloque.hidden = true;
+
+  const refBloque = $("#cv-m23-referencias-bloque");
+  if (estado.referencias.length) {
+    refBloque.hidden = false;
+    $("#cv-m23-referencias").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m23-ref">
+        <div class="cv-m23-ref-nombre">${esc(r.nombre)}</div>
+        <div class="cv-m23-ref-rol">${esc(r.rol)}</div>
+        ${r.email ? `<div class="cv-m23-ref-dato">${esc(r.email)}</div>` : ""}
+        ${r.linkedin ? `<div class="cv-m23-ref-dato">${esc(r.linkedin)}</div>` : ""}
+      </div>
+    `).join("");
+  } else refBloque.hidden = true;
+}
+
+// ---- Modelo 24 — Chef / Culinary (Menu Card) ----
+function asegurarEsqueletoModelo24() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo24") return;
+  pagina.dataset.esqueleto = "modelo24";
+  pagina.innerHTML = `
+    <header class="cv-m24-header">
+      <div class="cv-m24-foto-marco">
+        <img class="cv-m24-foto" id="cv-m24-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m24-foto-placeholder" id="cv-m24-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m24-flourish-top" aria-hidden="true">❖ ─────────── ❖</div>
+      <h1 class="cv-m24-nombre" id="cv-m24-nombre"></h1>
+      <div class="cv-m24-puesto" id="cv-m24-puesto"></div>
+      <div class="cv-m24-subtitulo" id="cv-m24-subtitulo"></div>
+      <div class="cv-m24-flourish-bottom" aria-hidden="true">❖ ─────────── ❖</div>
+      <ul class="cv-m24-contacto" id="cv-m24-contacto"></ul>
+    </header>
+
+    <div class="cv-m24-cuerpo">
+      <section class="cv-m24-bloque" id="cv-m24-perfil-bloque">
+        <h2 class="cv-m24-tit-menu" id="cv-m24-tit-perfil"></h2>
+        <p class="cv-m24-perfil" id="cv-m24-perfil"></p>
+      </section>
+
+      <section class="cv-m24-bloque" id="cv-m24-experiencia-bloque">
+        <h2 class="cv-m24-tit-menu" id="cv-m24-tit-experiencia"></h2>
+        <div id="cv-m24-experiencia"></div>
+      </section>
+
+      <div class="cv-m24-grid-2">
+        <section class="cv-m24-bloque" id="cv-m24-habilidades-bloque">
+          <h2 class="cv-m24-tit-menu" id="cv-m24-tit-habilidades"></h2>
+          <div class="cv-m24-tags" id="cv-m24-habilidades"></div>
+        </section>
+        <section class="cv-m24-bloque" id="cv-m24-blandas-bloque">
+          <h2 class="cv-m24-tit-menu" id="cv-m24-tit-blandas"></h2>
+          <div class="cv-m24-tags" id="cv-m24-blandas"></div>
+        </section>
+      </div>
+
+      <section class="cv-m24-bloque" id="cv-m24-logros-bloque">
+        <h2 class="cv-m24-tit-menu" id="cv-m24-tit-logros"></h2>
+        <ul class="cv-m24-logros" id="cv-m24-logros"></ul>
+      </section>
+
+      <div class="cv-m24-grid-2">
+        <section class="cv-m24-bloque" id="cv-m24-educacion-bloque">
+          <h2 class="cv-m24-tit-menu" id="cv-m24-tit-educacion"></h2>
+          <div id="cv-m24-educacion"></div>
+        </section>
+        <section class="cv-m24-bloque" id="cv-m24-certificaciones-bloque">
+          <h2 class="cv-m24-tit-menu" id="cv-m24-tit-certificaciones"></h2>
+          <div id="cv-m24-certificaciones"></div>
+        </section>
+      </div>
+
+      <section class="cv-m24-bloque" id="cv-m24-idiomas-bloque">
+        <h2 class="cv-m24-tit-menu" id="cv-m24-tit-idiomas"></h2>
+        <ul class="cv-m24-idiomas" id="cv-m24-idiomas"></ul>
+      </section>
+
+      <section class="cv-m24-bloque" id="cv-m24-referencias-bloque">
+        <h2 class="cv-m24-tit-menu" id="cv-m24-tit-referencias"></h2>
+        <div class="cv-m24-referencias" id="cv-m24-referencias"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo24() {
+  asegurarEsqueletoModelo24();
+
+  $("#cv-m24-tit-perfil").textContent = t("perfil");
+  $("#cv-m24-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m24-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m24-tit-blandas").textContent = t("blandas");
+  $("#cv-m24-tit-logros").textContent = t("logros");
+  $("#cv-m24-tit-educacion").textContent = t("educacion");
+  $("#cv-m24-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m24-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m24-tit-referencias").textContent = t("referencias");
+
+  $("#cv-m24-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-m24-puesto").textContent = estado.puesto || "";
+  $("#cv-m24-subtitulo").textContent = estado.subtitulo || "";
+
+  const foto = $("#cv-m24-foto"), placeholder = $("#cv-m24-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  const contactoUl = $("#cv-m24-contacto");
+  if (estado.contacto.length) {
+    contactoUl.hidden = false;
+    contactoUl.innerHTML = estado.contacto.map(c => `
+      <li><span class="cv-m24-ico">${iconoDe(c.tipo)}</span><span>${contactoValorHTML(c)}</span></li>
+    `).join("");
+  } else contactoUl.hidden = true;
+
+  const perfilBloque = $("#cv-m24-perfil-bloque");
+  if (estado.perfil) { perfilBloque.hidden = false; $("#cv-m24-perfil").innerHTML = escPárrafo(estado.perfil); }
+  else perfilBloque.hidden = true;
+
+  const expBloque = $("#cv-m24-experiencia-bloque");
+  if (estado.experiencia.length) {
+    expBloque.hidden = false;
+    $("#cv-m24-experiencia").innerHTML = estado.experiencia.map(x => `
+      <div class="cv-m24-plato">
+        <div class="cv-m24-job-head">
+          <div class="cv-m24-plato-nombre">
+            <span class="cv-m24-exp-rol">${esc(x.rol)}</span>
+            <span class="cv-m24-puntos" aria-hidden="true"></span>
+          </div>
+          <div class="cv-m24-precio">${esc(x.fecha)}</div>
+        </div>
+        <div class="cv-m24-exp-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</div>
+        ${x.descripcion ? `<p class="cv-m24-exp-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m24-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${x.herramientas.length ? `<div class="cv-m24-herramientas">${x.herramientas.map(h => `<span class="cv-m24-chip"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : ""}
+      </div>
+    `).join("");
+  } else expBloque.hidden = true;
+
+  const habBloque = $("#cv-m24-habilidades-bloque");
+  if (estado.habilidades.length) {
+    habBloque.hidden = false;
+    $("#cv-m24-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m24-chip">${esc(h.texto)}</span>`).join("");
+  } else habBloque.hidden = true;
+
+  const blandasBloque = $("#cv-m24-blandas-bloque");
+  if (estado.blandas.length) {
+    blandasBloque.hidden = false;
+    $("#cv-m24-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m24-chip cv-m24-chip-alt">${esc(h.texto)}</span>`).join("");
+  } else blandasBloque.hidden = true;
+
+  const logrosBloque = $("#cv-m24-logros-bloque");
+  if (estado.logros.length) {
+    logrosBloque.hidden = false;
+    $("#cv-m24-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  } else logrosBloque.hidden = true;
+
+  const eduBloque = $("#cv-m24-educacion-bloque");
+  if (estado.educacion.length) {
+    eduBloque.hidden = false;
+    $("#cv-m24-educacion").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m24-edu">
+        <div class="cv-m24-edu-inst">${esc(e.institucion)}</div>
+        <div class="cv-m24-edu-fecha">${esc(e.fecha)}</div>
+        ${e.bullets.length ? `<ul class="cv-m24-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  } else eduBloque.hidden = true;
+
+  const certBloque = $("#cv-m24-certificaciones-bloque");
+  if (estado.certificaciones.length) {
+    certBloque.hidden = false;
+    $("#cv-m24-certificaciones").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m24-cert">
+        <div class="cv-m24-cert-tit">${esc(c.titulo)}</div>
+        <div class="cv-m24-cert-sub">${esc(c.subtitulo)}</div>
+      </div>
+    `).join("");
+  } else certBloque.hidden = true;
+
+  const idiomasBloque = $("#cv-m24-idiomas-bloque");
+  if (estado.idiomas.length) {
+    idiomasBloque.hidden = false;
+    $("#cv-m24-idiomas").innerHTML = estado.idiomas.map(i => `<li><span>${esc(i.nombre)}</span><span class="cv-m24-nivel">${esc(i.nivel)}</span></li>`).join("");
+  } else idiomasBloque.hidden = true;
+
+  const refBloque = $("#cv-m24-referencias-bloque");
+  if (estado.referencias.length) {
+    refBloque.hidden = false;
+    $("#cv-m24-referencias").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m24-ref">
+        <div class="cv-m24-ref-nombre">${esc(r.nombre)}</div>
+        <div class="cv-m24-ref-rol">${esc(r.rol)}</div>
+        ${r.email ? `<div class="cv-m24-ref-dato">${esc(r.email)}</div>` : ""}
+        ${r.linkedin ? `<div class="cv-m24-ref-dato">${esc(r.linkedin)}</div>` : ""}
+      </div>
+    `).join("");
+  } else refBloque.hidden = true;
+}
+
+
+// ---- Modelos 25-28 ----
+function asegurarEsqueletoModelo25() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo25") return;
+  pagina.dataset.esqueleto = "modelo25";
+  pagina.innerHTML = `
+    <div class="cv-m25-shell">
+      <aside class="cv-m25-sidebar">
+        <div class="cv-m25-foto-marco">
+          <img class="cv-m25-foto" id="cv-m25-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-m25-foto-placeholder" id="cv-m25-foto-placeholder">🙂</div>
+          <div class="cv-m25-foto-badge">✚</div>
+        </div>
+        <div class="cv-m25-side-sec" id="cv-m25-sec-contacto">
+          <h3 class="cv-m25-side-titulo" id="cv-m25-tit-contacto"></h3>
+          <div class="cv-m25-contacto" id="cv-m25-contacto"></div>
+        </div>
+        <div class="cv-m25-side-sec" id="cv-m25-sec-habilidades">
+          <h3 class="cv-m25-side-titulo" id="cv-m25-tit-habilidades"></h3>
+          <div class="cv-m25-chips" id="cv-m25-habilidades"></div>
+        </div>
+        <div class="cv-m25-side-sec" id="cv-m25-sec-blandas">
+          <h3 class="cv-m25-side-titulo" id="cv-m25-tit-blandas"></h3>
+          <div class="cv-m25-chips" id="cv-m25-blandas"></div>
+        </div>
+        <div class="cv-m25-side-sec" id="cv-m25-sec-idiomas">
+          <h3 class="cv-m25-side-titulo" id="cv-m25-tit-idiomas"></h3>
+          <div class="cv-m25-idiomas" id="cv-m25-idiomas"></div>
+        </div>
+        <div class="cv-m25-side-sec" id="cv-m25-sec-certificaciones">
+          <h3 class="cv-m25-side-titulo" id="cv-m25-tit-certificaciones"></h3>
+          <div class="cv-m25-certs" id="cv-m25-certificaciones"></div>
+        </div>
+      </aside>
+      <main class="cv-m25-main">
+        <header class="cv-m25-header">
+          <div class="cv-m25-nombre-wrap">
+            <h1 class="cv-m25-nombre"><span id="cv-m25-nombre"></span> <span class="cv-m25-apellido" id="cv-m25-apellido"></span></h1>
+            <p class="cv-m25-puesto" id="cv-m25-puesto"></p>
+            <p class="cv-m25-subtitulo" id="cv-m25-subtitulo"></p>
+          </div>
+          <svg class="cv-m25-ekg" viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,20 40,20 55,6 68,34 82,14 96,20 140,20 155,8 170,32 185,20 300,20" />
+          </svg>
+        </header>
+        <section class="cv-m25-card" id="cv-m25-sec-perfil">
+          <h2 class="cv-m25-titulo" id="cv-m25-tit-perfil"></h2>
+          <p class="cv-m25-perfil" id="cv-m25-perfil"></p>
+        </section>
+        <section class="cv-m25-card" id="cv-m25-sec-experiencia">
+          <h2 class="cv-m25-titulo" id="cv-m25-tit-experiencia"></h2>
+          <div id="cv-m25-experiencia"></div>
+        </section>
+        <section class="cv-m25-card" id="cv-m25-sec-educacion">
+          <h2 class="cv-m25-titulo" id="cv-m25-tit-educacion"></h2>
+          <div id="cv-m25-educacion"></div>
+        </section>
+        <section class="cv-m25-card" id="cv-m25-sec-logros">
+          <h2 class="cv-m25-titulo" id="cv-m25-tit-logros"></h2>
+          <ul class="cv-m25-logros" id="cv-m25-logros"></ul>
+        </section>
+        <section class="cv-m25-card" id="cv-m25-sec-referencias">
+          <h2 class="cv-m25-titulo" id="cv-m25-tit-referencias"></h2>
+          <div class="cv-m25-refs" id="cv-m25-referencias"></div>
+        </section>
+      </main>
+    </div>
+  `;
+}
+
+function m25Herramientas(herramientas) {
+  if (!herramientas || !herramientas.length) return "";
+  const grupos = {};
+  herramientas.forEach(h => { (grupos[h.etiqueta || ""] ||= []).push(h.valor); });
+  return `<div class="cv-m25-job-tools">${Object.entries(grupos).map(([etq, vals]) =>
+    `<span class="cv-m25-tool-grupo">${etq ? `<strong>${esc(etq)}:</strong> ` : ""}${vals.map(esc).join(", ")}</span>`
+  ).join("")}</div>`;
+}
+
+function renderModelo25() {
+  asegurarEsqueletoModelo25();
+
+  $("#cv-m25-nombre").textContent = estado.nombre;
+  $("#cv-m25-apellido").textContent = estado.apellido;
+  $("#cv-m25-puesto").textContent = estado.puesto;
+  $("#cv-m25-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m25-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m25-foto"), placeholder = $("#cv-m25-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m25-tit-contacto").textContent = t("contacto");
+  $("#cv-m25-contacto").innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m25-contacto-item"><span class="cv-m25-ico">${iconoDe(c.tipo)}</span><span class="cv-m25-valor">${contactoValorHTML(c)}</span></div>`
+  ).join("");
+  $("#cv-m25-sec-contacto").hidden = !estado.contacto.length;
+
+  $("#cv-m25-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m25-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m25-chip">${esc(h.texto)}</span>`).join("");
+  $("#cv-m25-sec-habilidades").hidden = !estado.habilidades.length;
+
+  $("#cv-m25-tit-blandas").textContent = t("blandas");
+  $("#cv-m25-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m25-chip cv-m25-chip-alt">${esc(h.texto)}</span>`).join("");
+  $("#cv-m25-sec-blandas").hidden = !estado.blandas.length;
+
+  $("#cv-m25-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m25-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m25-idioma"><span>${esc(i.nombre)}</span><span class="cv-m25-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+  $("#cv-m25-sec-idiomas").hidden = !estado.idiomas.length;
+
+  $("#cv-m25-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m25-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m25-cert"><strong>${esc(c.titulo)}</strong>${c.subtitulo ? `<span>${esc(c.subtitulo)}</span>` : ""}</div>`
+  ).join("");
+  $("#cv-m25-sec-certificaciones").hidden = !estado.certificaciones.length;
+
+  $("#cv-m25-tit-perfil").textContent = t("perfil");
+  $("#cv-m25-perfil").innerHTML = escPárrafo(estado.perfil || "");
+  $("#cv-m25-sec-perfil").hidden = !estado.perfil;
+
+  $("#cv-m25-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m25-experiencia").innerHTML = estado.experiencia.map(x => `
+    <div class="cv-m25-job">
+      <div class="cv-m25-job-head">
+        <div>
+          <h3 class="cv-m25-job-rol">${esc(x.rol)}</h3>
+          <div class="cv-m25-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+        </div>
+        <div class="cv-m25-job-fecha">${esc(x.fecha)}</div>
+      </div>
+      ${x.descripcion ? `<p class="cv-m25-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+      ${x.bullets && x.bullets.length ? `<ul class="cv-m25-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      ${m25Herramientas(x.herramientas)}
+    </div>
+  `).join("");
+  $("#cv-m25-sec-experiencia").hidden = !estado.experiencia.length;
+
+  $("#cv-m25-tit-educacion").textContent = t("educacion");
+  $("#cv-m25-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m25-edu">
+      <div class="cv-m25-edu-head"><strong>${esc(e.institucion)}</strong><span class="cv-m25-edu-fecha">${esc(e.fecha)}</span></div>
+      ${e.bullets && e.bullets.length ? `<ul>${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m25-sec-educacion").hidden = !estado.educacion.length;
+
+  $("#cv-m25-tit-logros").textContent = t("logros");
+  $("#cv-m25-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  $("#cv-m25-sec-logros").hidden = !estado.logros.length;
+
+  $("#cv-m25-tit-referencias").textContent = t("referencias");
+  $("#cv-m25-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m25-ref">
+      <strong>${esc(r.nombre)}</strong>
+      <span>${esc(r.rol)}</span>
+      ${r.email ? `<span>${esc(r.email)}</span>` : ""}
+      ${r.linkedin ? `<a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m25-sec-referencias").hidden = !estado.referencias.length;
+}
+
+function asegurarEsqueletoModelo26() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo26") return;
+  pagina.dataset.esqueleto = "modelo26";
+  pagina.innerHTML = `
+    <div class="cv-m26-shell">
+      <header class="cv-m26-banner">
+        <div class="cv-m26-stripes" aria-hidden="true"></div>
+        <div class="cv-m26-banner-inner">
+          <div class="cv-m26-foto-marco">
+            <img class="cv-m26-foto" id="cv-m26-foto" src="" alt="Foto de perfil" hidden>
+            <div class="cv-m26-foto-placeholder" id="cv-m26-foto-placeholder">🙂</div>
+          </div>
+          <div class="cv-m26-id">
+            <h1 class="cv-m26-nombre"><span id="cv-m26-nombre"></span> <span id="cv-m26-apellido"></span></h1>
+            <p class="cv-m26-puesto" id="cv-m26-puesto"></p>
+            <p class="cv-m26-subtitulo" id="cv-m26-subtitulo"></p>
+          </div>
+        </div>
+      </header>
+      <div class="cv-m26-body">
+        <main class="cv-m26-main">
+          <section class="cv-m26-sec" id="cv-m26-sec-perfil">
+            <h2 class="cv-m26-titulo" id="cv-m26-tit-perfil"></h2>
+            <p class="cv-m26-perfil" id="cv-m26-perfil"></p>
+          </section>
+          <section class="cv-m26-sec" id="cv-m26-sec-experiencia">
+            <h2 class="cv-m26-titulo" id="cv-m26-tit-experiencia"></h2>
+            <div class="cv-m26-timeline" id="cv-m26-experiencia"></div>
+          </section>
+          <section class="cv-m26-sec" id="cv-m26-sec-logros">
+            <h2 class="cv-m26-titulo" id="cv-m26-tit-logros"></h2>
+            <ul class="cv-m26-logros" id="cv-m26-logros"></ul>
+          </section>
+          <section class="cv-m26-sec" id="cv-m26-sec-referencias">
+            <h2 class="cv-m26-titulo" id="cv-m26-tit-referencias"></h2>
+            <div class="cv-m26-refs" id="cv-m26-referencias"></div>
+          </section>
+        </main>
+        <aside class="cv-m26-side">
+          <div class="cv-m26-side-sec" id="cv-m26-sec-contacto">
+            <h3 class="cv-m26-side-titulo" id="cv-m26-tit-contacto"></h3>
+            <div id="cv-m26-contacto"></div>
+          </div>
+          <div class="cv-m26-side-sec" id="cv-m26-sec-habilidades">
+            <h3 class="cv-m26-side-titulo" id="cv-m26-tit-habilidades"></h3>
+            <div class="cv-m26-badges" id="cv-m26-habilidades"></div>
+          </div>
+          <div class="cv-m26-side-sec" id="cv-m26-sec-blandas">
+            <h3 class="cv-m26-side-titulo" id="cv-m26-tit-blandas"></h3>
+            <div class="cv-m26-badges" id="cv-m26-blandas"></div>
+          </div>
+          <div class="cv-m26-side-sec" id="cv-m26-sec-idiomas">
+            <h3 class="cv-m26-side-titulo" id="cv-m26-tit-idiomas"></h3>
+            <div id="cv-m26-idiomas"></div>
+          </div>
+          <div class="cv-m26-side-sec" id="cv-m26-sec-educacion">
+            <h3 class="cv-m26-side-titulo" id="cv-m26-tit-educacion"></h3>
+            <div id="cv-m26-educacion"></div>
+          </div>
+          <div class="cv-m26-side-sec" id="cv-m26-sec-certificaciones">
+            <h3 class="cv-m26-side-titulo" id="cv-m26-tit-certificaciones"></h3>
+            <div id="cv-m26-certificaciones"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  `;
+}
+
+function m26Herramientas(herramientas) {
+  if (!herramientas || !herramientas.length) return "";
+  const grupos = {};
+  herramientas.forEach(h => { (grupos[h.etiqueta || ""] ||= []).push(h.valor); });
+  return `<div class="cv-m26-job-tools">${Object.entries(grupos).map(([etq, vals]) =>
+    `<span class="cv-m26-tool-grupo">${etq ? `<strong>${esc(etq)}:</strong> ` : ""}${vals.map(esc).join(", ")}</span>`
+  ).join("")}</div>`;
+}
+
+function renderModelo26() {
+  asegurarEsqueletoModelo26();
+
+  $("#cv-m26-nombre").textContent = estado.nombre;
+  $("#cv-m26-apellido").textContent = estado.apellido;
+  $("#cv-m26-puesto").textContent = estado.puesto;
+  $("#cv-m26-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m26-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m26-foto"), placeholder = $("#cv-m26-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m26-tit-contacto").textContent = t("contacto");
+  $("#cv-m26-contacto").innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m26-contacto-item"><span class="cv-m26-ico">${iconoDe(c.tipo)}</span><span>${contactoValorHTML(c)}</span></div>`
+  ).join("");
+  $("#cv-m26-sec-contacto").hidden = !estado.contacto.length;
+
+  $("#cv-m26-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m26-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m26-badge">${esc(h.texto)}</span>`).join("");
+  $("#cv-m26-sec-habilidades").hidden = !estado.habilidades.length;
+
+  $("#cv-m26-tit-blandas").textContent = t("blandas");
+  $("#cv-m26-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m26-badge cv-m26-badge-alt">${esc(h.texto)}</span>`).join("");
+  $("#cv-m26-sec-blandas").hidden = !estado.blandas.length;
+
+  $("#cv-m26-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m26-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m26-idioma"><span>${esc(i.nombre)}</span><span class="cv-m26-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+  $("#cv-m26-sec-idiomas").hidden = !estado.idiomas.length;
+
+  $("#cv-m26-tit-educacion").textContent = t("educacion");
+  $("#cv-m26-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m26-edu">
+      <strong>${esc(e.institucion)}</strong>
+      <span class="cv-m26-edu-fecha">${esc(e.fecha)}</span>
+      ${e.bullets && e.bullets.length ? `<ul>${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m26-sec-educacion").hidden = !estado.educacion.length;
+
+  $("#cv-m26-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m26-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m26-cert"><strong>${esc(c.titulo)}</strong>${c.subtitulo ? `<span>${esc(c.subtitulo)}</span>` : ""}</div>`
+  ).join("");
+  $("#cv-m26-sec-certificaciones").hidden = !estado.certificaciones.length;
+
+  $("#cv-m26-tit-perfil").textContent = t("perfil");
+  $("#cv-m26-perfil").innerHTML = escPárrafo(estado.perfil || "");
+  $("#cv-m26-sec-perfil").hidden = !estado.perfil;
+
+  $("#cv-m26-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m26-experiencia").innerHTML = estado.experiencia.map(x => `
+    <div class="cv-m26-job">
+      <div class="cv-m26-job-marker"></div>
+      <div class="cv-m26-job-body">
+        <div class="cv-m26-job-head">
+          <div>
+            <h3 class="cv-m26-job-rol">${esc(x.rol)}</h3>
+            <div class="cv-m26-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+          </div>
+          <div class="cv-m26-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m26-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets && x.bullets.length ? `<ul class="cv-m26-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${m26Herramientas(x.herramientas)}
+      </div>
+    </div>
+  `).join("");
+  $("#cv-m26-sec-experiencia").hidden = !estado.experiencia.length;
+
+  $("#cv-m26-tit-logros").textContent = t("logros");
+  $("#cv-m26-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  $("#cv-m26-sec-logros").hidden = !estado.logros.length;
+
+  $("#cv-m26-tit-referencias").textContent = t("referencias");
+  $("#cv-m26-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m26-ref">
+      <strong>${esc(r.nombre)}</strong>
+      <span>${esc(r.rol)}</span>
+      ${r.email ? `<span>${esc(r.email)}</span>` : ""}
+      ${r.linkedin ? `<a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m26-sec-referencias").hidden = !estado.referencias.length;
+}
+
+function asegurarEsqueletoModelo27() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo27") return;
+  pagina.dataset.esqueleto = "modelo27";
+  pagina.innerHTML = `
+    <div class="cv-m27-shell">
+      <aside class="cv-m27-cover">
+        <div class="cv-m27-aperture">
+          <img class="cv-m27-foto" id="cv-m27-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-m27-foto-placeholder" id="cv-m27-foto-placeholder">🙂</div>
+        </div>
+        <h1 class="cv-m27-nombre"><span id="cv-m27-nombre"></span><br><span id="cv-m27-apellido"></span></h1>
+        <p class="cv-m27-puesto" id="cv-m27-puesto"></p>
+        <p class="cv-m27-subtitulo" id="cv-m27-subtitulo"></p>
+        <div class="cv-m27-contacto" id="cv-m27-contacto"></div>
+        <div class="cv-m27-filmstrip" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </aside>
+      <main class="cv-m27-gallery">
+        <section class="cv-m27-sec" id="cv-m27-sec-perfil">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">01</span><span id="cv-m27-tit-perfil"></span></h2>
+          <p class="cv-m27-perfil" id="cv-m27-perfil"></p>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-experiencia">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">02</span><span id="cv-m27-tit-experiencia"></span></h2>
+          <div id="cv-m27-experiencia"></div>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-educacion">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">03</span><span id="cv-m27-tit-educacion"></span></h2>
+          <div id="cv-m27-educacion"></div>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-certificaciones">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">04</span><span id="cv-m27-tit-certificaciones"></span></h2>
+          <div id="cv-m27-certificaciones"></div>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-habilidades">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">05</span><span id="cv-m27-tit-habilidades"></span></h2>
+          <div class="cv-m27-chips" id="cv-m27-habilidades"></div>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-blandas">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">06</span><span id="cv-m27-tit-blandas"></span></h2>
+          <div class="cv-m27-chips" id="cv-m27-blandas"></div>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-idiomas">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">07</span><span id="cv-m27-tit-idiomas"></span></h2>
+          <div id="cv-m27-idiomas"></div>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-logros">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">08</span><span id="cv-m27-tit-logros"></span></h2>
+          <ul class="cv-m27-logros" id="cv-m27-logros"></ul>
+        </section>
+        <section class="cv-m27-sec" id="cv-m27-sec-referencias">
+          <h2 class="cv-m27-titulo"><span class="cv-m27-num">09</span><span id="cv-m27-tit-referencias"></span></h2>
+          <div class="cv-m27-refs" id="cv-m27-referencias"></div>
+        </section>
+      </main>
+    </div>
+  `;
+}
+
+function m27Herramientas(herramientas) {
+  if (!herramientas || !herramientas.length) return "";
+  const grupos = {};
+  herramientas.forEach(h => { (grupos[h.etiqueta || ""] ||= []).push(h.valor); });
+  return `<div class="cv-m27-job-tools">${Object.entries(grupos).map(([etq, vals]) =>
+    `<span class="cv-m27-tool-grupo">${etq ? `<strong>${esc(etq)}:</strong> ` : ""}${vals.map(esc).join(", ")}</span>`
+  ).join("")}</div>`;
+}
+
+function renderModelo27() {
+  asegurarEsqueletoModelo27();
+
+  $("#cv-m27-nombre").textContent = estado.nombre;
+  $("#cv-m27-apellido").textContent = estado.apellido;
+  $("#cv-m27-puesto").textContent = estado.puesto;
+  $("#cv-m27-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m27-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m27-foto"), placeholder = $("#cv-m27-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m27-contacto").innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m27-contacto-item"><span class="cv-m27-ico">${iconoDe(c.tipo)}</span><span>${contactoValorHTML(c)}</span></div>`
+  ).join("");
+
+  $("#cv-m27-tit-perfil").textContent = t("perfil");
+  $("#cv-m27-perfil").innerHTML = escPárrafo(estado.perfil || "");
+  $("#cv-m27-sec-perfil").hidden = !estado.perfil;
+
+  $("#cv-m27-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m27-experiencia").innerHTML = estado.experiencia.map(x => `
+    <div class="cv-m27-job">
+      <div class="cv-m27-job-head">
+        <div>
+          <h3 class="cv-m27-job-rol">${esc(x.rol)}</h3>
+          <div class="cv-m27-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+        </div>
+        <div class="cv-m27-job-fecha">${esc(x.fecha)}</div>
+      </div>
+      ${x.descripcion ? `<p class="cv-m27-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+      ${x.bullets && x.bullets.length ? `<ul class="cv-m27-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      ${m27Herramientas(x.herramientas)}
+    </div>
+  `).join("");
+  $("#cv-m27-sec-experiencia").hidden = !estado.experiencia.length;
+
+  $("#cv-m27-tit-educacion").textContent = t("educacion");
+  $("#cv-m27-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m27-edu">
+      <div class="cv-m27-edu-head"><strong>${esc(e.institucion)}</strong><span class="cv-m27-edu-fecha">${esc(e.fecha)}</span></div>
+      ${e.bullets && e.bullets.length ? `<ul>${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m27-sec-educacion").hidden = !estado.educacion.length;
+
+  $("#cv-m27-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m27-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m27-cert"><strong>${esc(c.titulo)}</strong>${c.subtitulo ? `<span>${esc(c.subtitulo)}</span>` : ""}</div>`
+  ).join("");
+  $("#cv-m27-sec-certificaciones").hidden = !estado.certificaciones.length;
+
+  $("#cv-m27-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m27-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m27-chip">${esc(h.texto)}</span>`).join("");
+  $("#cv-m27-sec-habilidades").hidden = !estado.habilidades.length;
+
+  $("#cv-m27-tit-blandas").textContent = t("blandas");
+  $("#cv-m27-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m27-chip cv-m27-chip-alt">${esc(h.texto)}</span>`).join("");
+  $("#cv-m27-sec-blandas").hidden = !estado.blandas.length;
+
+  $("#cv-m27-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m27-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m27-idioma"><span>${esc(i.nombre)}</span><span class="cv-m27-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+  $("#cv-m27-sec-idiomas").hidden = !estado.idiomas.length;
+
+  $("#cv-m27-tit-logros").textContent = t("logros");
+  $("#cv-m27-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  $("#cv-m27-sec-logros").hidden = !estado.logros.length;
+
+  $("#cv-m27-tit-referencias").textContent = t("referencias");
+  $("#cv-m27-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m27-ref">
+      <strong>${esc(r.nombre)}</strong>
+      <span>${esc(r.rol)}</span>
+      ${r.email ? `<span>${esc(r.email)}</span>` : ""}
+      ${r.linkedin ? `<a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m27-sec-referencias").hidden = !estado.referencias.length;
+}
+
+function asegurarEsqueletoModelo28() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo28") return;
+  pagina.dataset.esqueleto = "modelo28";
+  pagina.innerHTML = `
+    <div class="cv-m28-shell">
+      <header class="cv-m28-header">
+        <div class="cv-m28-vinilo">
+          <img class="cv-m28-foto" id="cv-m28-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-m28-foto-placeholder" id="cv-m28-foto-placeholder">🙂</div>
+        </div>
+        <div class="cv-m28-id">
+          <h1 class="cv-m28-nombre"><span id="cv-m28-nombre"></span> <span id="cv-m28-apellido"></span></h1>
+          <p class="cv-m28-puesto" id="cv-m28-puesto"></p>
+          <p class="cv-m28-subtitulo" id="cv-m28-subtitulo"></p>
+          <div class="cv-m28-contacto" id="cv-m28-contacto"></div>
+        </div>
+      </header>
+      <div class="cv-m28-eq" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="cv-m28-body">
+        <section class="cv-m28-sec" id="cv-m28-sec-perfil">
+          <h2 class="cv-m28-titulo" id="cv-m28-tit-perfil"></h2>
+          <p class="cv-m28-perfil" id="cv-m28-perfil"></p>
+        </section>
+        <section class="cv-m28-sec" id="cv-m28-sec-experiencia">
+          <h2 class="cv-m28-titulo" id="cv-m28-tit-experiencia"></h2>
+          <ol class="cv-m28-tracklist" id="cv-m28-experiencia"></ol>
+        </section>
+        <div class="cv-m28-grid2">
+          <section class="cv-m28-sec" id="cv-m28-sec-educacion">
+            <h2 class="cv-m28-titulo" id="cv-m28-tit-educacion"></h2>
+            <div id="cv-m28-educacion"></div>
+          </section>
+          <section class="cv-m28-sec" id="cv-m28-sec-certificaciones">
+            <h2 class="cv-m28-titulo" id="cv-m28-tit-certificaciones"></h2>
+            <div id="cv-m28-certificaciones"></div>
+          </section>
+        </div>
+        <div class="cv-m28-grid2">
+          <section class="cv-m28-sec" id="cv-m28-sec-habilidades">
+            <h2 class="cv-m28-titulo" id="cv-m28-tit-habilidades"></h2>
+            <div class="cv-m28-chips" id="cv-m28-habilidades"></div>
+          </section>
+          <section class="cv-m28-sec" id="cv-m28-sec-blandas">
+            <h2 class="cv-m28-titulo" id="cv-m28-tit-blandas"></h2>
+            <div class="cv-m28-chips" id="cv-m28-blandas"></div>
+          </section>
+        </div>
+        <div class="cv-m28-grid2">
+          <section class="cv-m28-sec" id="cv-m28-sec-idiomas">
+            <h2 class="cv-m28-titulo" id="cv-m28-tit-idiomas"></h2>
+            <div id="cv-m28-idiomas"></div>
+          </section>
+          <section class="cv-m28-sec" id="cv-m28-sec-logros">
+            <h2 class="cv-m28-titulo" id="cv-m28-tit-logros"></h2>
+            <ul class="cv-m28-logros" id="cv-m28-logros"></ul>
+          </section>
+        </div>
+        <section class="cv-m28-sec" id="cv-m28-sec-referencias">
+          <h2 class="cv-m28-titulo" id="cv-m28-tit-referencias"></h2>
+          <div class="cv-m28-refs" id="cv-m28-referencias"></div>
+        </section>
+      </div>
+    </div>
+  `;
+}
+
+function m28Herramientas(herramientas) {
+  if (!herramientas || !herramientas.length) return "";
+  const grupos = {};
+  herramientas.forEach(h => { (grupos[h.etiqueta || ""] ||= []).push(h.valor); });
+  return `<div class="cv-m28-job-tools">${Object.entries(grupos).map(([etq, vals]) =>
+    `<span class="cv-m28-tool-grupo">${etq ? `<strong>${esc(etq)}:</strong> ` : ""}${vals.map(esc).join(", ")}</span>`
+  ).join("")}</div>`;
+}
+
+function renderModelo28() {
+  asegurarEsqueletoModelo28();
+
+  $("#cv-m28-nombre").textContent = estado.nombre;
+  $("#cv-m28-apellido").textContent = estado.apellido;
+  $("#cv-m28-puesto").textContent = estado.puesto;
+  $("#cv-m28-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m28-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m28-foto"), placeholder = $("#cv-m28-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m28-contacto").innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m28-contacto-item"><span class="cv-m28-ico">${iconoDe(c.tipo)}</span><span>${contactoValorHTML(c)}</span></div>`
+  ).join("");
+
+  $("#cv-m28-tit-perfil").textContent = t("perfil");
+  $("#cv-m28-perfil").innerHTML = escPárrafo(estado.perfil || "");
+  $("#cv-m28-sec-perfil").hidden = !estado.perfil;
+
+  $("#cv-m28-tit-experiencia").textContent = t("experiencia");
+  $("#cv-m28-experiencia").innerHTML = estado.experiencia.map((x, idx) => `
+    <li class="cv-m28-track">
+      <span class="cv-m28-track-num">${String(idx + 1).padStart(2, "0")}</span>
+      <div class="cv-m28-track-body">
+        <div class="cv-m28-track-head">
+          <div>
+            <h3 class="cv-m28-track-title">${esc(x.rol)}</h3>
+            <div class="cv-m28-track-artist">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+          </div>
+          <div class="cv-m28-track-dur">${esc(x.fecha)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m28-track-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets && x.bullets.length ? `<ul class="cv-m28-track-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${m28Herramientas(x.herramientas)}
+      </div>
+    </li>
+  `).join("");
+  $("#cv-m28-sec-experiencia").hidden = !estado.experiencia.length;
+
+  $("#cv-m28-tit-educacion").textContent = t("educacion");
+  $("#cv-m28-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m28-edu">
+      <div class="cv-m28-edu-head"><strong>${esc(e.institucion)}</strong><span class="cv-m28-edu-fecha">${esc(e.fecha)}</span></div>
+      ${e.bullets && e.bullets.length ? `<ul>${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m28-sec-educacion").hidden = !estado.educacion.length;
+
+  $("#cv-m28-tit-certificaciones").textContent = t("certificaciones");
+  $("#cv-m28-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m28-cert"><strong>${esc(c.titulo)}</strong>${c.subtitulo ? `<span>${esc(c.subtitulo)}</span>` : ""}</div>`
+  ).join("");
+  $("#cv-m28-sec-certificaciones").hidden = !estado.certificaciones.length;
+
+  $("#cv-m28-tit-habilidades").textContent = t("habilidades");
+  $("#cv-m28-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m28-chip">${esc(h.texto)}</span>`).join("");
+  $("#cv-m28-sec-habilidades").hidden = !estado.habilidades.length;
+
+  $("#cv-m28-tit-blandas").textContent = t("blandas");
+  $("#cv-m28-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m28-chip cv-m28-chip-alt">${esc(h.texto)}</span>`).join("");
+  $("#cv-m28-sec-blandas").hidden = !estado.blandas.length;
+
+  $("#cv-m28-tit-idiomas").textContent = t("idiomas");
+  $("#cv-m28-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m28-idioma"><span>${esc(i.nombre)}</span><span class="cv-m28-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+  $("#cv-m28-sec-idiomas").hidden = !estado.idiomas.length;
+
+  $("#cv-m28-tit-logros").textContent = t("logros");
+  $("#cv-m28-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  $("#cv-m28-sec-logros").hidden = !estado.logros.length;
+
+  $("#cv-m28-tit-referencias").textContent = t("referencias");
+  $("#cv-m28-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m28-ref">
+      <strong>${esc(r.nombre)}</strong>
+      <span>${esc(r.rol)}</span>
+      ${r.email ? `<span>${esc(r.email)}</span>` : ""}
+      ${r.linkedin ? `<a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}
+    </div>
+  `).join("");
+  $("#cv-m28-sec-referencias").hidden = !estado.referencias.length;
+}
+
+// ---- Modelos 29-32 ----
+function asegurarEsqueletoModelo29() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo29") return;
+  pagina.dataset.esqueleto = "modelo29";
+  pagina.innerHTML = `
+    <div class="cv-m29-banner">
+      <div class="cv-m29-foto-marco">
+        <img class="cv-m29-foto" id="cv-m29-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m29-foto-placeholder" id="cv-m29-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m29-banner-texto">
+        <h1 class="cv-m29-nombre"><span id="cv-m29-nombre"></span> <span id="cv-m29-apellido" class="cv-m29-apellido"></span></h1>
+        <p class="cv-m29-puesto" id="cv-m29-puesto"></p>
+        <p class="cv-m29-subtitulo" id="cv-m29-subtitulo"></p>
+      </div>
+    </div>
+    <div class="cv-m29-contacto" id="cv-m29-contacto"></div>
+    <div class="cv-m29-cuerpo">
+      <section class="cv-m29-seccion" id="cv-m29-sec-perfil">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-perfil"></h2>
+        <p class="cv-m29-perfil" id="cv-m29-perfil"></p>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-habilidades">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-habilidades"></h2>
+        <div class="cv-m29-stats-grid" id="cv-m29-habilidades"></div>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-blandas">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-blandas"></h2>
+        <div class="cv-m29-tags" id="cv-m29-blandas"></div>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-idiomas">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-idiomas"></h2>
+        <div class="cv-m29-idiomas" id="cv-m29-idiomas"></div>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-logros">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-logros"></h2>
+        <ul class="cv-m29-logros" id="cv-m29-logros"></ul>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-experiencia">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-experiencia"></h2>
+        <div class="cv-m29-timeline" id="cv-m29-experiencia"></div>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-educacion">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-educacion"></h2>
+        <div id="cv-m29-educacion"></div>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-certificaciones">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-certificaciones"></h2>
+        <div id="cv-m29-certificaciones"></div>
+      </section>
+      <section class="cv-m29-seccion" id="cv-m29-sec-referencias">
+        <h2 class="cv-m29-titulo" id="cv-m29-titulo-referencias"></h2>
+        <div id="cv-m29-referencias"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo29() {
+  asegurarEsqueletoModelo29();
+
+  $("#cv-m29-nombre").textContent = estado.nombre;
+  $("#cv-m29-apellido").textContent = estado.apellido;
+  $("#cv-m29-puesto").textContent = estado.puesto;
+  $("#cv-m29-subtitulo").textContent = estado.subtitulo;
+  $("#cv-m29-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m29-foto"), placeholder = $("#cv-m29-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m29-titulo-perfil").textContent = t("perfil");
+  $("#cv-m29-titulo-habilidades").textContent = t("habilidades");
+  $("#cv-m29-titulo-blandas").textContent = t("blandas");
+  $("#cv-m29-titulo-idiomas").textContent = t("idiomas");
+  $("#cv-m29-titulo-logros").textContent = t("logros");
+  $("#cv-m29-titulo-experiencia").textContent = t("experiencia");
+  $("#cv-m29-titulo-educacion").textContent = t("educacion");
+  $("#cv-m29-titulo-certificaciones").textContent = t("certificaciones");
+  $("#cv-m29-titulo-referencias").textContent = t("referencias");
+
+  $("#cv-m29-sec-perfil").hidden = !estado.perfil;
+  $("#cv-m29-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  const contacto = $("#cv-m29-contacto");
+  $("#cv-m29-contacto").hidden = !estado.contacto.length;
+  contacto.innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m29-contacto-item">${iconoDe(c.tipo)} ${contactoValorHTML(c)}</div>`
+  ).join("");
+
+  $("#cv-m29-sec-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m29-habilidades").innerHTML = estado.habilidades.map(h =>
+    `<div class="cv-m29-stat-card">${esc(h.texto)}</div>`
+  ).join("");
+
+  $("#cv-m29-sec-blandas").hidden = !estado.blandas.length;
+  $("#cv-m29-blandas").innerHTML = estado.blandas.map(b =>
+    `<span class="cv-m29-tag">${esc(b.texto)}</span>`
+  ).join("");
+
+  $("#cv-m29-sec-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m29-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m29-idioma"><span>${esc(i.nombre)}</span><span class="cv-m29-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+
+  $("#cv-m29-sec-logros").hidden = !estado.logros.length;
+  $("#cv-m29-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m29-sec-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m29-experiencia").innerHTML = estado.experiencia.map(x => {
+    const bullets = x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    const herramientas = x.herramientas.length
+      ? `<div class="cv-m29-tools">${x.herramientas.map(h => `<span class="cv-m29-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>`
+      : "";
+    return `
+      <div class="cv-m29-job">
+        <div class="cv-m29-job-head">
+          <div class="cv-m29-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-m29-enlace-empresa")}${ubicacionSufijo(x)}</div>
+          <div class="cv-m29-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        <div class="cv-m29-job-rol">${esc(x.rol)}</div>
+        ${x.descripcion ? `<p class="cv-m29-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${bullets ? `<ul class="cv-m29-job-bullets">${bullets}</ul>` : ""}
+        ${herramientas}
+      </div>`;
+  }).join("");
+
+  $("#cv-m29-sec-educacion").hidden = !estado.educacion.length;
+  $("#cv-m29-educacion").innerHTML = estado.educacion.map(e => {
+    const bullets = e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    return `
+      <div class="cv-m29-edu">
+        <div class="cv-m29-edu-head"><span class="cv-m29-edu-inst">${esc(e.institucion)}</span><span class="cv-m29-edu-fecha">${esc(e.fecha)}</span></div>
+        ${bullets ? `<ul class="cv-m29-edu-bullets">${bullets}</ul>` : ""}
+      </div>`;
+  }).join("");
+
+  $("#cv-m29-sec-certificaciones").hidden = !estado.certificaciones.length;
+  $("#cv-m29-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m29-cert"><div class="cv-m29-cert-titulo">${esc(c.titulo)}</div><div class="cv-m29-cert-sub">${esc(c.subtitulo)}</div></div>`
+  ).join("");
+
+  $("#cv-m29-sec-referencias").hidden = !estado.referencias.length;
+  $("#cv-m29-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m29-ref">
+      <div class="cv-m29-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m29-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m29-ref-linea">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m29-ref-linea"><a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></div>` : ""}
+    </div>`).join("");
+}
+
+function asegurarEsqueletoModelo30() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo30") return;
+  pagina.dataset.esqueleto = "modelo30";
+  pagina.innerHTML = `
+    <div class="cv-m30-letterhead">
+      <div class="cv-m30-foto-marco">
+        <img class="cv-m30-foto" id="cv-m30-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m30-foto-placeholder" id="cv-m30-foto-placeholder">🙂</div>
+      </div>
+      <h1 class="cv-m30-nombre"><span id="cv-m30-nombre"></span> <span id="cv-m30-apellido"></span></h1>
+      <p class="cv-m30-puesto" id="cv-m30-puesto"></p>
+      <p class="cv-m30-subtitulo" id="cv-m30-subtitulo"></p>
+      <div class="cv-m30-regla"></div>
+      <div class="cv-m30-contacto" id="cv-m30-contacto"></div>
+    </div>
+    <div class="cv-m30-cuerpo" id="cv-m30-cuerpo">
+      <section class="cv-m30-articulo" id="cv-m30-sec-perfil">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-perfil"></h2>
+        <p class="cv-m30-perfil" id="cv-m30-perfil"></p>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-habilidades">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-habilidades"></h2>
+        <ul class="cv-m30-lista-skills" id="cv-m30-habilidades"></ul>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-blandas">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-blandas"></h2>
+        <ul class="cv-m30-lista-skills" id="cv-m30-blandas"></ul>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-idiomas">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-idiomas"></h2>
+        <div id="cv-m30-idiomas"></div>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-experiencia">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-experiencia"></h2>
+        <div id="cv-m30-experiencia"></div>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-educacion">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-educacion"></h2>
+        <div id="cv-m30-educacion"></div>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-certificaciones">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-certificaciones"></h2>
+        <div id="cv-m30-certificaciones"></div>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-logros">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-logros"></h2>
+        <ol class="cv-m30-logros" id="cv-m30-logros"></ol>
+      </section>
+      <section class="cv-m30-articulo" id="cv-m30-sec-referencias">
+        <h2 class="cv-m30-titulo" id="cv-m30-titulo-referencias"></h2>
+        <div class="cv-m30-referencias-grid" id="cv-m30-referencias"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo30() {
+  asegurarEsqueletoModelo30();
+
+  $("#cv-m30-nombre").textContent = estado.nombre;
+  $("#cv-m30-apellido").textContent = estado.apellido;
+  $("#cv-m30-puesto").textContent = estado.puesto;
+  $("#cv-m30-subtitulo").textContent = estado.subtitulo;
+  $("#cv-m30-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m30-foto"), placeholder = $("#cv-m30-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m30-titulo-perfil").textContent = t("perfil");
+  $("#cv-m30-titulo-habilidades").textContent = t("habilidades");
+  $("#cv-m30-titulo-blandas").textContent = t("blandas");
+  $("#cv-m30-titulo-idiomas").textContent = t("idiomas");
+  $("#cv-m30-titulo-experiencia").textContent = t("experiencia");
+  $("#cv-m30-titulo-educacion").textContent = t("educacion");
+  $("#cv-m30-titulo-certificaciones").textContent = t("certificaciones");
+  $("#cv-m30-titulo-logros").textContent = t("logros");
+  $("#cv-m30-titulo-referencias").textContent = t("referencias");
+
+  $("#cv-m30-sec-perfil").hidden = !estado.perfil;
+  $("#cv-m30-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  const contacto = $("#cv-m30-contacto");
+  contacto.hidden = !estado.contacto.length;
+  contacto.innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m30-contacto-item">${iconoDe(c.tipo)} ${contactoValorHTML(c)}</div>`
+  ).join("");
+
+  $("#cv-m30-sec-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m30-habilidades").innerHTML = estado.habilidades.map(h => `<li>${esc(h.texto)}</li>`).join("");
+
+  $("#cv-m30-sec-blandas").hidden = !estado.blandas.length;
+  $("#cv-m30-blandas").innerHTML = estado.blandas.map(b => `<li>${esc(b.texto)}</li>`).join("");
+
+  $("#cv-m30-sec-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m30-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m30-idioma"><span>${esc(i.nombre)}</span><span class="cv-m30-idioma-leader"></span><span class="cv-m30-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+
+  $("#cv-m30-sec-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m30-experiencia").innerHTML = estado.experiencia.map(x => {
+    const bullets = x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    const herramientas = x.herramientas.length
+      ? `<div class="cv-m30-tools">${x.herramientas.map(h => `<strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}`).join(" &nbsp;•&nbsp; ")}</div>`
+      : "";
+    return `
+      <div class="cv-m30-job">
+        <div class="cv-m30-job-head">
+          <span class="cv-m30-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-m30-enlace-empresa")}${ubicacionSufijo(x)}</span>
+          <span class="cv-m30-job-fecha">${esc(x.fecha)}</span>
+        </div>
+        <div class="cv-m30-job-rol">${esc(x.rol)}</div>
+        ${x.descripcion ? `<p class="cv-m30-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${bullets ? `<ol class="cv-m30-job-bullets">${bullets}</ol>` : ""}
+        ${herramientas}
+      </div>`;
+  }).join("");
+
+  $("#cv-m30-sec-educacion").hidden = !estado.educacion.length;
+  $("#cv-m30-educacion").innerHTML = estado.educacion.map(e => {
+    const bullets = e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    return `
+      <div class="cv-m30-edu">
+        <div class="cv-m30-edu-head"><span>${esc(e.institucion)}</span><span class="cv-m30-edu-fecha">${esc(e.fecha)}</span></div>
+        ${bullets ? `<ol class="cv-m30-edu-bullets">${bullets}</ol>` : ""}
+      </div>`;
+  }).join("");
+
+  $("#cv-m30-sec-certificaciones").hidden = !estado.certificaciones.length;
+  $("#cv-m30-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m30-cert"><span class="cv-m30-cert-titulo">${esc(c.titulo)}</span><span class="cv-m30-cert-sub">${esc(c.subtitulo)}</span></div>`
+  ).join("");
+
+  $("#cv-m30-sec-logros").hidden = !estado.logros.length;
+  $("#cv-m30-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m30-sec-referencias").hidden = !estado.referencias.length;
+  $("#cv-m30-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m30-ref">
+      <div class="cv-m30-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m30-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m30-ref-linea">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m30-ref-linea"><a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></div>` : ""}
+    </div>`).join("");
+}
+
+function asegurarEsqueletoModelo31() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo31") return;
+  pagina.dataset.esqueleto = "modelo31";
+  pagina.innerHTML = `
+    <aside class="cv-m31-pizarra">
+      <div class="cv-m31-foto-marco">
+        <img class="cv-m31-foto" id="cv-m31-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m31-foto-placeholder" id="cv-m31-foto-placeholder">🙂</div>
+      </div>
+      <h1 class="cv-m31-nombre"><span id="cv-m31-nombre"></span><br><span id="cv-m31-apellido"></span></h1>
+      <p class="cv-m31-puesto" id="cv-m31-puesto"></p>
+      <p class="cv-m31-subtitulo" id="cv-m31-subtitulo"></p>
+      <div class="cv-m31-pizarra-sec" id="cv-m31-sec-contacto">
+        <h2 class="cv-m31-pizarra-titulo" id="cv-m31-titulo-contacto"></h2>
+        <div id="cv-m31-contacto"></div>
+      </div>
+      <div class="cv-m31-pizarra-sec" id="cv-m31-sec-habilidades">
+        <h2 class="cv-m31-pizarra-titulo" id="cv-m31-titulo-habilidades"></h2>
+        <ul class="cv-m31-chalk-list" id="cv-m31-habilidades"></ul>
+      </div>
+      <div class="cv-m31-pizarra-sec" id="cv-m31-sec-blandas">
+        <h2 class="cv-m31-pizarra-titulo" id="cv-m31-titulo-blandas"></h2>
+        <ul class="cv-m31-chalk-list" id="cv-m31-blandas"></ul>
+      </div>
+      <div class="cv-m31-pizarra-sec" id="cv-m31-sec-idiomas">
+        <h2 class="cv-m31-pizarra-titulo" id="cv-m31-titulo-idiomas"></h2>
+        <div id="cv-m31-idiomas"></div>
+      </div>
+      <div class="cv-m31-pizarra-sec" id="cv-m31-sec-certificaciones">
+        <h2 class="cv-m31-pizarra-titulo" id="cv-m31-titulo-certificaciones"></h2>
+        <div id="cv-m31-certificaciones"></div>
+      </div>
+    </aside>
+    <main class="cv-m31-cuaderno">
+      <section class="cv-m31-leccion" id="cv-m31-sec-perfil">
+        <h2 class="cv-m31-leccion-titulo" id="cv-m31-titulo-perfil"></h2>
+        <p class="cv-m31-perfil" id="cv-m31-perfil"></p>
+      </section>
+      <section class="cv-m31-leccion" id="cv-m31-sec-experiencia">
+        <h2 class="cv-m31-leccion-titulo" id="cv-m31-titulo-experiencia"></h2>
+        <div id="cv-m31-experiencia"></div>
+      </section>
+      <section class="cv-m31-leccion" id="cv-m31-sec-educacion">
+        <h2 class="cv-m31-leccion-titulo" id="cv-m31-titulo-educacion"></h2>
+        <div id="cv-m31-educacion"></div>
+      </section>
+      <section class="cv-m31-leccion" id="cv-m31-sec-logros">
+        <h2 class="cv-m31-leccion-titulo" id="cv-m31-titulo-logros"></h2>
+        <ul class="cv-m31-logros" id="cv-m31-logros"></ul>
+      </section>
+      <section class="cv-m31-leccion" id="cv-m31-sec-referencias">
+        <h2 class="cv-m31-leccion-titulo" id="cv-m31-titulo-referencias"></h2>
+        <div class="cv-m31-referencias-grid" id="cv-m31-referencias"></div>
+      </section>
+    </main>
+  `;
+}
+
+function renderModelo31() {
+  asegurarEsqueletoModelo31();
+
+  $("#cv-m31-nombre").textContent = estado.nombre;
+  $("#cv-m31-apellido").textContent = estado.apellido;
+  $("#cv-m31-puesto").textContent = estado.puesto;
+  $("#cv-m31-subtitulo").textContent = estado.subtitulo;
+  $("#cv-m31-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m31-foto"), placeholder = $("#cv-m31-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m31-titulo-contacto").textContent = t("contacto");
+  $("#cv-m31-titulo-habilidades").textContent = t("habilidades");
+  $("#cv-m31-titulo-blandas").textContent = t("blandas");
+  $("#cv-m31-titulo-idiomas").textContent = t("idiomas");
+  $("#cv-m31-titulo-certificaciones").textContent = t("certificaciones");
+  $("#cv-m31-titulo-perfil").textContent = t("perfil");
+  $("#cv-m31-titulo-experiencia").textContent = t("experiencia");
+  $("#cv-m31-titulo-educacion").textContent = t("educacion");
+  $("#cv-m31-titulo-logros").textContent = t("logros");
+  $("#cv-m31-titulo-referencias").textContent = t("referencias");
+
+  $("#cv-m31-sec-contacto").hidden = !estado.contacto.length;
+  $("#cv-m31-contacto").innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m31-contacto-item">${iconoDe(c.tipo)} ${contactoValorHTML(c)}</div>`
+  ).join("");
+
+  $("#cv-m31-sec-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m31-habilidades").innerHTML = estado.habilidades.map(h => `<li>${esc(h.texto)}</li>`).join("");
+
+  $("#cv-m31-sec-blandas").hidden = !estado.blandas.length;
+  $("#cv-m31-blandas").innerHTML = estado.blandas.map(b => `<li>${esc(b.texto)}</li>`).join("");
+
+  $("#cv-m31-sec-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m31-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m31-idioma"><span>${esc(i.nombre)}</span><span class="cv-m31-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+
+  $("#cv-m31-sec-certificaciones").hidden = !estado.certificaciones.length;
+  $("#cv-m31-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m31-cert"><div class="cv-m31-cert-titulo">${esc(c.titulo)}</div><div class="cv-m31-cert-sub">${esc(c.subtitulo)}</div></div>`
+  ).join("");
+
+  $("#cv-m31-sec-perfil").hidden = !estado.perfil;
+  $("#cv-m31-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m31-sec-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m31-experiencia").innerHTML = estado.experiencia.map(x => {
+    const bullets = x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    const herramientas = x.herramientas.length
+      ? `<div class="cv-m31-tools">${x.herramientas.map(h => `<span class="cv-m31-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>`
+      : "";
+    return `
+      <div class="cv-m31-job">
+        <div class="cv-m31-job-head">
+          <div class="cv-m31-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-m31-enlace-empresa")}${ubicacionSufijo(x)}</div>
+          <div class="cv-m31-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        <div class="cv-m31-job-rol">${esc(x.rol)}</div>
+        ${x.descripcion ? `<p class="cv-m31-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${bullets ? `<ul class="cv-m31-job-bullets">${bullets}</ul>` : ""}
+        ${herramientas}
+      </div>`;
+  }).join("");
+
+  $("#cv-m31-sec-educacion").hidden = !estado.educacion.length;
+  $("#cv-m31-educacion").innerHTML = estado.educacion.map(e => {
+    const bullets = e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    return `
+      <div class="cv-m31-edu">
+        <div class="cv-m31-edu-body">
+          <div class="cv-m31-edu-head"><span>${esc(e.institucion)}</span><span class="cv-m31-edu-fecha">${esc(e.fecha)}</span></div>
+          ${bullets ? `<ul class="cv-m31-edu-bullets">${bullets}</ul>` : ""}
+        </div>
+      </div>`;
+  }).join("");
+
+  $("#cv-m31-sec-logros").hidden = !estado.logros.length;
+  $("#cv-m31-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m31-sec-referencias").hidden = !estado.referencias.length;
+  $("#cv-m31-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m31-ref">
+      <div class="cv-m31-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m31-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m31-ref-linea">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m31-ref-linea"><a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></div>` : ""}
+    </div>`).join("");
+}
+
+function asegurarEsqueletoModelo32() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo32") return;
+  pagina.dataset.esqueleto = "modelo32";
+  pagina.innerHTML = `
+    <header class="cv-m32-banner">
+      <div class="cv-m32-compass"></div>
+      <div class="cv-m32-foto-marco">
+        <div class="cv-m32-foto-inner">
+          <img class="cv-m32-foto" id="cv-m32-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-m32-foto-placeholder" id="cv-m32-foto-placeholder">🙂</div>
+        </div>
+      </div>
+      <div class="cv-m32-banner-texto">
+        <h1 class="cv-m32-nombre"><span id="cv-m32-nombre"></span> <span id="cv-m32-apellido"></span></h1>
+        <p class="cv-m32-puesto" id="cv-m32-puesto"></p>
+        <p class="cv-m32-subtitulo" id="cv-m32-subtitulo"></p>
+      </div>
+    </header>
+    <div class="cv-m32-cuerpo">
+      <main class="cv-m32-principal">
+        <section class="cv-m32-seccion" id="cv-m32-sec-perfil">
+          <h2 class="cv-m32-titulo" id="cv-m32-titulo-perfil"></h2>
+          <p class="cv-m32-perfil" id="cv-m32-perfil"></p>
+        </section>
+        <section class="cv-m32-seccion" id="cv-m32-sec-experiencia">
+          <h2 class="cv-m32-titulo" id="cv-m32-titulo-experiencia"></h2>
+          <div class="cv-m32-ruta" id="cv-m32-experiencia"></div>
+        </section>
+        <section class="cv-m32-seccion" id="cv-m32-sec-educacion">
+          <h2 class="cv-m32-titulo" id="cv-m32-titulo-educacion"></h2>
+          <div id="cv-m32-educacion"></div>
+        </section>
+        <section class="cv-m32-seccion" id="cv-m32-sec-logros">
+          <h2 class="cv-m32-titulo" id="cv-m32-titulo-logros"></h2>
+          <ul class="cv-m32-logros" id="cv-m32-logros"></ul>
+        </section>
+      </main>
+      <aside class="cv-m32-panel">
+        <div class="cv-m32-panel-sec" id="cv-m32-sec-contacto">
+          <h2 class="cv-m32-panel-titulo" id="cv-m32-titulo-contacto"></h2>
+          <div id="cv-m32-contacto"></div>
+        </div>
+        <div class="cv-m32-panel-sec" id="cv-m32-sec-habilidades">
+          <h2 class="cv-m32-panel-titulo" id="cv-m32-titulo-habilidades"></h2>
+          <div class="cv-m32-gauges" id="cv-m32-habilidades"></div>
+        </div>
+        <div class="cv-m32-panel-sec" id="cv-m32-sec-blandas">
+          <h2 class="cv-m32-panel-titulo" id="cv-m32-titulo-blandas"></h2>
+          <div class="cv-m32-tags" id="cv-m32-blandas"></div>
+        </div>
+        <div class="cv-m32-panel-sec" id="cv-m32-sec-idiomas">
+          <h2 class="cv-m32-panel-titulo" id="cv-m32-titulo-idiomas"></h2>
+          <div id="cv-m32-idiomas"></div>
+        </div>
+        <div class="cv-m32-panel-sec" id="cv-m32-sec-certificaciones">
+          <h2 class="cv-m32-panel-titulo" id="cv-m32-titulo-certificaciones"></h2>
+          <div id="cv-m32-certificaciones"></div>
+        </div>
+        <div class="cv-m32-panel-sec" id="cv-m32-sec-referencias">
+          <h2 class="cv-m32-panel-titulo" id="cv-m32-titulo-referencias"></h2>
+          <div id="cv-m32-referencias"></div>
+        </div>
+      </aside>
+    </div>
+  `;
+}
+
+function renderModelo32() {
+  asegurarEsqueletoModelo32();
+
+  $("#cv-m32-nombre").textContent = estado.nombre;
+  $("#cv-m32-apellido").textContent = estado.apellido;
+  $("#cv-m32-puesto").textContent = estado.puesto;
+  $("#cv-m32-subtitulo").textContent = estado.subtitulo;
+  $("#cv-m32-subtitulo").hidden = !estado.subtitulo;
+
+  const foto = $("#cv-m32-foto"), placeholder = $("#cv-m32-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m32-titulo-perfil").textContent = t("perfil");
+  $("#cv-m32-titulo-experiencia").textContent = t("experiencia");
+  $("#cv-m32-titulo-educacion").textContent = t("educacion");
+  $("#cv-m32-titulo-logros").textContent = t("logros");
+  $("#cv-m32-titulo-contacto").textContent = t("contacto");
+  $("#cv-m32-titulo-habilidades").textContent = t("habilidades");
+  $("#cv-m32-titulo-blandas").textContent = t("blandas");
+  $("#cv-m32-titulo-idiomas").textContent = t("idiomas");
+  $("#cv-m32-titulo-certificaciones").textContent = t("certificaciones");
+  $("#cv-m32-titulo-referencias").textContent = t("referencias");
+
+  $("#cv-m32-sec-perfil").hidden = !estado.perfil;
+  $("#cv-m32-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m32-sec-contacto").hidden = !estado.contacto.length;
+  $("#cv-m32-contacto").innerHTML = estado.contacto.map(c =>
+    `<div class="cv-m32-contacto-item">${iconoDe(c.tipo)} ${contactoValorHTML(c)}</div>`
+  ).join("");
+
+  $("#cv-m32-sec-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m32-habilidades").innerHTML = estado.habilidades.map(h =>
+    `<div class="cv-m32-gauge">${esc(h.texto)}</div>`
+  ).join("");
+
+  $("#cv-m32-sec-blandas").hidden = !estado.blandas.length;
+  $("#cv-m32-blandas").innerHTML = estado.blandas.map(b =>
+    `<span class="cv-m32-tag">${esc(b.texto)}</span>`
+  ).join("");
+
+  $("#cv-m32-sec-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m32-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<div class="cv-m32-idioma"><span>${esc(i.nombre)}</span><span class="cv-m32-idioma-nivel">${esc(i.nivel)}</span></div>`
+  ).join("");
+
+  $("#cv-m32-sec-certificaciones").hidden = !estado.certificaciones.length;
+  $("#cv-m32-certificaciones").innerHTML = estado.certificaciones.map(c =>
+    `<div class="cv-m32-cert"><div class="cv-m32-cert-titulo">${esc(c.titulo)}</div><div class="cv-m32-cert-sub">${esc(c.subtitulo)}</div></div>`
+  ).join("");
+
+  $("#cv-m32-sec-referencias").hidden = !estado.referencias.length;
+  $("#cv-m32-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m32-ref">
+      <div class="cv-m32-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m32-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m32-ref-linea">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m32-ref-linea"><a href="${esc(r.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></div>` : ""}
+    </div>`).join("");
+
+  $("#cv-m32-sec-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m32-experiencia").innerHTML = estado.experiencia.map(x => {
+    const bullets = x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    const herramientas = x.herramientas.length
+      ? `<div class="cv-m32-tools">${x.herramientas.map(h => `<span class="cv-m32-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>`
+      : "";
+    return `
+      <div class="cv-m32-job">
+        <div class="cv-m32-job-head">
+          <div class="cv-m32-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-m32-enlace-empresa")}${ubicacionSufijo(x)}</div>
+          <div class="cv-m32-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        <div class="cv-m32-job-rol">${esc(x.rol)}</div>
+        ${x.descripcion ? `<p class="cv-m32-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${bullets ? `<ul class="cv-m32-job-bullets">${bullets}</ul>` : ""}
+        ${herramientas}
+      </div>`;
+  }).join("");
+
+  $("#cv-m32-sec-educacion").hidden = !estado.educacion.length;
+  $("#cv-m32-educacion").innerHTML = estado.educacion.map(e => {
+    const bullets = e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("");
+    return `
+      <div class="cv-m32-edu">
+        <div class="cv-m32-edu-head"><span>${esc(e.institucion)}</span><span class="cv-m32-edu-fecha">${esc(e.fecha)}</span></div>
+        ${bullets ? `<ul class="cv-m32-edu-bullets">${bullets}</ul>` : ""}
+      </div>`;
+  }).join("");
+
+  $("#cv-m32-sec-logros").hidden = !estado.logros.length;
+  $("#cv-m32-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+}
+
+// ---- Modelos 33-36 ----
+function asegurarEsqueletoModelo33() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo33") return;
+  pagina.dataset.esqueleto = "modelo33";
+  pagina.innerHTML = `
+    <div class="cv-m33-sidebar">
+      <div class="cv-m33-foto-marco">
+        <img class="cv-m33-foto" id="cv-m33-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m33-foto-placeholder" id="cv-m33-foto-placeholder">🙂</div>
+      </div>
+      <h1 class="cv-m33-nombre" id="cv-m33-nombre"></h1>
+      <p class="cv-m33-puesto" id="cv-m33-puesto"></p>
+      <p class="cv-m33-subtitulo" id="cv-m33-subtitulo"></p>
+
+      <section class="cv-m33-side-sec" id="cv-m33-contacto-sec" hidden>
+        <h2 class="cv-m33-side-titulo" id="cv-m33-titulo-contacto"></h2>
+        <ul class="cv-m33-contacto" id="cv-m33-contacto-lista"></ul>
+      </section>
+
+      <section class="cv-m33-side-sec" id="cv-m33-hab-sec" hidden>
+        <h2 class="cv-m33-side-titulo" id="cv-m33-titulo-hab"></h2>
+        <div class="cv-m33-pills" id="cv-m33-hab-lista"></div>
+      </section>
+
+      <section class="cv-m33-side-sec" id="cv-m33-blandas-sec" hidden>
+        <h2 class="cv-m33-side-titulo" id="cv-m33-titulo-blandas"></h2>
+        <div class="cv-m33-pills" id="cv-m33-blandas-lista"></div>
+      </section>
+
+      <section class="cv-m33-side-sec" id="cv-m33-idiomas-sec" hidden>
+        <h2 class="cv-m33-side-titulo" id="cv-m33-titulo-idiomas"></h2>
+        <div id="cv-m33-idiomas-lista"></div>
+      </section>
+
+      <section class="cv-m33-side-sec" id="cv-m33-logros-sec" hidden>
+        <h2 class="cv-m33-side-titulo" id="cv-m33-titulo-logros"></h2>
+        <ul class="cv-m33-logros" id="cv-m33-logros-lista"></ul>
+      </section>
+    </div>
+
+    <div class="cv-m33-main">
+      <section class="cv-m33-seccion" id="cv-m33-perfil-sec" hidden>
+        <h2 class="cv-m33-titulo" id="cv-m33-titulo-perfil"></h2>
+        <p class="cv-m33-perfil-texto" id="cv-m33-perfil-texto"></p>
+      </section>
+
+      <section class="cv-m33-seccion" id="cv-m33-exp-sec" hidden>
+        <h2 class="cv-m33-titulo" id="cv-m33-titulo-exp"></h2>
+        <div id="cv-m33-exp-lista"></div>
+      </section>
+
+      <section class="cv-m33-seccion" id="cv-m33-edu-sec" hidden>
+        <h2 class="cv-m33-titulo" id="cv-m33-titulo-edu"></h2>
+        <div id="cv-m33-edu-lista"></div>
+      </section>
+
+      <section class="cv-m33-seccion" id="cv-m33-cert-sec" hidden>
+        <h2 class="cv-m33-titulo" id="cv-m33-titulo-cert"></h2>
+        <div id="cv-m33-cert-lista"></div>
+      </section>
+
+      <section class="cv-m33-seccion" id="cv-m33-ref-sec" hidden>
+        <h2 class="cv-m33-titulo" id="cv-m33-titulo-ref"></h2>
+        <div id="cv-m33-ref-lista"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo33() {
+  asegurarEsqueletoModelo33();
+
+  const foto = $("#cv-m33-foto"), placeholder = $("#cv-m33-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m33-nombre").innerHTML = `${esc(estado.nombre)} <span class="cv-m33-apellido">${esc(estado.apellido)}</span>`;
+  $("#cv-m33-puesto").textContent = estado.puesto || "";
+  $("#cv-m33-subtitulo").textContent = estado.subtitulo || "";
+
+  $("#cv-m33-titulo-contacto").textContent = t('contacto');
+  $("#cv-m33-titulo-hab").textContent = t('habilidades');
+  $("#cv-m33-titulo-blandas").textContent = t('blandas');
+  $("#cv-m33-titulo-idiomas").textContent = t('idiomas');
+  $("#cv-m33-titulo-logros").textContent = t('logros');
+  $("#cv-m33-titulo-perfil").textContent = t('perfil');
+  $("#cv-m33-titulo-exp").textContent = t('experiencia');
+  $("#cv-m33-titulo-edu").textContent = t('educacion');
+  $("#cv-m33-titulo-cert").textContent = t('certificaciones');
+  $("#cv-m33-titulo-ref").textContent = t('referencias');
+
+  const contactoSec = $("#cv-m33-contacto-sec");
+  contactoSec.hidden = !estado.contacto.length;
+  if (estado.contacto.length) {
+    $("#cv-m33-contacto-lista").innerHTML = estado.contacto.map(c => `
+      <li class="cv-m33-contacto-item">
+        <span class="cv-m33-contacto-icono">${iconoDe(c.tipo)}</span>
+        <span class="cv-m33-contacto-valor">${contactoValorHTML(c)}</span>
+      </li>
+    `).join("");
+  }
+
+  const habSec = $("#cv-m33-hab-sec");
+  habSec.hidden = !estado.habilidades.length;
+  if (estado.habilidades.length) {
+    $("#cv-m33-hab-lista").innerHTML = estado.habilidades.map(h => `<span class="cv-m33-pill">${esc(h.texto)}</span>`).join("");
+  }
+
+  const blandasSec = $("#cv-m33-blandas-sec");
+  blandasSec.hidden = !estado.blandas.length;
+  if (estado.blandas.length) {
+    $("#cv-m33-blandas-lista").innerHTML = estado.blandas.map(b => `<span class="cv-m33-pill cv-m33-pill-alt">${esc(b.texto)}</span>`).join("");
+  }
+
+  const idiomasSec = $("#cv-m33-idiomas-sec");
+  idiomasSec.hidden = !estado.idiomas.length;
+  if (estado.idiomas.length) {
+    $("#cv-m33-idiomas-lista").innerHTML = estado.idiomas.map(i => `
+      <div class="cv-m33-idioma">
+        <span class="cv-m33-idioma-nombre">${esc(i.nombre)}</span>
+        <span class="cv-m33-idioma-nivel">${esc(i.nivel)}</span>
+      </div>
+    `).join("");
+  }
+
+  const logrosSec = $("#cv-m33-logros-sec");
+  logrosSec.hidden = !estado.logros.length;
+  if (estado.logros.length) {
+    $("#cv-m33-logros-lista").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  }
+
+  const perfilSec = $("#cv-m33-perfil-sec");
+  perfilSec.hidden = !estado.perfil;
+  if (estado.perfil) $("#cv-m33-perfil-texto").innerHTML = escPárrafo(estado.perfil);
+
+  const expSec = $("#cv-m33-exp-sec");
+  expSec.hidden = !estado.experiencia.length;
+  if (estado.experiencia.length) {
+    $("#cv-m33-exp-lista").innerHTML = estado.experiencia.map(x => {
+      const desc = x.descripcion ? `<p class="cv-m33-job-desc">${escPárrafo(x.descripcion)}</p>` : "";
+      const bullets = (x.bullets && x.bullets.length) ? `<ul class="cv-m33-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : "";
+      const herramientas = (x.herramientas && x.herramientas.length) ? `<div class="cv-m33-job-tools">${x.herramientas.map(h => `<span class="cv-m33-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : "";
+      return `
+        <div class="cv-m33-job">
+          <div class="cv-m33-job-head">
+            <div class="cv-m33-job-empresa-wrap">
+              <span class="cv-m33-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</span>
+              <span class="cv-m33-job-rol">${esc(x.rol)}</span>
+            </div>
+            <span class="cv-m33-job-fecha">${esc(x.fecha)}</span>
+          </div>
+          ${desc}${bullets}${herramientas}
+        </div>
+      `;
+    }).join("");
+  }
+
+  const eduSec = $("#cv-m33-edu-sec");
+  eduSec.hidden = !estado.educacion.length;
+  if (estado.educacion.length) {
+    $("#cv-m33-edu-lista").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m33-edu">
+        <div class="cv-m33-edu-head">
+          <span class="cv-m33-edu-inst">${esc(e.institucion)}</span>
+          <span class="cv-m33-edu-fecha">${esc(e.fecha)}</span>
+        </div>
+        ${(e.bullets && e.bullets.length) ? `<ul class="cv-m33-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const certSec = $("#cv-m33-cert-sec");
+  certSec.hidden = !estado.certificaciones.length;
+  if (estado.certificaciones.length) {
+    $("#cv-m33-cert-lista").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m33-cert">
+        <span class="cv-m33-cert-titulo">${esc(c.titulo)}</span>
+        ${c.subtitulo ? `<span class="cv-m33-cert-sub">${esc(c.subtitulo)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const refSec = $("#cv-m33-ref-sec");
+  refSec.hidden = !estado.referencias.length;
+  if (estado.referencias.length) {
+    $("#cv-m33-ref-lista").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m33-ref">
+        <span class="cv-m33-ref-nombre">${esc(r.nombre)}</span>
+        <span class="cv-m33-ref-rol">${esc(r.rol)}</span>
+        ${r.email ? `<span class="cv-m33-ref-dato">${esc(r.email)}</span>` : ""}
+        ${r.linkedin ? `<span class="cv-m33-ref-dato">${esc(r.linkedin)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+}
+
+function asegurarEsqueletoModelo34() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo34") return;
+  pagina.dataset.esqueleto = "modelo34";
+  pagina.innerHTML = `
+    <header class="cv-m34-banner">
+      <div class="cv-m34-foto-marco">
+        <img class="cv-m34-foto" id="cv-m34-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m34-foto-placeholder" id="cv-m34-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m34-banner-texto">
+        <h1 class="cv-m34-nombre" id="cv-m34-nombre"></h1>
+        <p class="cv-m34-puesto" id="cv-m34-puesto"></p>
+        <p class="cv-m34-subtitulo" id="cv-m34-subtitulo"></p>
+      </div>
+    </header>
+
+    <div class="cv-m34-cuerpo">
+      <div class="cv-m34-col-izq">
+        <section class="cv-m34-sec" id="cv-m34-contacto-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-contacto"></h2>
+          <ul class="cv-m34-contacto" id="cv-m34-contacto-lista"></ul>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-hab-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-hab"></h2>
+          <div class="cv-m34-pills" id="cv-m34-hab-lista"></div>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-blandas-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-blandas"></h2>
+          <div class="cv-m34-pills" id="cv-m34-blandas-lista"></div>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-idiomas-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-idiomas"></h2>
+          <div id="cv-m34-idiomas-lista"></div>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-cert-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-cert"></h2>
+          <div id="cv-m34-cert-lista"></div>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-ref-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-ref"></h2>
+          <div id="cv-m34-ref-lista"></div>
+        </section>
+      </div>
+
+      <div class="cv-m34-col-der">
+        <section class="cv-m34-sec" id="cv-m34-perfil-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-perfil"></h2>
+          <p class="cv-m34-perfil-texto" id="cv-m34-perfil-texto"></p>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-exp-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-exp"></h2>
+          <div id="cv-m34-exp-lista"></div>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-edu-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-edu"></h2>
+          <div id="cv-m34-edu-lista"></div>
+        </section>
+
+        <section class="cv-m34-sec" id="cv-m34-logros-sec" hidden>
+          <h2 class="cv-m34-chalk" id="cv-m34-titulo-logros"></h2>
+          <ul class="cv-m34-logros" id="cv-m34-logros-lista"></ul>
+        </section>
+      </div>
+    </div>
+  `;
+}
+
+function renderModelo34() {
+  asegurarEsqueletoModelo34();
+
+  const foto = $("#cv-m34-foto"), placeholder = $("#cv-m34-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m34-nombre").innerHTML = `${esc(estado.nombre)} <span class="cv-m34-apellido">${esc(estado.apellido)}</span>`;
+  $("#cv-m34-puesto").textContent = estado.puesto || "";
+  $("#cv-m34-subtitulo").textContent = estado.subtitulo || "";
+
+  $("#cv-m34-titulo-contacto").textContent = t('contacto');
+  $("#cv-m34-titulo-hab").textContent = t('habilidades');
+  $("#cv-m34-titulo-blandas").textContent = t('blandas');
+  $("#cv-m34-titulo-idiomas").textContent = t('idiomas');
+  $("#cv-m34-titulo-cert").textContent = t('certificaciones');
+  $("#cv-m34-titulo-ref").textContent = t('referencias');
+  $("#cv-m34-titulo-perfil").textContent = t('perfil');
+  $("#cv-m34-titulo-exp").textContent = t('experiencia');
+  $("#cv-m34-titulo-edu").textContent = t('educacion');
+  $("#cv-m34-titulo-logros").textContent = t('logros');
+
+  const contactoSec = $("#cv-m34-contacto-sec");
+  contactoSec.hidden = !estado.contacto.length;
+  if (estado.contacto.length) {
+    $("#cv-m34-contacto-lista").innerHTML = estado.contacto.map(c => `
+      <li class="cv-m34-contacto-item">
+        <span class="cv-m34-contacto-icono">${iconoDe(c.tipo)}</span>
+        <span class="cv-m34-contacto-valor">${contactoValorHTML(c)}</span>
+      </li>
+    `).join("");
+  }
+
+  const habSec = $("#cv-m34-hab-sec");
+  habSec.hidden = !estado.habilidades.length;
+  if (estado.habilidades.length) {
+    $("#cv-m34-hab-lista").innerHTML = estado.habilidades.map(h => `<span class="cv-m34-pill">${esc(h.texto)}</span>`).join("");
+  }
+
+  const blandasSec = $("#cv-m34-blandas-sec");
+  blandasSec.hidden = !estado.blandas.length;
+  if (estado.blandas.length) {
+    $("#cv-m34-blandas-lista").innerHTML = estado.blandas.map(b => `<span class="cv-m34-pill cv-m34-pill-alt">${esc(b.texto)}</span>`).join("");
+  }
+
+  const idiomasSec = $("#cv-m34-idiomas-sec");
+  idiomasSec.hidden = !estado.idiomas.length;
+  if (estado.idiomas.length) {
+    $("#cv-m34-idiomas-lista").innerHTML = estado.idiomas.map(i => `
+      <div class="cv-m34-idioma">
+        <span class="cv-m34-idioma-nombre">${esc(i.nombre)}</span>
+        <span class="cv-m34-idioma-nivel">${esc(i.nivel)}</span>
+      </div>
+    `).join("");
+  }
+
+  const certSec = $("#cv-m34-cert-sec");
+  certSec.hidden = !estado.certificaciones.length;
+  if (estado.certificaciones.length) {
+    $("#cv-m34-cert-lista").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m34-cert">
+        <span class="cv-m34-cert-titulo">${esc(c.titulo)}</span>
+        ${c.subtitulo ? `<span class="cv-m34-cert-sub">${esc(c.subtitulo)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const refSec = $("#cv-m34-ref-sec");
+  refSec.hidden = !estado.referencias.length;
+  if (estado.referencias.length) {
+    $("#cv-m34-ref-lista").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m34-ref">
+        <span class="cv-m34-ref-nombre">${esc(r.nombre)}</span>
+        <span class="cv-m34-ref-rol">${esc(r.rol)}</span>
+        ${r.email ? `<span class="cv-m34-ref-dato">${esc(r.email)}</span>` : ""}
+        ${r.linkedin ? `<span class="cv-m34-ref-dato">${esc(r.linkedin)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const perfilSec = $("#cv-m34-perfil-sec");
+  perfilSec.hidden = !estado.perfil;
+  if (estado.perfil) $("#cv-m34-perfil-texto").innerHTML = escPárrafo(estado.perfil);
+
+  const expSec = $("#cv-m34-exp-sec");
+  expSec.hidden = !estado.experiencia.length;
+  if (estado.experiencia.length) {
+    $("#cv-m34-exp-lista").innerHTML = estado.experiencia.map(x => {
+      const desc = x.descripcion ? `<p class="cv-m34-job-desc">${escPárrafo(x.descripcion)}</p>` : "";
+      const bullets = (x.bullets && x.bullets.length) ? `<ul class="cv-m34-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : "";
+      const herramientas = (x.herramientas && x.herramientas.length) ? `<div class="cv-m34-job-tools">${x.herramientas.map(h => `<span class="cv-m34-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : "";
+      return `
+        <div class="cv-m34-job">
+          <div class="cv-m34-job-head">
+            <div>
+              <span class="cv-m34-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</span>
+              <span class="cv-m34-job-rol">${esc(x.rol)}</span>
+            </div>
+            <span class="cv-m34-job-fecha">${esc(x.fecha)}</span>
+          </div>
+          ${desc}${bullets}${herramientas}
+        </div>
+      `;
+    }).join("");
+  }
+
+  const eduSec = $("#cv-m34-edu-sec");
+  eduSec.hidden = !estado.educacion.length;
+  if (estado.educacion.length) {
+    $("#cv-m34-edu-lista").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m34-edu">
+        <div class="cv-m34-edu-head">
+          <span class="cv-m34-edu-inst">${esc(e.institucion)}</span>
+          <span class="cv-m34-edu-fecha">${esc(e.fecha)}</span>
+        </div>
+        ${(e.bullets && e.bullets.length) ? `<ul class="cv-m34-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const logrosSec = $("#cv-m34-logros-sec");
+  logrosSec.hidden = !estado.logros.length;
+  if (estado.logros.length) {
+    $("#cv-m34-logros-lista").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  }
+}
+
+function asegurarEsqueletoModelo35() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo35") return;
+  pagina.dataset.esqueleto = "modelo35";
+  pagina.innerHTML = `
+    <header class="cv-m35-header">
+      <div class="cv-m35-header-top">
+        <div class="cv-m35-foto-marco">
+          <img class="cv-m35-foto" id="cv-m35-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-m35-foto-placeholder" id="cv-m35-foto-placeholder">🙂</div>
+        </div>
+        <div class="cv-m35-nombre-wrap">
+          <h1 class="cv-m35-nombre" id="cv-m35-nombre"></h1>
+          <p class="cv-m35-puesto" id="cv-m35-puesto"></p>
+        </div>
+      </div>
+      <p class="cv-m35-subtitulo" id="cv-m35-subtitulo"></p>
+      <div class="cv-m35-runway"></div>
+    </header>
+
+    <div class="cv-m35-cuerpo">
+      <section class="cv-m35-sec" id="cv-m35-contacto-sec" hidden>
+        <h2 class="cv-m35-titulo" id="cv-m35-titulo-contacto"></h2>
+        <ul class="cv-m35-contacto" id="cv-m35-contacto-lista"></ul>
+      </section>
+
+      <section class="cv-m35-sec" id="cv-m35-perfil-sec" hidden>
+        <h2 class="cv-m35-titulo" id="cv-m35-titulo-perfil"></h2>
+        <p class="cv-m35-perfil-texto" id="cv-m35-perfil-texto"></p>
+      </section>
+
+      <section class="cv-m35-sec" id="cv-m35-exp-sec" hidden>
+        <h2 class="cv-m35-titulo" id="cv-m35-titulo-exp"></h2>
+        <div id="cv-m35-exp-lista"></div>
+      </section>
+
+      <div class="cv-m35-grid2">
+        <section class="cv-m35-sec" id="cv-m35-hab-sec" hidden>
+          <h2 class="cv-m35-titulo" id="cv-m35-titulo-hab"></h2>
+          <div class="cv-m35-pills" id="cv-m35-hab-lista"></div>
+        </section>
+
+        <section class="cv-m35-sec" id="cv-m35-blandas-sec" hidden>
+          <h2 class="cv-m35-titulo" id="cv-m35-titulo-blandas"></h2>
+          <div class="cv-m35-pills" id="cv-m35-blandas-lista"></div>
+        </section>
+      </div>
+
+      <section class="cv-m35-sec" id="cv-m35-edu-sec" hidden>
+        <h2 class="cv-m35-titulo" id="cv-m35-titulo-edu"></h2>
+        <div id="cv-m35-edu-lista"></div>
+      </section>
+
+      <div class="cv-m35-grid2">
+        <section class="cv-m35-sec" id="cv-m35-cert-sec" hidden>
+          <h2 class="cv-m35-titulo" id="cv-m35-titulo-cert"></h2>
+          <div id="cv-m35-cert-lista"></div>
+        </section>
+
+        <section class="cv-m35-sec" id="cv-m35-idiomas-sec" hidden>
+          <h2 class="cv-m35-titulo" id="cv-m35-titulo-idiomas"></h2>
+          <div id="cv-m35-idiomas-lista"></div>
+        </section>
+      </div>
+
+      <section class="cv-m35-sec" id="cv-m35-logros-sec" hidden>
+        <h2 class="cv-m35-titulo" id="cv-m35-titulo-logros"></h2>
+        <ul class="cv-m35-logros" id="cv-m35-logros-lista"></ul>
+      </section>
+
+      <section class="cv-m35-sec" id="cv-m35-ref-sec" hidden>
+        <h2 class="cv-m35-titulo" id="cv-m35-titulo-ref"></h2>
+        <div id="cv-m35-ref-lista"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo35() {
+  asegurarEsqueletoModelo35();
+
+  const foto = $("#cv-m35-foto"), placeholder = $("#cv-m35-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m35-nombre").innerHTML = `${esc(estado.nombre)}<br><span class="cv-m35-apellido">${esc(estado.apellido)}</span>`;
+  $("#cv-m35-puesto").textContent = estado.puesto || "";
+  $("#cv-m35-subtitulo").textContent = estado.subtitulo || "";
+
+  $("#cv-m35-titulo-contacto").textContent = t('contacto');
+  $("#cv-m35-titulo-perfil").textContent = t('perfil');
+  $("#cv-m35-titulo-exp").textContent = t('experiencia');
+  $("#cv-m35-titulo-hab").textContent = t('habilidades');
+  $("#cv-m35-titulo-blandas").textContent = t('blandas');
+  $("#cv-m35-titulo-edu").textContent = t('educacion');
+  $("#cv-m35-titulo-cert").textContent = t('certificaciones');
+  $("#cv-m35-titulo-idiomas").textContent = t('idiomas');
+  $("#cv-m35-titulo-logros").textContent = t('logros');
+  $("#cv-m35-titulo-ref").textContent = t('referencias');
+
+  const contactoSec = $("#cv-m35-contacto-sec");
+  contactoSec.hidden = !estado.contacto.length;
+  if (estado.contacto.length) {
+    $("#cv-m35-contacto-lista").innerHTML = estado.contacto.map(c => `
+      <li class="cv-m35-contacto-item">
+        <span class="cv-m35-contacto-icono">${iconoDe(c.tipo)}</span>
+        <span class="cv-m35-contacto-valor">${contactoValorHTML(c)}</span>
+      </li>
+    `).join("");
+  }
+
+  const perfilSec = $("#cv-m35-perfil-sec");
+  perfilSec.hidden = !estado.perfil;
+  if (estado.perfil) $("#cv-m35-perfil-texto").innerHTML = escPárrafo(estado.perfil);
+
+  const expSec = $("#cv-m35-exp-sec");
+  expSec.hidden = !estado.experiencia.length;
+  if (estado.experiencia.length) {
+    $("#cv-m35-exp-lista").innerHTML = estado.experiencia.map(x => {
+      const desc = x.descripcion ? `<p class="cv-m35-job-desc">${escPárrafo(x.descripcion)}</p>` : "";
+      const bullets = (x.bullets && x.bullets.length) ? `<ul class="cv-m35-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : "";
+      const herramientas = (x.herramientas && x.herramientas.length) ? `<div class="cv-m35-job-tools">${x.herramientas.map(h => `<span class="cv-m35-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : "";
+      return `
+        <div class="cv-m35-job">
+          <div class="cv-m35-job-head">
+            <div>
+              <span class="cv-m35-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</span>
+              <span class="cv-m35-job-rol">${esc(x.rol)}</span>
+            </div>
+            <span class="cv-m35-job-fecha">${esc(x.fecha)}</span>
+          </div>
+          ${desc}${bullets}${herramientas}
+        </div>
+      `;
+    }).join("");
+  }
+
+  const habSec = $("#cv-m35-hab-sec");
+  habSec.hidden = !estado.habilidades.length;
+  if (estado.habilidades.length) {
+    $("#cv-m35-hab-lista").innerHTML = estado.habilidades.map(h => `<span class="cv-m35-pill">${esc(h.texto)}</span>`).join("");
+  }
+
+  const blandasSec = $("#cv-m35-blandas-sec");
+  blandasSec.hidden = !estado.blandas.length;
+  if (estado.blandas.length) {
+    $("#cv-m35-blandas-lista").innerHTML = estado.blandas.map(b => `<span class="cv-m35-pill cv-m35-pill-alt">${esc(b.texto)}</span>`).join("");
+  }
+
+  const eduSec = $("#cv-m35-edu-sec");
+  eduSec.hidden = !estado.educacion.length;
+  if (estado.educacion.length) {
+    $("#cv-m35-edu-lista").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m35-edu">
+        <div class="cv-m35-edu-head">
+          <span class="cv-m35-edu-inst">${esc(e.institucion)}</span>
+          <span class="cv-m35-edu-fecha">${esc(e.fecha)}</span>
+        </div>
+        ${(e.bullets && e.bullets.length) ? `<ul class="cv-m35-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const certSec = $("#cv-m35-cert-sec");
+  certSec.hidden = !estado.certificaciones.length;
+  if (estado.certificaciones.length) {
+    $("#cv-m35-cert-lista").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m35-cert">
+        <span class="cv-m35-cert-titulo">${esc(c.titulo)}</span>
+        ${c.subtitulo ? `<span class="cv-m35-cert-sub">${esc(c.subtitulo)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const idiomasSec = $("#cv-m35-idiomas-sec");
+  idiomasSec.hidden = !estado.idiomas.length;
+  if (estado.idiomas.length) {
+    $("#cv-m35-idiomas-lista").innerHTML = estado.idiomas.map(i => `
+      <div class="cv-m35-idioma">
+        <span class="cv-m35-idioma-nombre">${esc(i.nombre)}</span>
+        <span class="cv-m35-idioma-nivel">${esc(i.nivel)}</span>
+      </div>
+    `).join("");
+  }
+
+  const logrosSec = $("#cv-m35-logros-sec");
+  logrosSec.hidden = !estado.logros.length;
+  if (estado.logros.length) {
+    $("#cv-m35-logros-lista").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  }
+
+  const refSec = $("#cv-m35-ref-sec");
+  refSec.hidden = !estado.referencias.length;
+  if (estado.referencias.length) {
+    $("#cv-m35-ref-lista").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m35-ref">
+        <span class="cv-m35-ref-nombre">${esc(r.nombre)}</span>
+        <span class="cv-m35-ref-rol">${esc(r.rol)}</span>
+        ${r.email ? `<span class="cv-m35-ref-dato">${esc(r.email)}</span>` : ""}
+        ${r.linkedin ? `<span class="cv-m35-ref-dato">${esc(r.linkedin)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+}
+
+function asegurarEsqueletoModelo36() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo36") return;
+  pagina.dataset.esqueleto = "modelo36";
+  pagina.innerHTML = `
+    <header class="cv-m36-header">
+      <div class="cv-m36-foto-marco">
+        <img class="cv-m36-foto" id="cv-m36-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m36-foto-placeholder" id="cv-m36-foto-placeholder">🙂</div>
+      </div>
+      <div>
+        <h1 class="cv-m36-nombre" id="cv-m36-nombre"></h1>
+        <p class="cv-m36-puesto" id="cv-m36-puesto"></p>
+        <p class="cv-m36-subtitulo" id="cv-m36-subtitulo"></p>
+      </div>
+    </header>
+
+    <div class="cv-m36-cuerpo">
+      <div class="cv-m36-col-izq">
+        <section class="cv-m36-card" id="cv-m36-contacto-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-contacto"></h2>
+          <ul class="cv-m36-contacto" id="cv-m36-contacto-lista"></ul>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-hab-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-hab"></h2>
+          <div class="cv-m36-pills" id="cv-m36-hab-lista"></div>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-blandas-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-blandas"></h2>
+          <div class="cv-m36-pills" id="cv-m36-blandas-lista"></div>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-idiomas-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-idiomas"></h2>
+          <div id="cv-m36-idiomas-lista"></div>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-cert-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-cert"></h2>
+          <div id="cv-m36-cert-lista"></div>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-ref-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-ref"></h2>
+          <div id="cv-m36-ref-lista"></div>
+        </section>
+      </div>
+
+      <div class="cv-m36-col-der">
+        <section class="cv-m36-card" id="cv-m36-perfil-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-perfil"></h2>
+          <p class="cv-m36-perfil-texto" id="cv-m36-perfil-texto"></p>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-exp-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-exp"></h2>
+          <div id="cv-m36-exp-lista"></div>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-edu-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-edu"></h2>
+          <div id="cv-m36-edu-lista"></div>
+        </section>
+
+        <section class="cv-m36-card" id="cv-m36-logros-sec" hidden>
+          <h2 class="cv-m36-titulo" id="cv-m36-titulo-logros"></h2>
+          <ul class="cv-m36-logros" id="cv-m36-logros-lista"></ul>
+        </section>
+      </div>
+    </div>
+  `;
+}
+
+function renderModelo36() {
+  asegurarEsqueletoModelo36();
+
+  const foto = $("#cv-m36-foto"), placeholder = $("#cv-m36-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m36-nombre").innerHTML = `${esc(estado.nombre)} <span class="cv-m36-apellido">${esc(estado.apellido)}</span>`;
+  $("#cv-m36-puesto").textContent = estado.puesto || "";
+  $("#cv-m36-subtitulo").textContent = estado.subtitulo || "";
+
+  $("#cv-m36-titulo-contacto").textContent = t('contacto');
+  $("#cv-m36-titulo-hab").textContent = t('habilidades');
+  $("#cv-m36-titulo-blandas").textContent = t('blandas');
+  $("#cv-m36-titulo-idiomas").textContent = t('idiomas');
+  $("#cv-m36-titulo-cert").textContent = t('certificaciones');
+  $("#cv-m36-titulo-ref").textContent = t('referencias');
+  $("#cv-m36-titulo-perfil").textContent = t('perfil');
+  $("#cv-m36-titulo-exp").textContent = t('experiencia');
+  $("#cv-m36-titulo-edu").textContent = t('educacion');
+  $("#cv-m36-titulo-logros").textContent = t('logros');
+
+  const contactoSec = $("#cv-m36-contacto-sec");
+  contactoSec.hidden = !estado.contacto.length;
+  if (estado.contacto.length) {
+    $("#cv-m36-contacto-lista").innerHTML = estado.contacto.map(c => `
+      <li class="cv-m36-contacto-item">
+        <span class="cv-m36-contacto-icono">${iconoDe(c.tipo)}</span>
+        <span class="cv-m36-contacto-valor">${contactoValorHTML(c)}</span>
+      </li>
+    `).join("");
+  }
+
+  const habSec = $("#cv-m36-hab-sec");
+  habSec.hidden = !estado.habilidades.length;
+  if (estado.habilidades.length) {
+    $("#cv-m36-hab-lista").innerHTML = estado.habilidades.map(h => `<span class="cv-m36-pill">${esc(h.texto)}</span>`).join("");
+  }
+
+  const blandasSec = $("#cv-m36-blandas-sec");
+  blandasSec.hidden = !estado.blandas.length;
+  if (estado.blandas.length) {
+    $("#cv-m36-blandas-lista").innerHTML = estado.blandas.map(b => `<span class="cv-m36-pill cv-m36-pill-alt">${esc(b.texto)}</span>`).join("");
+  }
+
+  const idiomasSec = $("#cv-m36-idiomas-sec");
+  idiomasSec.hidden = !estado.idiomas.length;
+  if (estado.idiomas.length) {
+    $("#cv-m36-idiomas-lista").innerHTML = estado.idiomas.map(i => `
+      <div class="cv-m36-idioma">
+        <span class="cv-m36-idioma-nombre">${esc(i.nombre)}</span>
+        <span class="cv-m36-idioma-nivel">${esc(i.nivel)}</span>
+      </div>
+    `).join("");
+  }
+
+  const certSec = $("#cv-m36-cert-sec");
+  certSec.hidden = !estado.certificaciones.length;
+  if (estado.certificaciones.length) {
+    $("#cv-m36-cert-lista").innerHTML = estado.certificaciones.map(c => `
+      <div class="cv-m36-cert">
+        <span class="cv-m36-cert-titulo">${esc(c.titulo)}</span>
+        ${c.subtitulo ? `<span class="cv-m36-cert-sub">${esc(c.subtitulo)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const refSec = $("#cv-m36-ref-sec");
+  refSec.hidden = !estado.referencias.length;
+  if (estado.referencias.length) {
+    $("#cv-m36-ref-lista").innerHTML = estado.referencias.map(r => `
+      <div class="cv-m36-ref">
+        <span class="cv-m36-ref-nombre">${esc(r.nombre)}</span>
+        <span class="cv-m36-ref-rol">${esc(r.rol)}</span>
+        ${r.email ? `<span class="cv-m36-ref-dato">${esc(r.email)}</span>` : ""}
+        ${r.linkedin ? `<span class="cv-m36-ref-dato">${esc(r.linkedin)}</span>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const perfilSec = $("#cv-m36-perfil-sec");
+  perfilSec.hidden = !estado.perfil;
+  if (estado.perfil) $("#cv-m36-perfil-texto").innerHTML = escPárrafo(estado.perfil);
+
+  const expSec = $("#cv-m36-exp-sec");
+  expSec.hidden = !estado.experiencia.length;
+  if (estado.experiencia.length) {
+    $("#cv-m36-exp-lista").innerHTML = estado.experiencia.map(x => {
+      const desc = x.descripcion ? `<p class="cv-m36-job-desc">${escPárrafo(x.descripcion)}</p>` : "";
+      const bullets = (x.bullets && x.bullets.length) ? `<ul class="cv-m36-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : "";
+      const herramientas = (x.herramientas && x.herramientas.length) ? `<div class="cv-m36-job-tools">${x.herramientas.map(h => `<span class="cv-m36-tool"><strong>${esc(h.etiqueta)}:</strong> ${esc(h.valor)}</span>`).join("")}</div>` : "";
+      return `
+        <div class="cv-m36-job">
+          <div class="cv-m36-job-head">
+            <div>
+              <span class="cv-m36-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${ubicacionSufijo(x)}</span>
+              <span class="cv-m36-job-rol">${esc(x.rol)}</span>
+            </div>
+            <span class="cv-m36-job-fecha">${esc(x.fecha)}</span>
+          </div>
+          ${desc}${bullets}${herramientas}
+        </div>
+      `;
+    }).join("");
+  }
+
+  const eduSec = $("#cv-m36-edu-sec");
+  eduSec.hidden = !estado.educacion.length;
+  if (estado.educacion.length) {
+    $("#cv-m36-edu-lista").innerHTML = estado.educacion.map(e => `
+      <div class="cv-m36-edu">
+        <div class="cv-m36-edu-head">
+          <span class="cv-m36-edu-inst">${esc(e.institucion)}</span>
+          <span class="cv-m36-edu-fecha">${esc(e.fecha)}</span>
+        </div>
+        ${(e.bullets && e.bullets.length) ? `<ul class="cv-m36-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+      </div>
+    `).join("");
+  }
+
+  const logrosSec = $("#cv-m36-logros-sec");
+  logrosSec.hidden = !estado.logros.length;
+  if (estado.logros.length) {
+    $("#cv-m36-logros-lista").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+  }
+}
+
+// ---- Modelos 37-40 ----
+function asegurarEsqueletoModelo37() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo37") return;
+  pagina.dataset.esqueleto = "modelo37";
+  pagina.innerHTML = `
+    <div class="cv-m37-riel">
+      <div class="cv-m37-foto-marco">
+        <img class="cv-m37-foto" id="cv-m37-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m37-foto-placeholder" id="cv-m37-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m37-contacto" id="cv-m37-contacto"></div>
+      <div class="cv-m37-bloque" id="cv-m37-bloque-habilidades">
+        <h3 class="cv-m37-subtitulo">${t('habilidades')}</h3>
+        <div class="cv-m37-tags" id="cv-m37-habilidades"></div>
+      </div>
+      <div class="cv-m37-bloque" id="cv-m37-bloque-blandas">
+        <h3 class="cv-m37-subtitulo">${t('blandas')}</h3>
+        <div class="cv-m37-tags" id="cv-m37-blandas"></div>
+      </div>
+      <div class="cv-m37-bloque" id="cv-m37-bloque-idiomas">
+        <h3 class="cv-m37-subtitulo">${t('idiomas')}</h3>
+        <ul class="cv-m37-idiomas" id="cv-m37-idiomas"></ul>
+      </div>
+      <div class="cv-m37-bloque" id="cv-m37-bloque-educacion">
+        <h3 class="cv-m37-subtitulo">${t('educacion')}</h3>
+        <div id="cv-m37-educacion"></div>
+      </div>
+      <div class="cv-m37-bloque" id="cv-m37-bloque-cert">
+        <h3 class="cv-m37-subtitulo">${t('certificaciones')}</h3>
+        <div id="cv-m37-certificaciones"></div>
+      </div>
+      <div class="cv-m37-bloque" id="cv-m37-bloque-ref">
+        <h3 class="cv-m37-subtitulo">${t('referencias')}</h3>
+        <div id="cv-m37-referencias"></div>
+      </div>
+    </div>
+    <div class="cv-m37-panel">
+      <header class="cv-m37-header">
+        <div class="cv-m37-rayo" aria-hidden="true">⚡</div>
+        <h1 class="cv-m37-nombre" id="cv-m37-nombre"></h1>
+        <div class="cv-m37-puesto" id="cv-m37-puesto"></div>
+        <div class="cv-m37-subtit" id="cv-m37-subtitulo"></div>
+      </header>
+      <section class="cv-m37-bloque" id="cv-m37-bloque-perfil">
+        <h2 class="cv-m37-titulo"><span class="cv-m37-nodo"></span>${t('perfil')}</h2>
+        <p class="cv-m37-perfil" id="cv-m37-perfil"></p>
+      </section>
+      <section class="cv-m37-bloque" id="cv-m37-bloque-experiencia">
+        <h2 class="cv-m37-titulo"><span class="cv-m37-nodo"></span>${t('experiencia')}</h2>
+        <div id="cv-m37-experiencia"></div>
+      </section>
+      <section class="cv-m37-bloque" id="cv-m37-bloque-logros">
+        <h2 class="cv-m37-titulo"><span class="cv-m37-nodo"></span>${t('logros')}</h2>
+        <ul class="cv-m37-logros" id="cv-m37-logros"></ul>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo37() {
+  asegurarEsqueletoModelo37();
+
+  const foto = $("#cv-m37-foto"), placeholder = $("#cv-m37-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m37-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m37-puesto").textContent = estado.puesto || "";
+  $("#cv-m37-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m37-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m37-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m37-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m37-contacto").innerHTML = estado.contacto.map(c => `
+    <div class="cv-m37-contacto-item">
+      <span class="cv-m37-contacto-ico">${iconoDe(c.tipo)}</span>
+      <span class="cv-m37-contacto-val">${contactoValorHTML(c)}</span>
+    </div>
+  `).join("");
+
+  $("#cv-m37-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m37-habilidades").innerHTML = estado.habilidades.map(h =>
+    `<span class="cv-m37-tag">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m37-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m37-blandas").innerHTML = estado.blandas.map(h =>
+    `<span class="cv-m37-tag cv-m37-tag-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m37-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m37-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m37-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m37-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m37-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m37-edu">
+      <div class="cv-m37-edu-fecha">${esc(e.fecha)}</div>
+      <div class="cv-m37-edu-inst">${esc(e.institucion)}</div>
+      ${e.bullets.length ? `<ul class="cv-m37-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m37-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m37-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m37-cert">
+      <div class="cv-m37-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m37-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m37-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m37-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m37-ref">
+      <div class="cv-m37-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m37-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m37-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m37-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m37-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m37-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m37-job-herramientas">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <div class="cv-m37-herr-grupo">
+            ${etq ? `<span class="cv-m37-herr-etq">${esc(etq)}:</span>` : ""}
+            <span class="cv-m37-herr-val">${vals.map(v => esc(v)).join(", ")}</span>
+          </div>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m37-job">
+        <div class="cv-m37-job-head">
+          <div>
+            <div class="cv-m37-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+            <div class="cv-m37-job-rol">${esc(x.rol)}</div>
+          </div>
+          <div class="cv-m37-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m37-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m37-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+
+  $("#cv-m37-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m37-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+}
+
+function asegurarEsqueletoModelo38() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo38") return;
+  pagina.dataset.esqueleto = "modelo38";
+  pagina.innerHTML = `
+    <header class="cv-m38-banner">
+      <div class="cv-m38-skyline" aria-hidden="true"></div>
+      <div class="cv-m38-foto-marco">
+        <img class="cv-m38-foto" id="cv-m38-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m38-foto-placeholder" id="cv-m38-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m38-banner-texto">
+        <h1 class="cv-m38-nombre" id="cv-m38-nombre"></h1>
+        <div class="cv-m38-puesto" id="cv-m38-puesto"></div>
+        <div class="cv-m38-subtitulo" id="cv-m38-subtitulo"></div>
+      </div>
+      <div class="cv-m38-llave" aria-hidden="true">🔑</div>
+    </header>
+    <div class="cv-m38-cuerpo">
+      <div class="cv-m38-main">
+        <section id="cv-m38-bloque-perfil">
+          <h2 class="cv-m38-titulo">${t('perfil')}</h2>
+          <p class="cv-m38-perfil" id="cv-m38-perfil"></p>
+        </section>
+        <section id="cv-m38-bloque-experiencia">
+          <h2 class="cv-m38-titulo">${t('experiencia')}</h2>
+          <div id="cv-m38-experiencia"></div>
+        </section>
+        <section id="cv-m38-bloque-logros">
+          <h2 class="cv-m38-titulo">${t('logros')}</h2>
+          <ul class="cv-m38-logros" id="cv-m38-logros"></ul>
+        </section>
+      </div>
+      <aside class="cv-m38-lateral">
+        <div class="cv-m38-bloque" id="cv-m38-bloque-contacto">
+          <h3 class="cv-m38-sub">${t('contacto')}</h3>
+          <div id="cv-m38-contacto"></div>
+        </div>
+        <div class="cv-m38-bloque" id="cv-m38-bloque-habilidades">
+          <h3 class="cv-m38-sub">${t('habilidades')}</h3>
+          <div class="cv-m38-tags" id="cv-m38-habilidades"></div>
+        </div>
+        <div class="cv-m38-bloque" id="cv-m38-bloque-blandas">
+          <h3 class="cv-m38-sub">${t('blandas')}</h3>
+          <div class="cv-m38-tags" id="cv-m38-blandas"></div>
+        </div>
+        <div class="cv-m38-bloque" id="cv-m38-bloque-idiomas">
+          <h3 class="cv-m38-sub">${t('idiomas')}</h3>
+          <ul class="cv-m38-idiomas" id="cv-m38-idiomas"></ul>
+        </div>
+        <div class="cv-m38-bloque" id="cv-m38-bloque-educacion">
+          <h3 class="cv-m38-sub">${t('educacion')}</h3>
+          <div id="cv-m38-educacion"></div>
+        </div>
+        <div class="cv-m38-bloque" id="cv-m38-bloque-cert">
+          <h3 class="cv-m38-sub">${t('certificaciones')}</h3>
+          <div id="cv-m38-certificaciones"></div>
+        </div>
+        <div class="cv-m38-bloque" id="cv-m38-bloque-ref">
+          <h3 class="cv-m38-sub">${t('referencias')}</h3>
+          <div id="cv-m38-referencias"></div>
+        </div>
+      </aside>
+    </div>
+  `;
+}
+
+function renderModelo38() {
+  asegurarEsqueletoModelo38();
+
+  const foto = $("#cv-m38-foto"), placeholder = $("#cv-m38-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m38-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m38-puesto").textContent = estado.puesto || "";
+  $("#cv-m38-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m38-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m38-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m38-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m38-contacto").innerHTML = estado.contacto.map(c => `
+    <div class="cv-m38-contacto-item">
+      <span class="cv-m38-contacto-ico">${iconoDe(c.tipo)}</span>
+      <span>${contactoValorHTML(c)}</span>
+    </div>
+  `).join("");
+  $("#cv-m38-bloque-contacto").hidden = !estado.contacto.length;
+
+  $("#cv-m38-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m38-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m38-tag">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m38-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m38-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m38-tag cv-m38-tag-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m38-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m38-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m38-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m38-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m38-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m38-edu">
+      <div class="cv-m38-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m38-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m38-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m38-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m38-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m38-cert">
+      <div class="cv-m38-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m38-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m38-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m38-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m38-ref">
+      <div class="cv-m38-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m38-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m38-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m38-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m38-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m38-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m38-job-herramientas">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m38-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m38-listing">
+        <div class="cv-m38-listing-precio">${esc(x.fecha)}</div>
+        <div class="cv-m38-listing-head">
+          <div class="cv-m38-listing-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+          <div class="cv-m38-listing-rol">${esc(x.rol)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m38-listing-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m38-listing-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+
+  $("#cv-m38-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m38-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+}
+
+function asegurarEsqueletoModelo39() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo39") return;
+  pagina.dataset.esqueleto = "modelo39";
+  pagina.innerHTML = `
+    <header class="cv-m39-header">
+      <div class="cv-m39-vinilo">
+        <img class="cv-m39-foto" id="cv-m39-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m39-foto-placeholder" id="cv-m39-foto-placeholder">🙂</div>
+      </div>
+      <h1 class="cv-m39-nombre" id="cv-m39-nombre"></h1>
+      <div class="cv-m39-puesto" id="cv-m39-puesto"></div>
+      <div class="cv-m39-subtitulo" id="cv-m39-subtitulo"></div>
+      <div class="cv-m39-eq" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="cv-m39-contacto" id="cv-m39-contacto"></div>
+    </header>
+    <div class="cv-m39-cuerpo">
+      <div class="cv-m39-main">
+        <section id="cv-m39-bloque-perfil">
+          <h2 class="cv-m39-titulo">${t('perfil')}</h2>
+          <p class="cv-m39-perfil" id="cv-m39-perfil"></p>
+        </section>
+        <section id="cv-m39-bloque-experiencia">
+          <h2 class="cv-m39-titulo">${t('experiencia')}</h2>
+          <div id="cv-m39-experiencia"></div>
+        </section>
+        <section id="cv-m39-bloque-logros">
+          <h2 class="cv-m39-titulo">${t('logros')}</h2>
+          <ul class="cv-m39-logros" id="cv-m39-logros"></ul>
+        </section>
+      </div>
+      <aside class="cv-m39-lateral">
+        <div class="cv-m39-bloque" id="cv-m39-bloque-habilidades">
+          <h3 class="cv-m39-sub">${t('habilidades')}</h3>
+          <div class="cv-m39-tags" id="cv-m39-habilidades"></div>
+        </div>
+        <div class="cv-m39-bloque" id="cv-m39-bloque-blandas">
+          <h3 class="cv-m39-sub">${t('blandas')}</h3>
+          <div class="cv-m39-tags" id="cv-m39-blandas"></div>
+        </div>
+        <div class="cv-m39-bloque" id="cv-m39-bloque-idiomas">
+          <h3 class="cv-m39-sub">${t('idiomas')}</h3>
+          <ul class="cv-m39-idiomas" id="cv-m39-idiomas"></ul>
+        </div>
+        <div class="cv-m39-bloque" id="cv-m39-bloque-educacion">
+          <h3 class="cv-m39-sub">${t('educacion')}</h3>
+          <div id="cv-m39-educacion"></div>
+        </div>
+        <div class="cv-m39-bloque" id="cv-m39-bloque-cert">
+          <h3 class="cv-m39-sub">${t('certificaciones')}</h3>
+          <div id="cv-m39-certificaciones"></div>
+        </div>
+        <div class="cv-m39-bloque" id="cv-m39-bloque-ref">
+          <h3 class="cv-m39-sub">${t('referencias')}</h3>
+          <div id="cv-m39-referencias"></div>
+        </div>
+      </aside>
+    </div>
+  `;
+}
+
+function renderModelo39() {
+  asegurarEsqueletoModelo39();
+
+  const foto = $("#cv-m39-foto"), placeholder = $("#cv-m39-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m39-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m39-puesto").textContent = estado.puesto || "";
+  $("#cv-m39-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m39-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m39-contacto").innerHTML = estado.contacto.map(c => `
+    <div class="cv-m39-contacto-item">
+      <span class="cv-m39-contacto-ico">${iconoDe(c.tipo)}</span>
+      <span>${contactoValorHTML(c)}</span>
+    </div>
+  `).join("");
+
+  $("#cv-m39-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m39-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m39-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m39-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m39-tag">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m39-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m39-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m39-tag cv-m39-tag-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m39-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m39-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m39-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m39-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m39-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m39-edu">
+      <div class="cv-m39-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m39-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m39-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m39-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m39-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m39-cert">
+      <div class="cv-m39-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m39-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m39-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m39-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m39-ref">
+      <div class="cv-m39-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m39-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m39-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m39-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m39-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m39-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m39-job-herramientas">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m39-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m39-job">
+        <div class="cv-m39-job-head">
+          <div>
+            <div class="cv-m39-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+            <div class="cv-m39-job-rol">${esc(x.rol)}</div>
+          </div>
+          <div class="cv-m39-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m39-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m39-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+
+  $("#cv-m39-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m39-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+}
+
+function asegurarEsqueletoModelo40() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo40") return;
+  pagina.dataset.esqueleto = "modelo40";
+  pagina.innerHTML = `
+    <header class="cv-m40-header">
+      <div class="cv-m40-horizonte" aria-hidden="true">
+        <div class="cv-m40-loma cv-m40-loma-1"></div>
+        <div class="cv-m40-loma cv-m40-loma-2"></div>
+      </div>
+      <div class="cv-m40-foto-marco">
+        <img class="cv-m40-foto" id="cv-m40-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m40-foto-placeholder" id="cv-m40-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m40-header-texto">
+        <h1 class="cv-m40-nombre" id="cv-m40-nombre"></h1>
+        <div class="cv-m40-puesto" id="cv-m40-puesto"></div>
+        <div class="cv-m40-subtitulo" id="cv-m40-subtitulo"></div>
+      </div>
+    </header>
+    <div class="cv-m40-contacto" id="cv-m40-contacto"></div>
+    <div class="cv-m40-cuerpo">
+      <section id="cv-m40-bloque-perfil">
+        <h2 class="cv-m40-titulo">${t('perfil')}</h2>
+        <p class="cv-m40-perfil" id="cv-m40-perfil"></p>
+      </section>
+      <section id="cv-m40-bloque-experiencia">
+        <h2 class="cv-m40-titulo">${t('experiencia')}</h2>
+        <div id="cv-m40-experiencia"></div>
+      </section>
+      <div class="cv-m40-columnas">
+        <div>
+          <section id="cv-m40-bloque-educacion">
+            <h2 class="cv-m40-titulo">${t('educacion')}</h2>
+            <div id="cv-m40-educacion"></div>
+          </section>
+          <section id="cv-m40-bloque-cert">
+            <h2 class="cv-m40-titulo">${t('certificaciones')}</h2>
+            <div id="cv-m40-certificaciones"></div>
+          </section>
+          <section id="cv-m40-bloque-logros">
+            <h2 class="cv-m40-titulo">${t('logros')}</h2>
+            <ul class="cv-m40-logros" id="cv-m40-logros"></ul>
+          </section>
+        </div>
+        <div>
+          <section id="cv-m40-bloque-habilidades">
+            <h2 class="cv-m40-titulo">${t('habilidades')}</h2>
+            <div class="cv-m40-tags" id="cv-m40-habilidades"></div>
+          </section>
+          <section id="cv-m40-bloque-blandas">
+            <h2 class="cv-m40-titulo">${t('blandas')}</h2>
+            <div class="cv-m40-tags" id="cv-m40-blandas"></div>
+          </section>
+          <section id="cv-m40-bloque-idiomas">
+            <h2 class="cv-m40-titulo">${t('idiomas')}</h2>
+            <ul class="cv-m40-idiomas" id="cv-m40-idiomas"></ul>
+          </section>
+          <section id="cv-m40-bloque-ref">
+            <h2 class="cv-m40-titulo">${t('referencias')}</h2>
+            <div id="cv-m40-referencias"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderModelo40() {
+  asegurarEsqueletoModelo40();
+
+  const foto = $("#cv-m40-foto"), placeholder = $("#cv-m40-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+
+  $("#cv-m40-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m40-puesto").textContent = estado.puesto || "";
+  $("#cv-m40-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m40-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m40-contacto").innerHTML = estado.contacto.map(c => `
+    <div class="cv-m40-contacto-item">
+      <span class="cv-m40-contacto-ico">${iconoDe(c.tipo)}</span>
+      <span>${contactoValorHTML(c)}</span>
+    </div>
+  `).join("");
+
+  $("#cv-m40-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m40-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m40-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m40-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m40-tag">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m40-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m40-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m40-tag cv-m40-tag-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m40-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m40-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m40-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m40-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m40-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m40-edu">
+      <div class="cv-m40-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m40-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m40-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m40-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m40-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m40-cert">
+      <div class="cv-m40-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m40-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m40-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m40-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m40-ref">
+      <div class="cv-m40-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m40-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m40-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m40-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m40-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m40-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m40-job-herramientas">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m40-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m40-entrada">
+        <div class="cv-m40-entrada-head">
+          <div class="cv-m40-entrada-fecha">${esc(x.fecha)}</div>
+          <div class="cv-m40-entrada-datos">
+            <div class="cv-m40-entrada-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+            <div class="cv-m40-entrada-rol">${esc(x.rol)}</div>
+          </div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m40-entrada-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m40-entrada-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+
+  $("#cv-m40-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m40-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
 }
 
 // ============================================================
