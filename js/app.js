@@ -335,6 +335,92 @@ Start with the first question.
 `;
 }
 
+// ---------------- vista "ATS" (texto plano lineal) ----------------
+// Un ATS no ve columnas, íconos, ni colores — sólo texto, en el orden en
+// que aparece en el documento. Esta función arma esa misma info pero como
+// texto lineal simple, DIRECTO desde `estado` (no desde el HTML
+// renderizado, que trae de vuelta separado en columnas/tarjetas según el
+// modelo) — así el usuario puede confirmar que ningún dato se "pierde"
+// aunque el diseño visual lo acomode distinto.
+function contactoTextoPlano(c) {
+  const valor = c.tipo === "linkedin" && c.url ? `${c.valor} (${c.url})` : c.valor;
+  return c.etiqueta ? `${c.etiqueta}: ${valor}` : valor;
+}
+function fechaHoyFormateada() {
+  const MESES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const hoy = new Date();
+  return `${MESES[hoy.getMonth()]} ${hoy.getDate()}, ${hoy.getFullYear()}`;
+}
+function generarTextoATS() {
+  const l = [];
+  const linea = (s = "") => l.push(s);
+  const titulo = (s) => { linea(); linea(s.toUpperCase()); linea("-".repeat(s.length)); };
+
+  if (estado.tipoDocumento === "carta") {
+    const c = estado.carta || {};
+    linea(`${estado.nombre || ""} ${estado.apellido || ""}`.trim());
+    if (estado.puesto) linea(estado.puesto);
+    (estado.contacto || []).forEach((x) => linea(contactoTextoPlano(x)));
+    linea();
+    linea((c.fecha && c.fecha.trim()) || fechaHoyFormateada());
+    linea();
+    [c.destinatario, c.empresaDestino, c.puestoDestino ? `Re: ${c.puestoDestino}` : ""].filter(Boolean).forEach(linea);
+    linea();
+    if (c.saludo) linea(c.saludo);
+    linea();
+    (c.cuerpo || "").split(/\n+/).filter(Boolean).forEach((p) => { linea(p); linea(); });
+    if (c.despedida) linea(c.despedida);
+    linea();
+    linea(`${estado.nombre || ""} ${estado.apellido || ""}`.trim());
+    return l.join("\n");
+  }
+
+  linea(`${estado.nombre || ""} ${estado.apellido || ""}`.trim());
+  if (estado.puesto) linea(estado.puesto + (estado.subtitulo ? ` | ${estado.subtitulo}` : ""));
+  (estado.contacto || []).forEach((c) => linea(contactoTextoPlano(c)));
+
+  if (estado.perfil && estado.perfil.trim()) { titulo(t("perfil")); linea(estado.perfil.trim()); }
+
+  if ((estado.habilidades || []).length) { titulo(t("habilidades")); linea(estado.habilidades.map((h) => h.texto).join(", ")); }
+  if ((estado.blandas || []).length) { titulo(t("blandas")); linea(estado.blandas.map((b) => b.texto).join(", ")); }
+  if ((estado.idiomas || []).length) { titulo(t("idiomas")); estado.idiomas.forEach((i) => linea(`${i.nombre} — ${i.nivel}`)); }
+
+  if ((estado.experiencia || []).length) {
+    titulo(t("experiencia"));
+    estado.experiencia.forEach((x) => {
+      linea();
+      linea([x.rol, x.empresa].filter(Boolean).join(" — "));
+      linea([x.ubicacion, x.fecha].filter(Boolean).join(" | "));
+      if (x.descripcion && x.descripcion.trim()) linea(x.descripcion.trim());
+      (x.bullets || []).forEach((b) => linea(`- ${b.texto}`));
+      if ((x.herramientas || []).length) linea("Tools: " + x.herramientas.map((h) => (h.etiqueta ? `${h.etiqueta}: ${h.valor}` : h.valor)).join(" | "));
+    });
+  }
+
+  if ((estado.educacion || []).length) {
+    titulo(t("educacion"));
+    estado.educacion.forEach((e) => {
+      linea();
+      linea([e.institucion, e.fecha].filter(Boolean).join(" | "));
+      (e.bullets || []).forEach((b) => linea(`- ${b.texto}`));
+    });
+  }
+
+  if ((estado.certificaciones || []).length) {
+    titulo(t("certificaciones"));
+    estado.certificaciones.forEach((c) => linea([c.titulo, c.subtitulo].filter(Boolean).join(" — ")));
+  }
+
+  if ((estado.logros || []).length) { titulo(t("logros")); estado.logros.forEach((x) => linea(`- ${x.texto}`)); }
+
+  if ((estado.referencias || []).length) {
+    titulo(t("referencias"));
+    estado.referencias.forEach((r) => linea([r.nombre, r.rol, r.email, r.linkedin].filter(Boolean).join(" | ")));
+  }
+
+  return l.join("\n");
+}
+
 const PAQUETES_ICONOS = {
   emoji1: { nombre: "Emoji clásico", iconos: { telefono: "📞", email: "✉️", ubicacion: "📍", linkedin: "🔗", web: "🌐" } },
   emoji2: { nombre: "Emoji teléfono fijo", iconos: { telefono: "☎️", email: "📧", ubicacion: "📌", linkedin: "💼", web: "🌍" } },
@@ -4729,6 +4815,40 @@ function bindearControlesEstaticos() {
     btnQuitarFoto.classList.add("oculto");
     inputFoto.value = "";
     renderPreview(); guardar();
+  });
+
+  // ---- modal "Vista ATS": texto plano lineal armado directo desde
+  // `estado` (ver generarTextoATS()), no desde el HTML ya diagramado del
+  // modelo — así el usuario ve exactamente lo que un parser automático
+  // extraería, sin importar cuántas columnas/íconos tenga el diseño. ----
+  const modalAts = $("#modal-vista-ats");
+  $("#btn-vista-ats").addEventListener("click", () => {
+    $("#modal-vista-ats-texto").value = generarTextoATS();
+    $("#modal-vista-ats-copiado").classList.add("oculto");
+    modalAts.classList.remove("oculto");
+  });
+  function cerrarModalAts() { modalAts.classList.add("oculto"); }
+  $("#modal-vista-ats-cerrar").addEventListener("click", cerrarModalAts);
+  modalAts.addEventListener("click", (e) => { if (e.target === modalAts) cerrarModalAts(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modalAts.classList.contains("oculto")) cerrarModalAts(); });
+  $("#modal-vista-ats-copiar").addEventListener("click", async () => {
+    const texto = $("#modal-vista-ats-texto");
+    let copiado = false;
+    try { await navigator.clipboard.writeText(texto.value); copiado = true; }
+    catch {
+      texto.removeAttribute("readonly");
+      texto.select();
+      copiado = document.execCommand("copy");
+      texto.setAttribute("readonly", "");
+    }
+    if (copiado) {
+      const aviso = $("#modal-vista-ats-copiado");
+      aviso.classList.remove("oculto");
+      setTimeout(() => aviso.classList.add("oculto"), 2200);
+    } else {
+      texto.select();
+      alert("No se pudo copiar automáticamente — seleccioná el texto y copialo con Ctrl+C.");
+    }
   });
 
   $("#btn-imprimir").addEventListener("click", () => window.print());

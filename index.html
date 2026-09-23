@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="css/style.css?v=33">
+<link rel="stylesheet" href="css/style.css?v=34">
 </head>
 <body>
 
@@ -32,6 +32,7 @@
         <button class="btn btn-fantasma" id="btn-exportar" title="Descarga todos tus datos como un archivo .json — guardalo donde quieras como respaldo">⬇ Exportar datos</button>
         <button class="btn btn-fantasma" id="btn-importar" type="button" title="Carga un .json exportado antes (o el que te devolvió tu asistente de IA) — reemplaza todo lo que hay ahora">⬆ Importar datos</button>
         <input type="file" accept="application/json" id="importar-input" hidden>
+        <button class="btn btn-fantasma" id="btn-vista-ats" type="button" title="Muestra tu CV como texto plano lineal, sin columnas ni íconos — así es como lo lee un sistema ATS antes de que lo vea una persona">👁 Vista ATS</button>
         <button class="btn btn-fantasma" id="btn-restablecer" title="Vuelve al CV de ejemplo, se pierden los cambios">↺ Restablecer</button>
         <button class="btn btn-acento" id="btn-imprimir">⭳ Descargar / Imprimir PDF</button>
       </div>
@@ -465,6 +466,27 @@
     </div>
   </div>
 
+  <!-- ============ modal "Vista ATS" — un sistema ATS no ve columnas,
+       íconos ni colores, sólo texto en el orden del documento. Este modal
+       arma esa misma info como texto plano lineal, directo desde los
+       datos (no desde el HTML ya diagramado del modelo elegido), para que
+       el usuario pueda confirmar que nada se "pierde" en el diseño
+       visual. ============ -->
+  <div class="modal-fondo oculto" id="modal-vista-ats">
+    <div class="modal-caja" role="dialog" aria-modal="true" aria-labelledby="modal-vista-ats-titulo">
+      <button class="modal-cerrar" id="modal-vista-ats-cerrar" type="button" title="Cerrar">✕</button>
+      <h2 id="modal-vista-ats-titulo">👁 Cómo lo lee un ATS</h2>
+      <p class="modal-ayuda">
+        Muchas empresas usan un sistema automático (ATS) para leer el CV antes de que lo vea una persona — ese sistema no ve tu diseño (columnas, íconos, colores), sólo el texto, en orden. Esto es exactamente esa lectura: si algún dato falta acá, no va a llegar tampoco al ATS.
+      </p>
+      <textarea id="modal-vista-ats-texto" readonly spellcheck="false"></textarea>
+      <div class="modal-acciones">
+        <button class="btn btn-acento" id="modal-vista-ats-copiar" type="button">📋 Copiar texto</button>
+        <span class="modal-copiado oculto" id="modal-vista-ats-copiado">¡Copiado!</span>
+      </div>
+    </div>
+  </div>
+
   <!-- plantillas para entradas repetibles del editor (clonadas por JS, nunca se muestran solas) -->
   <template id="tpl-fila-texto">
     <div class="fila-editable">
@@ -478,7 +500,7 @@
        no rompe la página) y js/app.js sigue con el ejemplo lorem-ipsum.
        Tiene que ir ANTES de app.js: es lo único que decide qué datos
        arrancan como estado inicial. -->
-  <script src="js/datos-privados.js?v=33"></script>
-  <script src="js/app.js?v=33"></script>
+  <script src="js/datos-privados.js?v=34"></script>
+  <script src="js/app.js?v=34"></script>
 </body>
 </html>

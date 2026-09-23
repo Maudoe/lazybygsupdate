@@ -2063,7 +2063,7 @@ a.btn { display: inline-block; text-decoration: none; }
   color: var(--app-tenue); font-size: 0.9rem; cursor: pointer; line-height: 1;
 }
 .modal-cerrar:hover { color: var(--app-texto); }
-#modal-plantilla-json-texto {
+#modal-plantilla-json-texto, #modal-vista-ats-texto {
   width: 100%; min-height: 280px; max-height: 42vh; resize: vertical;
   background: #0d0f12; border: 1px solid var(--app-borde); border-radius: 10px;
   color: #cfd3da; font-family: "Courier New", monospace; font-size: 0.78rem; line-height: 1.5;
