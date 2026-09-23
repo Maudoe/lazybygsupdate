@@ -1,0 +1,82 @@
+{
+  "_instrucciones": "Esto NO es un dato del CV — es solo una guía para quien complete este archivo (vos o un asistente de IA como ChatGPT/Claude). Borrá esta clave '_instrucciones' antes de importar, o dejala: la app la ignora sin problema. Guía completa: pegale este archivo a tu asistente de IA junto con tu CV viejo, tu LinkedIn exportado o una lista de tu experiencia, y pedile que complete cada campo respetando exactamente esta forma (mismas claves, mismos tipos: listas siguen siendo listas, texto sigue siendo texto). Después: en la app, botón 'Importar datos' arriba a la derecha, elegís el .json ya completo, listo — tu CV se genera solo. Campos que podés dejar tal cual (son de diseño, se cambian después desde la app si querés): modelo, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv. Valores válidos — modelo: 'modelo1' a 'modelo20'. tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral'. idiomaCv: 'en' o 'es' (idioma de los TÍTULOS DE SECCIÓN del CV impreso, no de tu contenido). contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url es opcional, solo tiene efecto en el tipo 'linkedin' (convierte tu nombre en un link a tu perfil). experiencia[].empresaUrl es opcional (convierte el nombre de la empresa en un link a su sitio). Todo lo demás es texto libre en el idioma que quieras (inglés recomendado, es lo más común en CVs). 'foto' se deja en null — la foto se carga por separado, arrastrándola en la app, no va en este archivo.",
+
+  "modelo": "modelo1",
+  "tema": "turquesa",
+  "fuente": "jakarta",
+  "iconos": "emoji1",
+  "colorOscuro": "#16191e",
+  "colorClaro": "#ffffff",
+  "escalaFoto": 1,
+  "escalaIconos": 1,
+  "idiomaCv": "en",
+
+  "nombre": "Your first name",
+  "apellido": "Your last name",
+  "puesto": "Your current job title (e.g. Senior Backend Engineer)",
+  "subtitulo": "Optional short tag next to your title (e.g. a language level like C1, or leave empty)",
+  "foto": null,
+
+  "contacto": [
+    { "id": "c1", "tipo": "telefono", "etiqueta": "Optional short label (e.g. country code like US)", "valor": "+1 234 567 8900" },
+    { "id": "c2", "tipo": "email", "etiqueta": "", "valor": "you@example.com" },
+    { "id": "c3", "tipo": "ubicacion", "etiqueta": "", "valor": "City, Country" },
+    { "id": "c4", "tipo": "linkedin", "etiqueta": "", "valor": "linkedin.com/in/your-handle", "url": "" }
+  ],
+
+  "perfil": "A 3-5 sentence professional summary: who you are, your years of experience, your specialty/focus area, and what kind of impact or track record you bring. Write it in first-person-implied style (no 'I' — CVs usually drop the subject), like: 'Senior backend engineer with 8+ years building...'",
+
+  "habilidades": [
+    { "id": "h1", "texto": "A hard/technical skill (e.g. Python, React, AWS, SQL) — group related tools into one line if you have many, e.g. 'CI/CD — GitHub Actions & GitLab CI'" }
+  ],
+
+  "blandas": [
+    { "id": "b1", "texto": "A soft skill (e.g. Effective communication, Critical thinking, Team leadership)" }
+  ],
+
+  "idiomas": [
+    { "id": "i1", "nombre": "Spanish", "nivel": "Native" },
+    { "id": "i2", "nombre": "English", "nivel": "C1 (or B2, Fluent, etc.)" }
+  ],
+
+  "educacion": [
+    {
+      "id": "e1",
+      "institucion": "School/University name",
+      "fecha": "Free-text date range, e.g. 2016 - 2020",
+      "bullets": [
+        { "id": "e1b1", "texto": "Degree name, honors, or a relevant detail" }
+      ]
+    }
+  ],
+
+  "certificaciones": [
+    { "id": "cert1", "titulo": "Certification name | Issuing org | Year", "subtitulo": "Optional one-line detail about the certification" }
+  ],
+
+  "referencias": [
+    { "id": "r1", "nombre": "Reference full name", "rol": "Company / Their role there", "email": "reference@example.com", "linkedin": "linkedin.com/in/reference-handle" }
+  ],
+
+  "logros": [
+    { "id": "l1", "texto": "One standout achievement, ideally with a number/result (e.g. 'Reduced deploy time by 40% by...')" }
+  ],
+
+  "experiencia": [
+    {
+      "id": "x1",
+      "empresa": "Company name",
+      "empresaUrl": "",
+      "fecha": "Free-text date range, e.g. JAN 2023 - PRESENT",
+      "rol": "Your job title at this company",
+      "descripcion": "1-3 sentences about the company/team context and your overall mandate in this role.",
+      "bullets": [
+        { "id": "x1b1", "texto": "A specific responsibility or achievement, ideally with concrete numbers/impact." },
+        { "id": "x1b2", "texto": "Another bullet — aim for 4-8 per job, each one a single clear sentence." }
+      ],
+      "herramientas": [
+        { "id": "x1h1", "etiqueta": "A category label (e.g. Automation, Cloud & Infrastructure)", "valor": "Comma-separated tools/tech used in that category" }
+      ]
+    }
+  ]
+}

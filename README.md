@@ -40,12 +40,14 @@ Pick one from the "Modelo de plantilla" dropdown — your data stays exactly the
 
 ## 🤖 About the "AI-powered" part
 
-There's no embedded AI API here — no key to configure, nothing to pay for. The AI part is **you, plus whatever AI assistant you already have** (Claude, Claude Code, ChatGPT, Cursor, whatever):
+There's no embedded AI API here — no key to configure, nothing to pay for. The AI part is **you, plus whatever AI assistant you already have** (ChatGPT, Claude, Claude Code, Cursor, whatever). The fastest path in:
 
-1. Open this project's folder with your AI assistant of choice.
-2. Paste your work history — a LinkedIn export, a messy bullet list, your old CV, whatever you've got.
-3. Ask it to update the default data in `js/app.js` (or just edit the form yourself — the UI works standalone too, no AI required).
+1. Click **🧩 Plantilla JSON** in the app — downloads a blank `.json` with the exact shape the app expects (every field labeled with instructions, right inside the file).
+2. Paste that file into your AI assistant of choice, along with your work history — a LinkedIn export, a messy bullet list, your old CV, whatever you've got — and ask it to fill in the template, keeping the same keys/structure.
+3. Click **⬆ Importar datos** in the app and pick the file the AI gave you back. Your CV builds itself.
 4. Open `index.html`, hit print, done.
+
+(You can also just fill in the form on the left by hand — no AI required, same result.)
 
 That's it. If we're already using AI to automate our work, why are we still updating our CVs by hand? No fancy promises, no magic button that guarantees you a job — just point a smart assistant at a well-organized template and let it do the typing.
 

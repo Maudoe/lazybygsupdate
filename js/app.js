@@ -4131,6 +4131,11 @@ function bindearControlesEstaticos() {
         return;
       }
       if (!confirm("Esto reemplaza todo el contenido actual por lo que hay en el archivo. ¿Seguir?")) { e.target.value = ""; return; }
+      // "_instrucciones" es la guía que trae la plantilla en blanco (ver
+      // docs/plantilla-datos-cv.json) para quien la completa con un
+      // asistente de IA — no es un dato del CV, así que no debe quedar
+      // pegada en el estado (ni reexportarse después como si lo fuera).
+      delete datos._instrucciones;
       estado = datos;
       poblarDesdeEstado();
       guardar();
