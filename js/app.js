@@ -73,6 +73,13 @@ function contactoValorHTML(c) {
   if (c.tipo === "linkedin") return enlaceSiHay(c.valor, c.url, "cv-enlace-contacto");
   return esc(c.valor);
 }
+// Ciudad/país junto al nombre de la empresa en cada experiencia — opcional,
+// no se muestra nada si no cargaste el campo. `item` es la experiencia
+// completa (necesita `.ubicacion`), no sólo el string.
+function ubicacionSufijo(item) {
+  if (!item.ubicacion || !item.ubicacion.trim()) return "";
+  return ` <span class="cv-ubicacion">· ${esc(item.ubicacion)}</span>`;
+}
 
 function iconoDe(tipo) {
   const pack = PAQUETES_ICONOS[estado.iconos] || PAQUETES_ICONOS.emoji1;
@@ -201,7 +208,7 @@ function estadoPorDefecto() {
     ].map((texto) => ({ id: id(), texto })),
     experiencia: [
       {
-        id: id(), empresa: "Lorem Corp", empresaUrl: "https://example.com", fecha: "JAN 2023 - PRESENT",
+        id: id(), empresa: "Lorem Corp", empresaUrl: "https://example.com", ubicacion: "Placeholder City, Placeholderland", fecha: "JAN 2023 - PRESENT",
         rol: "Senior Consectetur Engineer | Adipiscing & Elit",
         descripcion: LOREM,
         bullets: [
@@ -218,7 +225,7 @@ function estadoPorDefecto() {
         ],
       },
       {
-        id: id(), empresa: "Ipsum Industries", empresaUrl: "https://example.com", fecha: "JUN 2020 - DEC 2022",
+        id: id(), empresa: "Ipsum Industries", empresaUrl: "https://example.com", ubicacion: "Placeholder City, Placeholderland", fecha: "JUN 2020 - DEC 2022",
         rol: "Dolor Sit Amet Specialist",
         descripcion: LOREM2,
         bullets: [
@@ -233,7 +240,7 @@ function estadoPorDefecto() {
         ],
       },
       {
-        id: id(), empresa: "Dolor & Sit Ltd.", empresaUrl: "https://example.com", fecha: "MAR 2017 - MAY 2020",
+        id: id(), empresa: "Dolor & Sit Ltd.", empresaUrl: "https://example.com", ubicacion: "Placeholder City, Placeholderland", fecha: "MAR 2017 - MAY 2020",
         rol: "Junior Amet Analyst",
         descripcion: "Magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet consectetur.",
         bullets: [
@@ -508,7 +515,7 @@ function renderPrincipalModelo1() {
     for (const x of estado.experiencia) {
       html += `<div class="cv-experiencia">
         <div class="cv-experiencia-fila">
-          <span class="cv-experiencia-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}</span>
+          <span class="cv-experiencia-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</span>
           ${x.fecha ? `<span class="cv-experiencia-fecha">${esc(x.fecha)}</span>` : ""}
         </div>
         ${x.rol ? `<p class="cv-experiencia-rol">${esc(x.rol)}</p>` : ""}
@@ -655,7 +662,7 @@ function renderColDerModelo2() {
     for (const x of estado.experiencia) {
       html += `<div class="cv-m2-item">
         <p class="cv-m2-item-titulo">${esc(x.rol || x.empresa)}</p>
-        <p class="cv-m2-item-sub">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}${x.fecha ? ` | ${esc(x.fecha)}` : ""}</p>
+        <p class="cv-m2-item-sub">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}${x.fecha ? ` | ${esc(x.fecha)}` : ""}</p>
         <ul class="cv-bullets">
           ${x.descripcion.trim() ? `<li>${esc(x.descripcion)}</li>` : ""}
           ${x.bullets.map((b) => `<li>${esc(b.texto)}</li>`).join("")}
@@ -831,7 +838,8 @@ function renderPrincipalModelo3() {
   html += seccionTimelineM3("▲", t('educacion'), educacion);
 
   const experiencia = estado.experiencia.map((x) => ({
-    fecha: x.fecha, titulo: x.rol || x.empresa, sub: x.rol ? x.empresa : "",
+    fecha: x.fecha, titulo: x.rol || x.empresa,
+    sub: x.rol ? `${x.empresa}${x.ubicacion && x.ubicacion.trim() ? ` · ${x.ubicacion}` : ""}` : "",
     desc: [x.descripcion, ...x.bullets.map((b) => b.texto)].filter(Boolean).join(" "),
   }));
   html += seccionTimelineM3("■", t('experiencia'), experiencia);
@@ -962,7 +970,7 @@ function renderPrincipalModelo4() {
           <span class="cv-m4-exp-titulo">${esc(x.rol || x.empresa)}</span>
           ${x.fecha ? `<span class="cv-m4-exp-fecha">${esc(x.fecha)}</span>` : ""}
         </div>
-        ${x.rol ? `<p class="cv-m4-exp-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}</p>` : ""}
+        ${x.rol ? `<p class="cv-m4-exp-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</p>` : ""}
         ${x.descripcion.trim() ? `<p class="cv-m4-exp-desc">${escPárrafo(x.descripcion)}</p>` : ""}
         ${x.bullets.length ? `<ul class="cv-bullets">${x.bullets.map((b) => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
       </div>`;
@@ -1112,7 +1120,7 @@ function renderExperienciaModelo5() {
           <span class="cv-m5-experiencia-rol">${esc(x.rol || x.empresa)}</span>
           ${x.fecha ? `<span class="cv-m5-experiencia-fecha">${esc(x.fecha)}</span>` : ""}
         </div>
-        ${x.rol ? `<p class="cv-m5-experiencia-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa")}</p>` : ""}
+        ${x.rol ? `<p class="cv-m5-experiencia-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</p>` : ""}
         ${x.descripcion.trim() ? `<p class="cv-m5-experiencia-desc">${escPárrafo(x.descripcion)}</p>` : ""}
         ${x.bullets.length ? `<ul class="cv-m5-lista-clara">${x.bullets.map((b) => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
       </div>
@@ -1241,7 +1249,7 @@ function _m6ExperienciaHTML(experiencia) {
           <span class="cv-m6-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m6-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m6-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m6-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m6-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<div class="cv-m6-bullets">${bullets}</div>` : ""}
         ${herramientas ? `<div class="cv-m6-tools">${herramientas}</div>` : ""}
@@ -1390,7 +1398,7 @@ function _m7ExperienciaHTML(experiencia) {
           <span class="cv-m7-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m7-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m7-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m7-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m7-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m7-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m7-job-tools">${herramientas}</div>` : ""}
@@ -1544,7 +1552,7 @@ function _m8ExperienciaHTML(experiencia) {
           <span class="cv-m8-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m8-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m8-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m8-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m8-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m8-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m8-tools">${herramientas}</div>` : ""}
@@ -1712,7 +1720,7 @@ function _m9Experiencia(exp) {
       <h3 class="cv-m9-exp-rol">${esc(exp.rol || exp.empresa)}</h3>
       <span class="cv-m9-exp-fecha">${esc(exp.fecha)}</span>
     </div>
-    <div class="cv-m9-exp-empresa">${enlaceSiHay(exp.empresa, exp.empresaUrl, "cv-enlace-empresa")}</div>
+    <div class="cv-m9-exp-empresa">${enlaceSiHay(exp.empresa, exp.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(exp)}</div>
     ${exp.descripcion && exp.descripcion.trim() ? `<div class="cv-m9-exp-desc">${escPárrafo(exp.descripcion)}</div>` : ""}
     ${bulletsHtml}
     ${toolsHtml}
@@ -1896,7 +1904,7 @@ function _m10Experiencia(exp) {
       <h3 class="cv-m10-exp-rol">${esc(exp.rol || exp.empresa)}</h3>
       <span class="cv-m10-exp-fecha">${esc(exp.fecha)}</span>
     </div>
-    <div class="cv-m10-exp-empresa">${enlaceSiHay(exp.empresa, exp.empresaUrl, "cv-enlace-empresa")}</div>
+    <div class="cv-m10-exp-empresa">${enlaceSiHay(exp.empresa, exp.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(exp)}</div>
     ${exp.descripcion && exp.descripcion.trim() ? `<div class="cv-m10-exp-desc">${escPárrafo(exp.descripcion)}</div>` : ""}
     ${bulletsHtml}
     ${toolsHtml}
@@ -2082,7 +2090,7 @@ function _m11ExperienciaHTML(experiencia) {
           <span class="cv-m11-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m11-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m11-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m11-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m11-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m11-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m11-tools">${herramientas}</div>` : ""}
@@ -2268,7 +2276,7 @@ function _m12ExperienciaHTML(experiencia) {
         <div class="cv-m12-fila-cont">
           <div class="cv-m12-fila-head">
             <span class="cv-m12-fila-rol">${esc(job.rol || job.empresa)}</span>
-            <span class="cv-m12-fila-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</span>
+            <span class="cv-m12-fila-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</span>
           </div>
           ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m12-fila-desc">${escPárrafo(job.descripcion)}</p>` : ""}
           ${bullets ? `<ul class="cv-m12-fila-bullets">${bullets}</ul>` : ""}
@@ -2430,7 +2438,7 @@ function _m13ExperienciaHTML(experiencia) {
           <span class="cv-m13-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m13-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m13-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m13-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m13-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m13-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m13-job-tools">${herramientas}</div>` : ""}
@@ -2594,7 +2602,7 @@ function _m14ExperienciaHTML(experiencia) {
           <span class="cv-m14-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m14-tag cv-m14-tag-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m14-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m14-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m14-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m14-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m14-job-tools">${herramientas}</div>` : ""}
@@ -2756,7 +2764,7 @@ function _m15ExperienciaHTML(experiencia) {
           <span class="cv-m15-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m15-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m15-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m15-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m15-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m15-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m15-job-tools">${herramientas}</div>` : ""}
@@ -2922,7 +2930,7 @@ function _m16ExperienciaHTML(experiencia) {
           <span class="cv-m16-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m16-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m16-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m16-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m16-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m16-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m16-job-tools">${herramientas}</div>` : ""}
@@ -3071,7 +3079,7 @@ function _m17ExperienciaHTML(experiencia) {
           <span class="cv-m17-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m17-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m17-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m17-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m17-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m17-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m17-job-tools">${herramientas}</div>` : ""}
@@ -3225,7 +3233,7 @@ function _m18ExperienciaHTML(experiencia) {
           <span class="cv-m18-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m18-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m18-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m18-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m18-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m18-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m18-tools">${herramientas}</div>` : ""}
@@ -3371,7 +3379,7 @@ function _m19ExperienciaHTML(experiencia) {
           <span class="cv-m19-job-rol">${esc(job.rol || job.empresa)}</span>
           <span class="cv-m19-job-fecha">${esc(job.fecha)}</span>
         </div>
-        <div class="cv-m19-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+        <div class="cv-m19-job-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
         ${job.descripcion && job.descripcion.trim() ? `<p class="cv-m19-job-desc">${escPárrafo(job.descripcion)}</p>` : ""}
         ${bullets ? `<ul class="cv-m19-job-bullets">${bullets}</ul>` : ""}
         ${herramientas ? `<div class="cv-m19-tools">${herramientas}</div>` : ""}
@@ -3543,7 +3551,7 @@ function _m20ExperienciaHTML(experiencia) {
         <div class="cv-m20-chapter-head">
           <div class="cv-m20-chapter-num">${t('capitulo')} ${num}</div>
           <div class="cv-m20-chapter-titles">
-            <div class="cv-m20-chapter-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa")}</div>
+            <div class="cv-m20-chapter-empresa">${enlaceSiHay(job.empresa, job.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(job)}</div>
             <div class="cv-m20-chapter-rol">${esc(job.rol)}</div>
           </div>
           <div class="cv-m20-chapter-fecha">${esc(job.fecha)}</div>
@@ -3784,6 +3792,7 @@ function crearTarjetaExperiencia(item, contenedor) {
 
   tarjeta.appendChild(campoTarjeta("Empresa", item.empresa, (v) => { item.empresa = v; refrescarTitulo(); }));
   tarjeta.appendChild(campoTarjeta("Sitio web de la empresa (opcional) — el nombre queda clickeable", item.empresaUrl, (v) => { item.empresaUrl = v; }));
+  tarjeta.appendChild(campoTarjeta("Ciudad, país (opcional, ej. Buenos Aires, Argentina)", item.ubicacion, (v) => { item.ubicacion = v; }));
   tarjeta.appendChild(campoTarjeta("Fechas (texto libre, ej. MAY 2021 - MAY 2025)", item.fecha, (v) => { item.fecha = v; }));
   tarjeta.appendChild(campoTarjeta("Rol / subtítulo", item.rol, (v) => { item.rol = v; }));
   tarjeta.appendChild(campoTarjeta("Descripción", item.descripcion, (v) => { item.descripcion = v; }, true));
@@ -4055,7 +4064,7 @@ function bindearControlesEstaticos() {
         case "logros": { const it = { id: nuevoId(), texto: "" }; estado.logros.push(it); const n = crearFilaTexto(estado.logros, it, $("#lista-logros"), "Logro"); $(".fila-input", n).focus(); break; }
         case "contacto": { const it = { id: nuevoId(), tipo: "telefono", etiqueta: "", valor: "" }; estado.contacto.push(it); crearFilaContacto(it, $("#lista-contacto")); break; }
         case "idiomas": { const it = { id: nuevoId(), nombre: "", nivel: "" }; estado.idiomas.push(it); crearFilaIdioma(it, $("#lista-idiomas")); break; }
-        case "experiencia": { estado.experiencia.push({ id: nuevoId(), empresa: "", fecha: "", rol: "", descripcion: "", bullets: [], herramientas: [] }); montarListaExperiencia(); break; }
+        case "experiencia": { estado.experiencia.push({ id: nuevoId(), empresa: "", empresaUrl: "", ubicacion: "", fecha: "", rol: "", descripcion: "", bullets: [], herramientas: [] }); montarListaExperiencia(); break; }
         case "educacion": { estado.educacion.push({ id: nuevoId(), institucion: "", fecha: "", bullets: [] }); montarListaEducacion(); break; }
         case "certificaciones": { estado.certificaciones.push({ id: nuevoId(), titulo: "", subtitulo: "" }); montarListaCertificaciones(); break; }
         case "referencias": { estado.referencias.push({ id: nuevoId(), nombre: "", rol: "", email: "", linkedin: "" }); montarListaReferencias(); break; }
