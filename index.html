@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="css/style.css?v=27">
+<link rel="stylesheet" href="css/style.css?v=29">
 </head>
 <body>
 
@@ -30,10 +30,8 @@
         <button class="btn btn-fantasma" id="btn-idioma-cv" title="Cambia el idioma de los TÍTULOS DE SECCIÓN del CV impreso (Skills/Habilidades, etc.) — el editor de acá a la izquierda se queda siempre en español">🌐 EN</button>
         <button class="btn btn-fantasma" id="btn-plantilla-json" type="button" title="Abre un prompt listo para pegarle a ChatGPT (u otro asistente de IA) junto a tu CV viejo o tu LinkedIn, para que te complete los datos">🧩 Plantilla JSON</button>
         <button class="btn btn-fantasma" id="btn-exportar" title="Descarga todos tus datos como un archivo .json — guardalo donde quieras como respaldo">⬇ Exportar datos</button>
-        <label class="btn btn-fantasma" id="btn-importar" title="Carga un .json exportado antes — reemplaza todo lo que hay ahora" style="cursor:pointer;">
-          ⬆ Importar datos
-          <input type="file" accept="application/json" id="importar-input" hidden>
-        </label>
+        <button class="btn btn-fantasma" id="btn-importar" type="button" title="Carga un .json exportado antes (o el que te devolvió tu asistente de IA) — reemplaza todo lo que hay ahora">⬆ Importar datos</button>
+        <input type="file" accept="application/json" id="importar-input" hidden>
         <button class="btn btn-fantasma" id="btn-restablecer" title="Vuelve al CV de ejemplo, se pierden los cambios">↺ Restablecer</button>
         <button class="btn btn-acento" id="btn-imprimir">⭳ Descargar / Imprimir PDF</button>
       </div>
@@ -419,7 +417,11 @@
     <div class="modal-caja" role="dialog" aria-modal="true" aria-labelledby="modal-plantilla-json-titulo">
       <button class="modal-cerrar" id="modal-plantilla-json-cerrar" type="button" title="Cerrar">✕</button>
       <h2 id="modal-plantilla-json-titulo">🧩 Completá tus datos con IA</h2>
-      <p class="modal-ayuda">
+      <div class="modal-tabs">
+        <button class="modal-tab activo" id="modal-plantilla-tab-completar" type="button">📋 Ya tengo mis datos</button>
+        <button class="modal-tab" id="modal-plantilla-tab-preparar" type="button">🎤 No tengo mis datos a mano</button>
+      </div>
+      <p class="modal-ayuda" id="modal-plantilla-json-ayuda">
         Copiá el texto de abajo y pegaselo a ChatGPT (o el asistente que uses), junto con tu CV viejo o tu perfil de LinkedIn.
         Ya tiene la plantilla y las instrucciones adentro — el asistente te va a devolver un JSON completo.
         Después, volvé acá y usá el botón <strong>⬆ Importar datos</strong> con lo que te devuelva.
@@ -429,6 +431,28 @@
         <button class="btn btn-acento" id="modal-plantilla-json-copiar" type="button">📋 Copiar prompt</button>
         <button class="btn btn-fantasma" id="modal-plantilla-json-descargar" type="button">⬇ Descargar el .json solo (opcional)</button>
         <span class="modal-copiado oculto" id="modal-plantilla-json-copiado">¡Copiado!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ modal "Importar datos" — mismo criterio que el de
+       Plantilla JSON: antes el botón abría el selector de archivos de
+       una sola, sin avisar qué iba a pasar (alguien que nunca lo usó no
+       tiene por qué saber que reemplaza TODO). Ahora explica primero, con
+       un ejemplo visual de cómo queda, y desde acá se elige el archivo. ============ -->
+  <div class="modal-fondo oculto" id="modal-importar-json">
+    <div class="modal-caja" role="dialog" aria-modal="true" aria-labelledby="modal-importar-json-titulo">
+      <button class="modal-cerrar" id="modal-importar-json-cerrar" type="button" title="Cerrar">✕</button>
+      <h2 id="modal-importar-json-titulo">⬆ Importar tus datos</h2>
+      <p class="modal-ayuda">
+        Elegís un archivo <code>.json</code> — el que ya completaste con un asistente de IA (ver <strong>🧩 Plantilla JSON</strong>) o uno que hayas exportado antes con <strong>⬇ Exportar datos</strong> — y esta herramienta reemplaza <strong>todo</strong> lo que tenés cargado ahora mismo (nombre, experiencia, colores, foto, todo) por lo que traiga ese archivo.
+        Apenas lo elijas, tu CV se arma solo y aparece completo en la vista previa de la derecha, listo para revisar, ajustar el modelo/tema si querés, e imprimir.
+      </p>
+      <img class="modal-ejemplo" src="docs/screenshot.png" alt="Ejemplo de cómo se ve el CV en la vista previa una vez importado">
+      <p class="modal-ejemplo-caption">Así se ve una vez importado: el editor a la izquierda queda cargado con tus datos, la vista previa a la derecha ya es tu CV listo.</p>
+      <div class="modal-acciones">
+        <button class="btn btn-acento" id="modal-importar-json-elegir" type="button">📂 Elegir archivo .json</button>
+        <button class="btn btn-fantasma" id="modal-importar-json-cancelar" type="button">Cancelar</button>
       </div>
     </div>
   </div>
@@ -446,7 +470,7 @@
        no rompe la página) y js/app.js sigue con el ejemplo lorem-ipsum.
        Tiene que ir ANTES de app.js: es lo único que decide qué datos
        arrancan como estado inicial. -->
-  <script src="js/datos-privados.js?v=27"></script>
-  <script src="js/app.js?v=27"></script>
+  <script src="js/datos-privados.js?v=29"></script>
+  <script src="js/app.js?v=29"></script>
 </body>
 </html>

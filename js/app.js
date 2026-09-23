@@ -296,6 +296,31 @@ Mi CV viejo y/o mi perfil de LinkedIn (pegalo acá abajo):
 `;
 }
 
+// Prompt "de preparación" — para quien todavía no tiene un CV viejo ni un
+// LinkedIn armado a mano: en vez de pedirle que complete el JSON directo,
+// le pide al asistente que lo ENTREVISTE (pregunta por pregunta) y arme un
+// resumen ordenado con las respuestas — ese resumen es lo que después se
+// pega como "mi CV viejo" en armarPromptPlantillaJson().
+function armarPromptPreparacion() {
+  return `Quiero armar mi currículum pero todavía no tengo mis datos ordenados. Ayudame a juntarlos: hacéme preguntas UNA POR VEZ (no todas juntas), esperá mi respuesta antes de pasar a la siguiente, y cubrí estos temas en este orden:
+
+1. Datos de contacto: teléfono, email, ciudad y país, LinkedIn.
+2. Puesto actual o al que aspiro, y un subtítulo corto si quiero uno (ej. un nivel de idioma).
+3. Resumen profesional: quién soy, cuántos años de experiencia tengo, mi especialidad, qué tipo de impacto genero.
+4. Cada experiencia laboral, una por una: empresa, ciudad/país, fechas, mi rol, 1-3 frases de contexto del equipo/mandato, y entre 4 y 8 logros o responsabilidades concretas (pedime números o resultados si los tengo), más las herramientas/tecnologías que usé, agrupadas por categoría.
+5. Educación: institución, fechas, título o detalles relevantes.
+6. Certificaciones.
+7. Habilidades técnicas y habilidades blandas.
+8. Idiomas y nivel.
+9. Logros destacados aparte (con números si se puede).
+10. Referencias, si quiero incluir alguna.
+
+No inventes ningún dato — si en algún tema no tengo nada para decir, anotalo como vacío y seguí. Cuando terminemos de repasar todos los temas, armame un resumen ordenado con TODAS mis respuestas, agrupado por esas mismas categorías, en texto plano (no hace falta JSON todavía) — listo para que yo se lo pegue después a otro prompt que arma el archivo final.
+
+Empezá con la primera pregunta.
+`;
+}
+
 const PAQUETES_ICONOS = {
   emoji1: { nombre: "Emoji clásico", iconos: { telefono: "📞", email: "✉️", ubicacion: "📍", linkedin: "🔗", web: "🌐" } },
   emoji2: { nombre: "Emoji teléfono fijo", iconos: { telefono: "☎️", email: "📧", ubicacion: "📌", linkedin: "💼", web: "🌍" } },
@@ -397,7 +422,12 @@ function estadoPorDefecto() {
     modelo: "modelo1", tema: "turquesa", fuente: "jakarta", iconos: "emoji1", colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
     nombre: "Lorem", apellido: "Ipsum",
     puesto: "Dolor Sit Amet Engineer", subtitulo: "Consectetur+",
-    foto: null,
+    // sólo el ejemplo público trae una foto de arranque (el logo del
+    // proyecto) — es simplemente más simpático que el placeholder 🙂 vacío
+    // la primera vez que alguien abre la app; se reemplaza solo al
+    // arrastrar una foto propia. datos-privados.js (tu copia real) sigue
+    // sin foto por defecto, como corresponde.
+    foto: "img/sloth-avatar.png",
     contacto: [
       { id: id(), tipo: "telefono", etiqueta: "US", valor: "+1 234 567 8900" },
       { id: id(), tipo: "email", etiqueta: "", valor: "lorem.ipsum@example.com" },
@@ -4703,12 +4733,27 @@ function bindearControlesEstaticos() {
   // error. Ahora es un modal con el prompt (instrucciones + plantilla)
   // ya armado para copiar y pegar en un asistente de IA. ----
   const modalPlantilla = $("#modal-plantilla-json");
-  function abrirModalPlantilla() {
-    $("#modal-plantilla-json-texto").value = armarPromptPlantillaJson();
+  // dos modos dentro del mismo modal: "completar" (el prompt de siempre,
+  // con la plantilla adentro) y "preparar" (para quien todavía no tiene
+  // sus datos organizados — le pide al asistente que lo entreviste antes).
+  function mostrarTabPlantilla(modo) {
+    const esPreparar = modo === "preparar";
+    $("#modal-plantilla-tab-completar").classList.toggle("activo", !esPreparar);
+    $("#modal-plantilla-tab-preparar").classList.toggle("activo", esPreparar);
+    $("#modal-plantilla-json-descargar").classList.toggle("oculto", esPreparar);
+    $("#modal-plantilla-json-texto").value = esPreparar ? armarPromptPreparacion() : armarPromptPlantillaJson();
+    $("#modal-plantilla-json-ayuda").innerHTML = esPreparar
+      ? "Copiá el texto de abajo y pegaselo a ChatGPT (o el asistente que uses). Te va a ir haciendo preguntas para juntar tus datos, una por vez, y al final te arma un resumen ordenado. Ese resumen es lo que después pegás como tu \"CV viejo\" en la pestaña <strong>📋 Ya tengo mis datos</strong>."
+      : "Copiá el texto de abajo y pegaselo a ChatGPT (o el asistente que uses), junto con tu CV viejo o tu perfil de LinkedIn. Ya tiene la plantilla y las instrucciones adentro — el asistente te va a devolver un JSON completo. Después, volvé acá y usá el botón <strong>⬆ Importar datos</strong> con lo que te devuelva.";
     $("#modal-plantilla-json-copiado").classList.add("oculto");
+  }
+  function abrirModalPlantilla() {
+    mostrarTabPlantilla("completar");
     modalPlantilla.classList.remove("oculto");
   }
   function cerrarModalPlantilla() { modalPlantilla.classList.add("oculto"); }
+  $("#modal-plantilla-tab-completar").addEventListener("click", () => mostrarTabPlantilla("completar"));
+  $("#modal-plantilla-tab-preparar").addEventListener("click", () => mostrarTabPlantilla("preparar"));
   $("#btn-plantilla-json").addEventListener("click", abrirModalPlantilla);
   $("#modal-plantilla-json-cerrar").addEventListener("click", cerrarModalPlantilla);
   modalPlantilla.addEventListener("click", (e) => { if (e.target === modalPlantilla) cerrarModalPlantilla(); });
@@ -4745,6 +4790,23 @@ function bindearControlesEstaticos() {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
+  });
+
+  // ---- modal "Importar datos": mismo criterio que el de Plantilla JSON —
+  // antes el botón abría el selector de archivos directo, sin avisar qué
+  // iba a pasar. Ahora explica primero (reemplaza todo, cómo queda) y
+  // desde ahí se elige el archivo. ----
+  const modalImportar = $("#modal-importar-json");
+  function abrirModalImportar() { modalImportar.classList.remove("oculto"); }
+  function cerrarModalImportar() { modalImportar.classList.add("oculto"); }
+  $("#btn-importar").addEventListener("click", abrirModalImportar);
+  $("#modal-importar-json-cerrar").addEventListener("click", cerrarModalImportar);
+  $("#modal-importar-json-cancelar").addEventListener("click", cerrarModalImportar);
+  modalImportar.addEventListener("click", (e) => { if (e.target === modalImportar) cerrarModalImportar(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modalImportar.classList.contains("oculto")) cerrarModalImportar(); });
+  $("#modal-importar-json-elegir").addEventListener("click", () => {
+    cerrarModalImportar();
+    $("#importar-input").click();
   });
 
   // ---- exportar/importar: respaldo real de tus datos como .json, fuera

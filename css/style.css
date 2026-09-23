@@ -2071,4 +2071,13 @@ a.btn { display: inline-block; text-decoration: none; }
 }
 .modal-acciones { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .modal-copiado { font-size: 0.82rem; color: #45c97a; font-weight: 600; }
+.modal-tabs { display: flex; gap: 8px; margin: -2px 0 2px; }
+.modal-tab {
+  flex: 1; border-radius: 9px; border: 1px solid var(--app-borde); background: var(--app-panel-2);
+  color: var(--app-tenue); padding: 8px 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.modal-tab.activo { background: linear-gradient(135deg, var(--app-acento), var(--app-acento-oscuro)); color: #06161a; border-color: transparent; }
+.modal-ejemplo { width: 100%; border-radius: 10px; border: 1px solid var(--app-borde); display: block; }
+.modal-ejemplo-caption { margin: 0; font-size: 0.78rem; color: var(--app-tenue); text-align: center; }
+#modal-importar-json .modal-caja { width: min(620px, 100%); }
 
