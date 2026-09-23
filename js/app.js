@@ -288,6 +288,8 @@ Reglas importantes:
 
 Para que el contenido pase mejor los filtros automáticos (ATS) que usan muchas empresas antes de que un humano vea el CV:
 - Si más abajo te paso el aviso de un puesto específico, usá la MISMA terminología que usa ese aviso (los ATS suelen buscar coincidencias literales, no sinónimos) y metela temprano — en "perfil" y en el primer bullet de cada experiencia relevante.
+- En "puesto" y en el "rol" de cada experiencia, usá el título de puesto real/estándar de la industria (el que buscaría un reclutador o el que usa el aviso), no uno creativo o inventado.
+- Los nombres de herramientas/tecnologías (en "herramientas") escribilos tal cual figuran oficialmente (ej. "Adobe Creative Cloud", no una abreviación propia) — así coinciden con cómo los busca el ATS.
 - Las siglas de rol/área (QA, PM, BA, etc.) escribilas completas la primera vez que aparecen y con la sigla al lado, ej. "Quality Assurance (QA)" — después ya podés usar sólo la sigla.
 - Usá el mismo formato de fecha en TODAS las experiencias/educación (ej. "Jan 2023 - Present" en todos lados, no mezcles formatos).
 - No repitas la misma palabra clave de forma forzada varias veces — un párrafo o bullet con keywords metidas con calzador se nota y no suma.
@@ -314,10 +316,11 @@ Mi CV viejo y/o mi perfil de LinkedIn (pegalo acá abajo):
 function armarPromptPreparacion() {
   return `Quiero armar mi currículum pero todavía no tengo mis datos ordenados. Ayudame a juntarlos: hacéme preguntas UNA POR VEZ (no todas juntas), esperá mi respuesta antes de pasar a la siguiente, y cubrí estos temas en este orden:
 
+0. Si tengo un puesto específico en mente al que quiero aplicar, pedime que te pase el aviso (o el nombre del puesto y la industria si no tengo el aviso a mano) — lo vas a usar más adelante para que mis respuestas usen la misma terminología que ese puesto, así el CV pasa mejor los filtros automáticos (ATS) que usan muchas empresas.
 1. Datos de contacto: teléfono, email, ciudad y país, LinkedIn.
-2. Puesto actual o al que aspiro, y un subtítulo corto si quiero uno (ej. un nivel de idioma).
+2. Puesto actual o al que aspiro (el título real/estándar de la industria, no uno creativo — el que buscaría un reclutador), y un subtítulo corto si quiero uno (ej. un nivel de idioma).
 3. Resumen profesional: quién soy, cuántos años de experiencia tengo, mi especialidad, qué tipo de impacto genero.
-4. Cada experiencia laboral, una por una: empresa, ciudad/país, fechas, mi rol, 1-3 frases de contexto del equipo/mandato, y entre 4 y 8 logros o responsabilidades concretas (pedime números o resultados si los tengo), más las herramientas/tecnologías que usé, agrupadas por categoría.
+4. Cada experiencia laboral, una por una: empresa, ciudad/país, fechas (pedime que use el mismo formato de fecha en todas, ej. "Jan 2023 - Present"), mi rol (título real del puesto, no uno inventado), 1-3 frases de contexto del equipo/mandato, y entre 4 y 8 logros o responsabilidades concretas (pedime números o resultados si los tengo), más las herramientas/tecnologías que usé, agrupadas por categoría — con el nombre exacto de cada herramienta (ej. "Adobe Creative Cloud", no una forma abreviada distinta a como la escribiría un aviso de trabajo).
 5. Educación: institución, fechas, título o detalles relevantes.
 6. Certificaciones.
 7. Habilidades técnicas y habilidades blandas.
@@ -325,7 +328,7 @@ function armarPromptPreparacion() {
 9. Logros destacados aparte (con números si se puede).
 10. Referencias, si quiero incluir alguna.
 
-No inventes ningún dato — si en algún tema no tengo nada para decir, anotalo como vacío y seguí. Cuando terminemos de repasar todos los temas, armame un resumen ordenado con TODAS mis respuestas, agrupado por esas mismas categorías, en texto plano (no hace falta JSON todavía) — listo para que yo se lo pegue después a otro prompt que arma el archivo final.
+No inventes ningún dato — si en algún tema no tengo nada para decir, anotalo como vacío y seguí. Cuando terminemos de repasar todos los temas, armame un resumen ordenado con TODAS mis respuestas, agrupado por esas mismas categorías, en texto plano (no hace falta JSON todavía) — listo para que yo se lo pegue después a otro prompt que arma el archivo final. Si te pasé un puesto/aviso objetivo en la pregunta 0, agregalo también al final del resumen para no perderlo.
 
 Empezá con la primera pregunta.
 `;
