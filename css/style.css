@@ -198,6 +198,21 @@ input, textarea { font-family: inherit; }
   border-radius: 7px; padding: 7px 10px; color: var(--app-texto); font-size: 0.83rem;
 }
 .fila-editable input:focus { outline: none; border-color: var(--app-acento); }
+/* fila de contacto: la línea principal (tipo/etiqueta/valor/quitar) +
+   el link de LinkedIn debajo, sólo visible para ese tipo de contacto. */
+.fila-editable-envoltorio { display: flex; flex-direction: column; gap: 6px; }
+.fila-editable-linea { display: flex; align-items: center; gap: 6px; }
+.fila-editable-envoltorio .c-url {
+  background: var(--app-panel-2); border: 1px solid var(--app-borde);
+  border-radius: 7px; padding: 7px 10px; color: var(--app-texto); font-size: 0.83rem;
+}
+.fila-editable-envoltorio .c-url:focus { outline: none; border-color: var(--app-acento); }
+
+/* ---- links dentro del CV impreso (nombre de empresa / LinkedIn) — sólo
+   aparecen como tales cuando cargaste una URL; heredan el color del
+   texto que reemplazan para no romper la paleta de cada modelo. ---- */
+.cv-enlace { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
+.cv-enlace:hover { opacity: 0.8; }
 .fila-editable select {
   background: var(--app-panel-2); border: 1px solid var(--app-borde); color: var(--app-texto);
   border-radius: 7px; padding: 7px 6px; font-size: 0.8rem;
@@ -337,7 +352,7 @@ input, textarea { font-family: inherit; }
 }
 .cv-edu-fecha, .cv-ref-rol { font-size: 7.8pt; color: var(--cv-acento); font-weight: 600; display: block; margin-bottom: 1.2mm; }
 .cv-ref-rol { color: var(--cv-lateral-tenue); font-weight: 400; }
-.cv-cert-sub { font-size: 8pt; color: var(--cv-lateral-tenue); display: block; }
+.cv-cert-sub { font-size: 8pt; color: var(--cv-tenue); display: block; }
 
 /* ---- columna principal clara ---- */
 /* filete dorado entre la franja oscura y la hoja blanca — el detalle que
@@ -373,8 +388,14 @@ input, textarea { font-family: inherit; }
    por entrada, alineado a la fila de empresa/fecha — mismo lenguaje
    visual que el CV original. */
 .cv-lista-experiencia, .cv-lista-educ-principal { position: relative; padding-left: 4.4mm; }
+/* la línea tiene que pasar por el CENTRO del punto (radio 1.3mm), no por
+   su borde izquierdo — antes ambos usaban left:0 en marcos de referencia
+   distintos (la línea relativa a la lista completa, el punto relativo a
+   cada entrada), y coincidían por el borde del punto en vez del centro,
+   así que la línea se veía pegada a un costado de cada círculo en vez de
+   atravesarlos prolijamente. */
 .cv-lista-experiencia::before, .cv-lista-educ-principal::before {
-  content: ""; position: absolute; left: 0; top: 1.6mm; bottom: 4mm; width: 1.4px;
+  content: ""; position: absolute; left: 1.3mm; top: 1.6mm; bottom: 4mm; width: 1.4px;
   background: var(--cv-acento); opacity: 0.4;
 }
 .cv-experiencia, .cv-educ-principal-item { position: relative; margin-bottom: 6.5mm; }
@@ -717,3 +738,956 @@ input, textarea { font-family: inherit; }
 @media print {
   .cv-m4-bloque, .cv-m4-bloque-principal, .cv-m4-exp-item { break-inside: avoid; }
 }
+
+/* ---- Modelo 5 "Atelier": una sola columna editorial, sin franja
+   lateral — pensado para un perfil creativo. La foto va en un "blob"
+   orgánico (border-radius asimétrico, no un círculo ni un polígono con
+   esquinas rectas) y las secciones usan chips/listas livianas en vez de
+   barras de progreso o íconos en cápsula, para que se sienta más
+   editorial que "currículum corporativo". ---- */
+.cv-pagina[data-modelo="modelo5"] { padding: 16mm 16mm 14mm; }
+.cv-m5-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8mm; }
+.cv-m5-eyebrow {
+  font-size: 8pt; letter-spacing: 2px; text-transform: uppercase; color: var(--cv-acento);
+  font-weight: 700; margin: 0 0 2mm;
+}
+.cv-m5-nombre {
+  font-family: var(--cv-font-titulos); font-weight: 400; font-size: 26pt;
+  line-height: 1.12; margin: 0; color: var(--cv-texto);
+}
+.cv-m5-nombre .cv-nombre-acento { font-weight: 700; font-size: 1.02em; }
+/* el blob: cuatro radios distintos por esquina describen una forma
+   orgánica asimétrica — la misma receta clásica de "CSS blob shape",
+   nada de un círculo ni de un polígono con lados rectos. */
+.cv-m5-foto-marco {
+  width: calc(38mm * var(--cv-escala-foto, 1)); height: calc(44mm * var(--cv-escala-foto, 1));
+  border-radius: 62% 38% 55% 45% / 45% 40% 60% 55%;
+  overflow: hidden; background: #ece4d8; flex: 0 0 auto;
+  border: 2px solid var(--cv-acento);
+  display: grid; place-items: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+.cv-m5-foto { width: 100%; height: 100%; object-fit: cover; }
+.cv-m5-foto-placeholder { font-size: 2.2rem; opacity: 0.5; }
+
+.cv-m5-divisor { width: 100%; height: 5mm; display: block; margin: 6mm 0 8mm; }
+
+.cv-m5-titulo {
+  font-family: var(--cv-font-titulos); font-size: 8.6pt; font-weight: 700;
+  letter-spacing: 1.6px; text-transform: uppercase; color: var(--cv-acento);
+  margin: 0 0 3mm;
+}
+.cv-m5-perfil-texto {
+  font-size: 10pt; line-height: 1.7; color: var(--cv-tenue); margin: 0 0 10mm;
+  font-style: italic; position: relative; padding-left: 7mm;
+}
+.cv-m5-perfil-texto::before {
+  content: "“"; position: absolute; left: 0; top: -0.25em;
+  font-family: var(--cv-font-titulos); font-style: normal; font-size: 2.2em;
+  color: var(--cv-acento); line-height: 1;
+}
+
+.cv-m5-meta-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(42mm, 1fr));
+  gap: 7mm 8mm; margin-bottom: 10mm;
+}
+.cv-m5-chips { display: flex; flex-wrap: wrap; gap: 1.6mm; }
+.cv-m5-chip {
+  font-size: 7.6pt; color: var(--cv-texto); border: 1px solid var(--cv-linea);
+  border-radius: 20px; padding: 1.2mm 3mm; max-width: 100%; word-break: break-word;
+}
+.cv-m5-lista-clara { list-style: none; margin: 0; padding: 0; }
+.cv-m5-lista-clara li {
+  font-size: 8.4pt; line-height: 1.55; color: var(--cv-tenue);
+  padding: 1.4mm 0; border-bottom: 1px solid var(--cv-linea);
+}
+.cv-m5-lista-clara li:last-child { border-bottom: none; }
+
+.cv-m5-experiencia-lista { display: flex; flex-direction: column; gap: 6.5mm; margin-bottom: 10mm; }
+.cv-m5-experiencia-item { display: flex; gap: 5mm; }
+.cv-m5-experiencia-num {
+  font-family: var(--cv-font-titulos); font-size: 18pt; font-weight: 700;
+  color: var(--cv-acento); opacity: 0.32; line-height: 1; flex: 0 0 auto;
+}
+.cv-m5-experiencia-contenido { flex: 1 1 auto; min-width: 0; }
+.cv-m5-experiencia-fila { display: flex; align-items: baseline; justify-content: space-between; gap: 4mm; flex-wrap: wrap; }
+.cv-m5-experiencia-rol { font-size: 10pt; font-weight: 700; color: var(--cv-texto); }
+.cv-m5-experiencia-fecha { font-size: 7.8pt; color: var(--cv-acento); font-weight: 600; white-space: nowrap; }
+.cv-m5-experiencia-empresa { font-size: 8.6pt; color: var(--cv-tenue); font-style: italic; margin: 0.8mm 0 1.6mm; }
+.cv-m5-experiencia-desc { font-size: 8.6pt; line-height: 1.6; color: var(--cv-tenue); margin: 0 0 1.6mm; }
+
+.cv-m5-cierre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.cv-m5-ref-item { font-size: 8.4pt; line-height: 1.6; color: var(--cv-tenue); margin-bottom: 3mm; }
+.cv-m5-ref-nombre { color: var(--cv-texto); font-weight: 700; }
+
+@media print {
+  .cv-m5-experiencia-item, .cv-m5-meta-col { break-inside: avoid; }
+}
+
+/* ============================================================
+   Modelo 6 "Pulse" — estética de editor de código: franja angosta con
+   etiqueta vertical, foto chica como badge, skills como tags <Texto/>,
+   bullets con numeración de línea.
+   ============================================================ */
+.cv-m6-wrap { display: flex; min-height: 297mm; background: #0b0f14; color: #d6e2ea; font-family: var(--cv-font-cuerpo); }
+.cv-m6-rail { width: 8mm; flex: 0 0 8mm; background: linear-gradient(180deg, #0f1a20, #0b0f14); border-right: 0.4mm solid #1c2a33; display: flex; align-items: flex-end; justify-content: center; padding-block: 8mm; }
+.cv-m6-rail-label { writing-mode: vertical-rl; transform: rotate(180deg); font-family: "Courier New", var(--cv-font-cuerpo), monospace; font-size: 7pt; letter-spacing: 0.15em; color: #43e5ff; opacity: 0.75; white-space: nowrap; }
+.cv-m6-main { flex: 1; min-width: 0; padding: 10mm 12mm 12mm 10mm; }
+.cv-m6-header { display: flex; align-items: center; gap: 5mm; margin-bottom: 4mm; }
+.cv-m6-badge-wrap { flex: 0 0 auto; }
+.cv-m6-foto { width: calc(18mm * var(--cv-escala-foto, 1)); height: calc(18mm * var(--cv-escala-foto, 1)); object-fit: cover; border-radius: 4mm; border: 0.5mm solid #43e5ff; box-shadow: 0 0 0 1.5mm rgba(67, 229, 255, 0.12); }
+.cv-m6-nombre { font-family: var(--cv-font-titulos); font-size: 22pt; font-weight: 700; color: #f2f7fa; margin: 0; line-height: 1.1; }
+.cv-m6-puesto { font-family: "Courier New", monospace; font-size: 11pt; color: #43e5ff; margin-top: 1mm; }
+.cv-m6-subtitulo { font-size: 9pt; color: #8fa3af; margin-top: 0.5mm; }
+.cv-m6-contacto { display: flex; flex-wrap: wrap; gap: 3mm; font-size: 8.5pt; color: #9db2bd; padding-bottom: 4mm; border-bottom: 0.3mm solid #1c2a33; margin-bottom: 5mm; }
+.cv-m6-contacto-item { display: inline-flex; align-items: center; gap: 1.2mm; }
+.cv-m6-contacto-icono { font-size: calc(9pt * var(--cv-escala-iconos, 1)); color: #43e5ff; }
+.cv-m6-section { margin-bottom: 6mm; }
+.cv-m6-h2 { font-family: "Courier New", monospace; font-size: 9.5pt; color: #43e5ff; letter-spacing: 0.04em; margin: 0 0 2.5mm; text-transform: lowercase; }
+.cv-m6-perfil { font-size: 9.5pt; line-height: 1.6; color: #c3d2da; margin: 0; }
+.cv-m6-chips { display: flex; flex-wrap: wrap; gap: 2mm; }
+.cv-m6-chip { font-family: "Courier New", monospace; font-size: 8pt; background: #101820; border: 0.3mm solid #1c2a33; color: #43e5ff; border-radius: 1mm; padding: 1mm 2mm; }
+.cv-m6-chip-soft { color: #d6e2ea; border-color: #26333d; }
+.cv-m6-idiomas { display: flex; flex-wrap: wrap; gap: 4mm; }
+.cv-m6-idioma { display: flex; gap: 1.5mm; font-size: 9pt; }
+.cv-m6-idioma-nivel { color: #43e5ff; }
+.cv-m6-job { margin-bottom: 5mm; padding-bottom: 4mm; border-bottom: 0.3mm solid #161f26; }
+.cv-m6-job:last-child { border-bottom: none; }
+.cv-m6-job-head { display: flex; justify-content: space-between; font-size: 10.5pt; }
+.cv-m6-job-rol { font-weight: 700; color: #f2f7fa; }
+.cv-m6-job-fecha { font-family: "Courier New", monospace; font-size: 8pt; color: #6f8794; }
+.cv-m6-job-empresa { color: #43e5ff; font-size: 9pt; margin-bottom: 1.5mm; }
+.cv-m6-job-desc { font-size: 9pt; color: #b7c6ce; line-height: 1.55; margin: 0 0 2mm; }
+.cv-m6-bullets { border-left: 0.3mm solid #1c2a33; margin-left: 1mm; }
+.cv-m6-bullet-row { display: flex; gap: 3mm; font-size: 8.8pt; padding: 0.6mm 0 0.6mm 2.5mm; }
+.cv-m6-linenum { font-family: "Courier New", monospace; color: #435560; min-width: 5mm; text-align: right; }
+.cv-m6-bullet-text { color: #cdd9e0; }
+.cv-m6-tools { display: flex; flex-wrap: wrap; gap: 2mm; margin-top: 2mm; }
+.cv-m6-tool { font-size: 7.5pt; background: #101820; color: #8fa3af; border-radius: 1mm; padding: 0.8mm 1.8mm; }
+.cv-m6-edu { margin-bottom: 3mm; }
+.cv-m6-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m6-edu-inst { font-weight: 700; color: #f2f7fa; }
+.cv-m6-edu-fecha { font-family: "Courier New", monospace; font-size: 8pt; color: #6f8794; }
+.cv-m6-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.5pt; color: #b7c6ce; }
+.cv-m6-certs { display: flex; flex-direction: column; gap: 1.5mm; }
+.cv-m6-cert { font-size: 9pt; display: flex; gap: 2mm; }
+.cv-m6-cert-titulo { color: #f2f7fa; font-weight: 600; }
+.cv-m6-cert-sub { color: #8fa3af; }
+.cv-m6-logros { margin: 0; padding-left: 4mm; font-size: 9pt; color: #c3d2da; }
+.cv-m6-referencias { display: flex; flex-wrap: wrap; gap: 5mm; }
+.cv-m6-referencia { display: flex; flex-direction: column; font-size: 8.5pt; color: #b7c6ce; }
+.cv-m6-ref-nombre { font-weight: 700; color: #f2f7fa; }
+.cv-m6-ref-rol { color: #43e5ff; font-size: 8pt; }
+@media print { .cv-m6-job, .cv-m6-edu, .cv-m6-cert, .cv-m6-referencia { break-inside: avoid; } }
+
+/* ============================================================
+   Modelo 7 "Meridian" — masthead centrado y simétrico, foto chica tipo
+   sello, columna única ancha, serif, casi monocromo — perfil ejecutivo.
+   ============================================================ */
+.cv-m7-page { max-width: 160mm; margin: 0 auto; padding: 14mm 0 12mm; text-align: center; color: #1b2430; background: #fbf8f2; font-family: var(--cv-font-cuerpo); }
+.cv-m7-photowrap { margin-bottom: 4mm; }
+.cv-m7-foto { width: calc(20mm * var(--cv-escala-foto, 1)); height: calc(20mm * var(--cv-escala-foto, 1)); border-radius: 50%; object-fit: cover; border: 0.4mm solid #16233f; box-shadow: 0 0 0 1.4mm #fbf8f2, 0 0 0 1.7mm rgba(22,35,63,0.13); }
+.cv-m7-rule { height: 0; border-top: 0.25mm solid #16233f; margin: 2mm auto; width: 70mm; }
+.cv-m7-nombre { font-family: Georgia, "Times New Roman", var(--cv-font-titulos), serif; font-size: 24pt; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: #16233f; margin: 1mm 0; }
+.cv-m7-puesto { font-family: Georgia, "Times New Roman", var(--cv-font-titulos), serif; font-style: italic; font-size: 11pt; color: #4a5568; margin-top: 2mm; }
+.cv-m7-subtitulo { font-size: 9pt; color: #6b7686; margin-top: 1mm; }
+.cv-m7-contacto { font-size: 8.5pt; color: #55617a; margin: 3mm 0 8mm; }
+.cv-m7-dot { margin: 0 2mm; color: #b3a084; }
+.cv-m7-section { margin-bottom: 7mm; text-align: left; }
+.cv-m7-h2 { font-family: Georgia, "Times New Roman", var(--cv-font-titulos), serif; font-size: 10.5pt; letter-spacing: 0.18em; text-transform: uppercase; text-align: center; color: #16233f; margin: 0 0 4mm; padding-bottom: 1.5mm; border-bottom: 0.2mm solid #d8cdb8; }
+.cv-m7-perfil { font-size: 9.5pt; line-height: 1.7; text-align: center; color: #333e4d; margin: 0; }
+.cv-m7-job { margin-bottom: 5mm; }
+.cv-m7-job-head { display: flex; justify-content: space-between; font-size: 10.5pt; }
+.cv-m7-job-rol { font-weight: 700; color: #16233f; }
+.cv-m7-job-fecha { font-style: italic; color: #7a8496; font-size: 9pt; }
+.cv-m7-job-empresa { font-size: 9pt; color: #6b7686; margin-bottom: 1.5mm; }
+.cv-m7-job-desc { font-size: 9pt; line-height: 1.55; color: #333e4d; margin: 0 0 2mm; }
+.cv-m7-job-bullets { margin: 0 0 2mm; padding-left: 4.5mm; font-size: 8.8pt; color: #333e4d; }
+.cv-m7-job-tools { font-size: 8pt; color: #8a94a6; }
+.cv-m7-edu { margin-bottom: 3mm; }
+.cv-m7-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m7-edu-inst { font-weight: 700; color: #16233f; }
+.cv-m7-edu-fecha { font-style: italic; color: #7a8496; font-size: 8.5pt; }
+.cv-m7-edu-bullets { margin: 1mm 0 0; padding-left: 4.5mm; font-size: 8.5pt; color: #333e4d; }
+.cv-m7-cert { font-size: 9pt; margin-bottom: 1.5mm; }
+.cv-m7-cert-titulo { font-weight: 700; color: #16233f; }
+.cv-m7-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.cv-m7-inline-list { font-size: 9pt; color: #333e4d; margin: 0 0 2mm; text-align: center; }
+.cv-m7-idioma { display: flex; justify-content: space-between; font-size: 9pt; padding: 0.6mm 0; }
+.cv-m7-idioma-nivel { color: #7a8496; }
+.cv-m7-page ul#cv-m7-logros { list-style: none; padding: 0; margin: 0; text-align: center; }
+.cv-m7-page ul#cv-m7-logros li { font-size: 9pt; padding: 1mm 0; }
+.cv-m7-referencia { font-size: 8.8pt; text-align: center; margin-bottom: 2.5mm; color: #333e4d; }
+.cv-m7-ref-nombre { font-weight: 700; color: #16233f; }
+@media print { .cv-m7-job, .cv-m7-edu, .cv-m7-cert, .cv-m7-referencia { break-inside: avoid; } }
+
+/* ============================================================
+   Modelo 8 "Nova" — bloque diagonal de color detrás de nombre+foto,
+   grid asimétrico tipo revista con tarjetas "recortadas" a la derecha.
+   ============================================================ */
+.cv-m8-page { position: relative; background: #fffdf9; font-family: var(--cv-font-cuerpo); color: #2a2733; overflow: hidden; padding-bottom: 12mm; }
+.cv-m8-diagonal { position: absolute; top: 0; left: 0; width: 140mm; height: 62mm; background: linear-gradient(135deg, #ff6b5e, #7c5cff); clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%); z-index: 0; }
+.cv-m8-header { position: relative; z-index: 1; display: flex; align-items: flex-end; gap: 6mm; padding: 12mm 12mm 8mm 12mm; }
+.cv-m8-photo-wrap { flex: 0 0 auto; transform: translateY(4mm); }
+.cv-m8-foto { width: calc(30mm * var(--cv-escala-foto, 1)); height: calc(30mm * var(--cv-escala-foto, 1)); border-radius: 50%; object-fit: cover; border: 1.2mm solid #fffdf9; box-shadow: 0 1mm 3mm rgba(0,0,0,0.18); }
+.cv-m8-heading { padding-bottom: 2mm; }
+.cv-m8-nombre { font-family: var(--cv-font-titulos); font-size: 23pt; font-weight: 800; color: #fff; margin: 0; line-height: 1.05; text-shadow: 0 0.5mm 2mm rgba(0,0,0,0.25); }
+.cv-m8-apellido { color: #1a1620; text-shadow: none; }
+.cv-m8-puesto { font-size: 11pt; font-weight: 600; color: #fff2ee; margin-top: 1mm; }
+.cv-m8-subtitulo { font-size: 8.5pt; color: #fff2ee; opacity: 0.9; margin-top: 0.5mm; }
+.cv-m8-contacto { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4mm; font-size: 8.5pt; color: #57506a; padding: 0 12mm 4mm; }
+.cv-m8-contacto-item { display: inline-flex; align-items: center; gap: 1.2mm; }
+.cv-m8-contacto-icono { font-size: calc(9pt * var(--cv-escala-iconos, 1)); color: #ff6b5e; }
+.cv-m8-section-perfil { position: relative; z-index: 1; padding: 0 12mm 6mm; }
+.cv-m8-section-perfil p { font-size: 9.5pt; line-height: 1.6; color: #423d52; margin: 0; }
+.cv-m8-h2 { font-family: var(--cv-font-titulos); font-size: 12pt; font-weight: 800; color: #2a2733; margin: 0 0 3mm; }
+.cv-m8-h2::after { content: ""; display: block; width: 10mm; height: 1mm; background: #ff6b5e; border-radius: 1mm; margin-top: 1.5mm; }
+.cv-m8-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.65fr 1fr; gap: 8mm; padding: 0 12mm; align-items: start; }
+.cv-m8-job { margin-bottom: 5mm; padding-bottom: 4mm; border-bottom: 0.25mm solid #ece6da; }
+.cv-m8-job:last-child { border-bottom: none; }
+.cv-m8-job-head { display: flex; justify-content: space-between; font-size: 10.5pt; }
+.cv-m8-job-rol { font-weight: 700; color: #2a2733; }
+.cv-m8-job-fecha { font-size: 8pt; color: #7c5cff; font-weight: 600; }
+.cv-m8-job-empresa { font-size: 9pt; color: #ff6b5e; font-weight: 600; margin-bottom: 1.5mm; }
+.cv-m8-job-desc { font-size: 9pt; line-height: 1.55; color: #423d52; margin: 0 0 2mm; }
+.cv-m8-job-bullets { margin: 0 0 2mm; padding-left: 4.5mm; font-size: 8.8pt; color: #423d52; }
+.cv-m8-tools { display: flex; flex-wrap: wrap; gap: 1.5mm; }
+.cv-m8-tool { font-size: 7.5pt; background: #f4efe6; color: #57506a; border-radius: 1mm; padding: 0.7mm 1.8mm; }
+.cv-m8-page ul#cv-m8-logros { list-style: none; padding: 0; margin: 0; }
+.cv-m8-page ul#cv-m8-logros li { font-size: 9pt; padding: 1mm 0; border-bottom: 0.2mm dashed #ece6da; }
+.cv-m8-referencia { font-size: 8.8pt; margin-bottom: 3mm; display: flex; flex-direction: column; }
+.cv-m8-ref-nombre { font-weight: 700; }
+.cv-m8-ref-rol { color: #ff6b5e; font-size: 8pt; }
+.cv-m8-ref-dato { color: #7c5cff; font-size: 8pt; }
+.cv-m8-card { position: relative; background: #fbf6ee; border-radius: 2mm; padding: 5mm; margin-bottom: 5mm; }
+.cv-m8-card::after { content: ""; position: absolute; top: 0; right: 0; width: 6mm; height: 6mm; background: rgba(0,0,0,0.06); clip-path: polygon(100% 0, 0 0, 100% 100%); }
+.cv-m8-card-coral { border-left: 1mm solid #ff6b5e; }
+.cv-m8-card-violet { border-left: 1mm solid #7c5cff; }
+.cv-m8-h3 { font-family: var(--cv-font-titulos); font-size: 10pt; font-weight: 800; margin: 0 0 2.5mm; color: #2a2733; }
+.cv-m8-chip { display: inline-block; font-size: 7.8pt; background: #fff; border: 0.25mm solid #ece6da; color: #423d52; border-radius: 6mm; padding: 0.9mm 2.4mm; margin: 0 1.2mm 1.2mm 0; }
+.cv-m8-chip-soft { background: #f4efe6; }
+.cv-m8-idioma { display: flex; justify-content: space-between; font-size: 8.8pt; padding: 0.8mm 0; }
+.cv-m8-idioma-nivel { color: #7c5cff; font-weight: 600; }
+.cv-m8-edu { margin-bottom: 3mm; }
+.cv-m8-edu-inst { font-weight: 700; font-size: 9pt; }
+.cv-m8-edu-fecha { font-size: 7.8pt; color: #7c5cff; margin-bottom: 1mm; }
+.cv-m8-edu-bullets { margin: 0.5mm 0 0; padding-left: 4mm; font-size: 8.2pt; color: #423d52; }
+.cv-m8-cert { font-size: 8.8pt; margin-bottom: 2mm; display: flex; flex-direction: column; }
+.cv-m8-cert-titulo { font-weight: 700; }
+.cv-m8-cert-sub { color: #7a7488; font-size: 8pt; }
+@media print { .cv-m8-job, .cv-m8-card, .cv-m8-edu, .cv-m8-cert, .cv-m8-referencia { break-inside: avoid; } }
+
+/* ---- Modelo 9 "Ignite" ---- */
+.cv-m9-page {
+  --cv-m9-punch: #d7ff1f; --cv-m9-black: #0a0a0a;
+  font-family: var(--cv-font-cuerpo); color: var(--cv-m9-black); background: #fff;
+}
+.cv-m9-header { display: flex; align-items: center; gap: 6mm; padding: 10mm 10mm 4mm; }
+.cv-m9-fotowrap { flex: none; width: calc(28mm * var(--cv-escala-foto, 1)); height: calc(28mm * var(--cv-escala-foto, 1)); }
+.cv-m9-foto { width: 100%; height: 100%; object-fit: cover; clip-path: polygon(50% 0%, 100% 15%, 100% 75%, 50% 100%, 0% 75%, 0% 15%); background: #ddd; }
+.cv-m9-titlewrap { flex: 1; }
+.cv-m9-nombretitulo { font-family: var(--cv-font-titulos); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; font-size: 28pt; line-height: 1; margin: 0; }
+.cv-m9-apellido { color: var(--cv-m9-punch); -webkit-text-stroke: 0.5px var(--cv-m9-black); }
+.cv-m9-puesto { font-family: var(--cv-font-titulos); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11pt; margin-top: 1mm; }
+.cv-m9-subtitulo { font-size: 9pt; opacity: 0.75; margin-top: 0.5mm; }
+.cv-m9-contacto { list-style: none; display: flex; flex-wrap: wrap; gap: 3mm 6mm; margin: 0; padding: 3mm 10mm 5mm; background: var(--cv-m9-black); }
+.cv-m9-contacto-item { display: flex; align-items: center; gap: 1.5mm; color: #fff; font-size: 8.5pt; }
+.cv-m9-contacto-icono { color: var(--cv-m9-punch); font-size: calc(11pt * var(--cv-escala-iconos, 1)); line-height: 1; }
+.cv-m9-seccion { padding: 0 10mm 6mm; }
+.cv-m9-banda { position: relative; background: var(--cv-m9-black); padding: 3mm 0; margin: 0 -10mm 5mm; padding-left: 10mm; display: flex; align-items: center; gap: 4mm; }
+.cv-m9-num { font-family: var(--cv-font-titulos); font-weight: 900; font-size: 30pt; line-height: 1; color: var(--cv-m9-punch); letter-spacing: -0.05em; margin-top: -2mm; margin-bottom: -2mm; }
+.cv-m9-tituloseccion { font-family: var(--cv-font-titulos); color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 13pt; margin: 0; }
+.cv-m9-perfil { font-size: 9.5pt; line-height: 1.5; }
+.cv-m9-habilidades { display: flex; flex-direction: column; gap: 2.5mm; }
+.cv-m9-skill-texto { font-weight: 700; text-transform: uppercase; font-size: 8.5pt; letter-spacing: 0.03em; margin-bottom: 0.8mm; }
+.cv-m9-skill-bar { height: 3mm; background: repeating-linear-gradient(to right, var(--cv-m9-punch) 0 6mm, var(--cv-m9-black) 6mm 6.8mm); border: 1px solid var(--cv-m9-black); }
+.cv-m9-blandas, .cv-m9-idiomas { display: flex; flex-wrap: wrap; gap: 2mm; }
+.cv-m9-chip { background: var(--cv-m9-black); color: #fff; font-size: 8pt; font-weight: 700; text-transform: uppercase; padding: 1.5mm 3mm; clip-path: polygon(4% 0, 100% 0, 96% 100%, 0% 100%); }
+.cv-m9-idioma { display: flex; gap: 2mm; align-items: baseline; border-bottom: 2px solid var(--cv-m9-black); padding: 1mm 0; min-width: 40mm; }
+.cv-m9-idioma-nombre { font-weight: 700; text-transform: uppercase; font-size: 8.5pt; }
+.cv-m9-idioma-nivel { font-size: 8pt; color: var(--cv-m9-punch); background: var(--cv-m9-black); padding: 0 1.5mm; font-weight: 700; }
+.cv-m9-experiencia { display: flex; flex-direction: column; gap: 5mm; }
+.cv-m9-exp-item { border-left: 3px solid var(--cv-m9-punch); padding-left: 3mm; }
+.cv-m9-exp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; }
+.cv-m9-exp-rol { font-family: var(--cv-font-titulos); font-weight: 800; text-transform: uppercase; font-size: 11pt; margin: 0; }
+.cv-m9-exp-fecha { font-size: 8pt; font-weight: 700; color: var(--cv-m9-black); background: var(--cv-m9-punch); padding: 0.5mm 2mm; white-space: nowrap; }
+.cv-m9-exp-empresa { font-size: 9pt; font-weight: 700; opacity: 0.8; margin-bottom: 1mm; }
+.cv-m9-exp-desc { font-size: 9pt; line-height: 1.45; margin-bottom: 1mm; }
+.cv-m9-exp-bullets { margin: 1mm 0; padding-left: 4mm; font-size: 9pt; line-height: 1.4; }
+.cv-m9-exp-tools { display: flex; flex-wrap: wrap; gap: 1.5mm; margin-top: 1.5mm; }
+.cv-m9-tool { font-size: 7.5pt; font-weight: 700; border: 1px solid var(--cv-m9-black); padding: 0.5mm 1.5mm; text-transform: uppercase; }
+.cv-m9-educacion, .cv-m9-certificaciones, .cv-m9-referencias { display: flex; flex-direction: column; gap: 3mm; }
+.cv-m9-edu-head { display: flex; justify-content: space-between; align-items: baseline; }
+.cv-m9-edu-institucion { font-weight: 800; text-transform: uppercase; font-size: 10pt; margin: 0; }
+.cv-m9-edu-fecha { font-size: 8pt; font-weight: 700; }
+.cv-m9-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.5pt; }
+.cv-m9-cert-titulo { font-weight: 800; font-size: 9.5pt; }
+.cv-m9-cert-sub { font-size: 8.5pt; opacity: 0.75; }
+.cv-m9-logros { margin: 0; padding-left: 4mm; font-size: 9pt; line-height: 1.5; }
+.cv-m9-ref-nombre { font-weight: 800; font-size: 9.5pt; }
+.cv-m9-ref-detalle { font-size: 8.5pt; opacity: 0.75; }
+@media print { .cv-m9-exp-item, .cv-m9-edu-item, .cv-m9-cert-item, .cv-m9-ref-item, .cv-m9-skill, .cv-m9-banda { break-inside: avoid; } }
+
+/* ---- Modelo 10 "Halcyon" ---- */
+.cv-m10-page {
+  --cv-m10-sage: #e4ede4; --cv-m10-sage-deep: #7fa387; --cv-m10-blush: #f5e2df; --cv-m10-blush-deep: #d99a92; --cv-m10-ink: #4a4540;
+  font-family: var(--cv-font-cuerpo); color: var(--cv-m10-ink); background: #fbf9f6; padding: 8mm;
+}
+.cv-m10-flow { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 5mm; }
+.cv-m10-flow-inject { display: contents; }
+.cv-m10-card { background: #fff; border-radius: 6mm; padding: 6mm; box-shadow: 0 3mm 6mm -2mm rgba(120, 110, 100, 0.18); }
+.cv-m10-card-header { flex: 1 1 100%; display: flex; align-items: center; gap: 6mm; background: var(--cv-m10-sage); border-radius: 10mm; }
+.cv-m10-fotowrap { flex: none; width: calc(26mm * var(--cv-escala-foto, 1)); height: calc(26mm * var(--cv-escala-foto, 1)); border-radius: 50%; border: 2px solid var(--cv-m10-sage-deep); padding: 1.5mm; }
+.cv-m10-foto { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #eee; }
+.cv-m10-nombretitulo { font-family: var(--cv-font-titulos); font-weight: 700; font-size: 22pt; margin: 0; color: var(--cv-m10-ink); }
+.cv-m10-apellido { color: var(--cv-m10-blush-deep); }
+.cv-m10-puesto { font-size: 10.5pt; font-weight: 600; color: var(--cv-m10-sage-deep); margin-top: 1mm; }
+.cv-m10-subtitulo { font-size: 9pt; opacity: 0.8; margin-top: 0.5mm; }
+.cv-m10-tituloseccion { font-family: var(--cv-font-titulos); font-size: 11pt; font-weight: 700; color: var(--cv-m10-sage-deep); margin: 0 0 3mm; }
+.cv-m10-card-contacto, .cv-m10-card-habilidades, .cv-m10-card-blandas, .cv-m10-card-idiomas { flex: 1 1 78mm; }
+.cv-m10-card-perfil { flex: 1 1 100%; background: var(--cv-m10-blush); }
+.cv-m10-card-perfil .cv-m10-tituloseccion { color: var(--cv-m10-blush-deep); }
+.cv-m10-perfil { font-size: 9.5pt; line-height: 1.55; margin: 0; }
+.cv-m10-contacto { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2mm; }
+.cv-m10-contacto-item { display: flex; align-items: center; gap: 2mm; font-size: 8.5pt; }
+.cv-m10-contacto-icono { color: var(--cv-m10-sage-deep); font-size: calc(11pt * var(--cv-escala-iconos, 1)); line-height: 1; }
+.cv-m10-habilidades, .cv-m10-blandas { display: flex; flex-wrap: wrap; gap: 2mm; }
+.cv-m10-pill { display: inline-block; background: var(--cv-m10-sage); color: var(--cv-m10-ink); border-radius: 20mm; padding: 1.5mm 3.5mm; font-size: 8pt; font-weight: 600; }
+.cv-m10-card-blandas .cv-m10-pill { background: var(--cv-m10-blush); }
+.cv-m10-idioma { display: flex; justify-content: space-between; gap: 2mm; padding: 1.5mm 3mm; border-radius: 20mm; background: var(--cv-m10-sage); font-size: 8.5pt; margin-bottom: 2mm; }
+.cv-m10-idioma-nombre { font-weight: 700; }
+.cv-m10-idioma-nivel { color: var(--cv-m10-sage-deep); font-weight: 600; }
+.cv-m10-card-experiencia { flex: 1 1 100%; border: 1px solid var(--cv-m10-sage); }
+.cv-m10-exp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; flex-wrap: wrap; }
+.cv-m10-exp-rol { font-family: var(--cv-font-titulos); font-weight: 700; font-size: 11pt; margin: 0; }
+.cv-m10-exp-fecha { font-size: 8pt; font-weight: 600; color: var(--cv-m10-blush-deep); background: var(--cv-m10-blush); border-radius: 20mm; padding: 0.8mm 3mm; white-space: nowrap; }
+.cv-m10-exp-empresa { font-size: 9pt; font-weight: 600; color: var(--cv-m10-sage-deep); margin-bottom: 1.5mm; }
+.cv-m10-exp-desc { font-size: 9pt; line-height: 1.5; margin-bottom: 1.5mm; }
+.cv-m10-exp-bullets { margin: 1.5mm 0; padding-left: 4.5mm; font-size: 9pt; line-height: 1.45; }
+.cv-m10-exp-tools { display: flex; flex-wrap: wrap; gap: 1.5mm; margin-top: 2mm; }
+.cv-m10-tool { font-size: 7.5pt; font-weight: 600; background: var(--cv-m10-sage); border-radius: 20mm; padding: 0.8mm 2.5mm; }
+.cv-m10-card-educacion, .cv-m10-card-certificaciones, .cv-m10-card-logros { flex: 1 1 78mm; }
+.cv-m10-edu-item, .cv-m10-cert-item { margin-bottom: 3mm; padding-bottom: 3mm; border-bottom: 1px dashed var(--cv-m10-sage); }
+.cv-m10-edu-item:last-child, .cv-m10-cert-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.cv-m10-edu-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2mm; }
+.cv-m10-edu-institucion { font-weight: 700; font-size: 9.5pt; margin: 0; }
+.cv-m10-edu-fecha { font-size: 8pt; color: var(--cv-m10-sage-deep); font-weight: 600; }
+.cv-m10-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.5pt; }
+.cv-m10-cert-titulo { font-weight: 700; font-size: 9.5pt; }
+.cv-m10-cert-sub { font-size: 8.5pt; opacity: 0.8; }
+.cv-m10-logros { margin: 0; padding-left: 4mm; font-size: 9pt; line-height: 1.55; }
+.cv-m10-card-referencia { flex: 1 1 78mm; background: var(--cv-m10-blush); }
+.cv-m10-ref-nombre { font-weight: 700; font-size: 9.5pt; }
+.cv-m10-ref-detalle { font-size: 8.5pt; opacity: 0.8; }
+@media print { .cv-m10-card-experiencia, .cv-m10-edu-item, .cv-m10-cert-item, .cv-m10-card-referencia, .cv-m10-card { break-inside: avoid; } }
+
+/* ---- Modelo 11 "Vertex" ---- */
+.cv-m11-page { font-family: var(--cv-font-cuerpo); color: #cfe3f2; background: #0b1524; padding-bottom: 10mm; }
+.cv-m11-header { position: relative; display: flex; align-items: center; gap: 7mm; padding: 12mm 12mm 8mm; overflow: hidden; }
+.cv-m11-crosshatch {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.10;
+  background:
+    repeating-linear-gradient(45deg, #7fd7ff 0, #7fd7ff 0.3mm, transparent 0.3mm, transparent 6mm),
+    repeating-linear-gradient(-45deg, #7fd7ff 0, #7fd7ff 0.3mm, transparent 0.3mm, transparent 6mm);
+}
+.cv-m11-foto-wrap { position: relative; z-index: 1; flex: 0 0 auto; }
+.cv-m11-foto {
+  width: calc(34mm * var(--cv-escala-foto, 1)); height: calc(38mm * var(--cv-escala-foto, 1));
+  object-fit: cover; background: #17263a;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  filter: drop-shadow(0 0 3mm rgba(127,215,255,0.35));
+}
+.cv-m11-heading { position: relative; z-index: 1; min-width: 0; }
+.cv-m11-nombre { font-family: var(--cv-font-titulos); font-weight: 800; font-size: 24pt; color: #f2f8fd; margin: 0; line-height: 1.05; }
+.cv-m11-apellido { color: #7fd7ff; }
+.cv-m11-puesto { font-size: 11pt; font-weight: 600; color: #7fd7ff; margin-top: 1.5mm; letter-spacing: 0.5pt; }
+.cv-m11-subtitulo { font-size: 8.5pt; color: #9fb4c8; margin-top: 0.5mm; }
+.cv-m11-contacto { display: flex; flex-wrap: wrap; gap: 3.5mm; margin-top: 3mm; font-size: 8pt; color: #cfe3f2; }
+.cv-m11-contacto-item { display: inline-flex; align-items: center; gap: 1.2mm; }
+.cv-m11-contacto-icono { font-size: calc(9pt * var(--cv-escala-iconos, 1)); color: #7fd7ff; }
+.cv-m11-section { padding: 0 12mm 6mm; }
+.cv-m11-h2 { font-family: var(--cv-font-titulos); font-size: 11.5pt; font-weight: 700; color: #7fd7ff; text-transform: uppercase; letter-spacing: 1pt; margin: 0 0 3.5mm; }
+.cv-m11-perfil-texto { font-size: 9.3pt; line-height: 1.6; margin: 0; color: #dbe9f4; }
+.cv-m11-hive { display: flex; flex-direction: column; }
+.cv-m11-hive-fila { display: flex; }
+.cv-m11-hive-fila-offset { margin-left: 11mm; }
+/* el "panal" no se superpone de verdad entre filas (margin-top negativo
+   original) — con textos largos que envuelven a varias líneas eso hacía
+   que una fila tapara el texto de la fila de arriba. En cambio, un
+   espacio chico positivo entre filas + celdas que crecen con su propio
+   contenido (min-height, no height fijo) evita el choque sea cual sea el
+   largo del texto, a costa de perder el encastre geométrico perfecto. */
+.cv-m11-hive-fila-solapada { margin-top: 2mm; }
+.cv-m11-hex {
+  width: 24mm; min-height: 20mm; margin: 0 1.2mm 2mm;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: linear-gradient(150deg, #143351, #0e2338);
+  border: 0.25mm solid rgba(127,215,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; flex: 0 0 auto; padding: 3mm 0;
+}
+.cv-m11-hex-texto { font-size: 7pt; font-weight: 600; color: #cfe3f2; padding: 0 3mm; line-height: 1.2; }
+.cv-m11-hive-small .cv-m11-hex { width: 20mm; min-height: 17mm; }
+.cv-m11-hive-small .cv-m11-hex .cv-m11-hex-texto { font-size: 6.6pt; }
+.cv-m11-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 8mm; padding: 0 12mm; align-items: start; }
+.cv-m11-job { margin-bottom: 5.5mm; padding-bottom: 4mm; border-bottom: 0.25mm solid rgba(127,215,255,0.15); }
+.cv-m11-job:last-child { border-bottom: none; }
+.cv-m11-job-head { display: flex; justify-content: space-between; font-size: 10.3pt; }
+.cv-m11-job-rol { font-weight: 700; color: #f2f8fd; }
+.cv-m11-job-fecha { font-size: 8pt; color: #7fd7ff; font-weight: 600; }
+.cv-m11-job-empresa { font-size: 9pt; color: #9fb4c8; font-weight: 600; margin-bottom: 1.5mm; }
+.cv-m11-job-desc { font-size: 8.8pt; line-height: 1.55; margin: 0 0 2mm; color: #cfe3f2; }
+.cv-m11-job-bullets { margin: 0 0 2mm; padding-left: 4.5mm; font-size: 8.5pt; line-height: 1.5; color: #cfe3f2; }
+.cv-m11-tools { display: flex; flex-wrap: wrap; gap: 1.5mm; }
+.cv-m11-tool { font-size: 7.3pt; background: rgba(127,215,255,0.1); color: #7fd7ff; border-radius: 0.5mm; padding: 0.6mm 1.8mm; }
+.cv-m11-logros-list { list-style: none; margin: 0; padding: 0; }
+.cv-m11-logros-list li { font-size: 8.9pt; padding: 1.2mm 0; border-bottom: 0.25mm dashed rgba(127,215,255,0.15); }
+.cv-m11-logros-list li:last-child { border-bottom: none; }
+.cv-m11-idioma { display: flex; justify-content: space-between; font-size: 8.7pt; padding: 0.9mm 0; }
+.cv-m11-idioma-nivel { color: #7fd7ff; font-weight: 600; }
+.cv-m11-edu, .cv-m11-cert { margin-bottom: 3.5mm; }
+.cv-m11-edu-inst, .cv-m11-cert-titulo { font-weight: 700; font-size: 9pt; color: #f2f8fd; }
+.cv-m11-edu-fecha { font-size: 7.8pt; color: #7fd7ff; margin-bottom: 1mm; }
+.cv-m11-edu-bullets { margin: 0.5mm 0 0; padding-left: 4mm; font-size: 8.2pt; }
+.cv-m11-cert-sub { display: block; font-size: 8pt; color: #9fb4c8; }
+.cv-m11-referencia { font-size: 8.7pt; margin-bottom: 3mm; display: flex; flex-direction: column; }
+.cv-m11-ref-nombre { font-weight: 700; color: #f2f8fd; }
+.cv-m11-ref-rol { color: #7fd7ff; font-size: 8pt; }
+.cv-m11-ref-dato { color: #9fb4c8; font-size: 8pt; }
+@media print { .cv-m11-job, .cv-m11-edu, .cv-m11-cert, .cv-m11-referencia { break-inside: avoid; } }
+
+/* ---- Modelo 12 "Ledger" ---- */
+.cv-m12-page {
+  position: relative;
+  background-color: #f6f1e3;
+  background-image: repeating-linear-gradient(
+    to bottom, rgba(27,58,43,0.18) 0, rgba(27,58,43,0.18) 0.28mm, transparent 0.28mm, transparent 6mm
+  );
+  color: #1c2a22;
+  font-family: var(--cv-font-cuerpo);
+  padding: 14mm 14mm 16mm;
+}
+.cv-m12-header { display: flex; align-items: flex-start; gap: 7mm; margin-bottom: 6mm; }
+.cv-m12-folio { font-family: "Courier New", Consolas, monospace; font-size: 7.6pt; letter-spacing: .12em; color: #4f6a5a; margin-bottom: 2mm; }
+.cv-m12-nombre { font-family: var(--cv-font-titulos); font-size: 23pt; font-weight: 700; color: #1b3a2b; margin: 0; line-height: 1.05; }
+.cv-m12-puesto { font-size: 11pt; font-weight: 600; color: #1b3a2b; margin-top: 1.4mm; }
+.cv-m12-subtitulo { font-size: 9.4pt; color: #4f6a5a; margin-top: 0.6mm; }
+.cv-m12-foto-marco { position: relative; flex: 0 0 auto; width: calc(26mm * var(--cv-escala-foto, 1)); height: calc(26mm * var(--cv-escala-foto, 1)); }
+.cv-m12-foto { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 0; }
+.cv-m12-tick { position: absolute; width: 4mm; height: 4mm; }
+.cv-m12-tick-tl { top: -1.6mm; left: -1.6mm; border-top: 0.5mm solid #1b3a2b; border-left: 0.5mm solid #1b3a2b; }
+.cv-m12-tick-tr { top: -1.6mm; right: -1.6mm; border-top: 0.5mm solid #1b3a2b; border-right: 0.5mm solid #1b3a2b; }
+.cv-m12-tick-bl { bottom: -1.6mm; left: -1.6mm; border-bottom: 0.5mm solid #1b3a2b; border-left: 0.5mm solid #1b3a2b; }
+.cv-m12-tick-br { bottom: -1.6mm; right: -1.6mm; border-bottom: 0.5mm solid #1b3a2b; border-right: 0.5mm solid #1b3a2b; }
+.cv-m12-contacto { display: flex; flex-wrap: wrap; gap: 0 8mm; margin-bottom: 6mm; padding-bottom: 3mm; border-bottom: 0.5mm solid #1b3a2b; }
+.cv-m12-contacto .cv-m12-linea { flex: 0 0 auto; padding: 0; border: none; }
+.cv-m12-titulo {
+  font-family: var(--cv-font-titulos); font-size: 10.6pt; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: #1b3a2b; margin: 0 0 3mm;
+  padding-bottom: 1.2mm; border-bottom: 0.6mm solid #1b3a2b; box-shadow: 0 1.4mm 0 -1mm rgba(27,58,43,0.55);
+}
+.cv-m12-seccion { margin-bottom: 6.5mm; }
+.cv-m12-perfil { font-size: 9.6pt; line-height: 1.55; margin: 0; }
+.cv-m12-tabla-cab {
+  display: grid; grid-template-columns: 24mm 1fr; font-family: "Courier New", Consolas, monospace;
+  font-size: 7.6pt; letter-spacing: .06em; text-transform: uppercase; color: #4f6a5a; margin-bottom: 1.5mm;
+}
+.cv-m12-fila { display: grid; grid-template-columns: 24mm 1fr; gap: 3mm; padding: 3mm 0; border-top: 0.28mm solid rgba(27,58,43,0.35); }
+.cv-m12-fila:first-child { border-top: none; }
+.cv-m12-fila-fecha { font-family: "Courier New", Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 8.6pt; font-weight: 700; color: #1b3a2b; white-space: nowrap; }
+.cv-m12-fila-head { display: flex; flex-wrap: wrap; gap: 0 3mm; align-items: baseline; }
+.cv-m12-fila-rol { font-weight: 700; font-size: 10pt; color: #1b3a2b; }
+.cv-m12-fila-empresa { font-size: 9pt; color: #4f6a5a; }
+.cv-m12-fila-desc { font-size: 9pt; line-height: 1.5; margin: 1.6mm 0; }
+.cv-m12-fila-bullets { margin: 1.4mm 0 1.4mm 4mm; padding: 0; font-size: 8.8pt; line-height: 1.5; }
+.cv-m12-fila-bullets li { margin-bottom: 0.6mm; }
+.cv-m12-fila-tools { display: flex; flex-wrap: wrap; gap: 1.4mm; margin-top: 1.6mm; }
+.cv-m12-tool { font-family: "Courier New", Consolas, monospace; font-size: 7.4pt; color: #1b3a2b; border: 0.28mm solid #1b3a2b; padding: 0.4mm 1.6mm; border-radius: 0; }
+.cv-m12-cert { display: flex; gap: 3mm; padding: 2mm 0; border-top: 0.28mm solid rgba(27,58,43,0.35); }
+.cv-m12-cert:first-child { border-top: none; }
+.cv-m12-cert-num { font-family: "Courier New", Consolas, monospace; font-size: 8.4pt; font-weight: 700; color: #1b3a2b; }
+.cv-m12-cert-titulo { font-weight: 700; font-size: 9.4pt; color: #1b3a2b; }
+.cv-m12-cert-sub { font-size: 8.6pt; color: #4f6a5a; }
+.cv-m12-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-bottom: 6.5mm; }
+.cv-m12-sublista { font-size: 8pt; text-transform: uppercase; letter-spacing: .08em; color: #4f6a5a; margin: 3mm 0 1.2mm; }
+.cv-m12-linea { display: flex; align-items: baseline; gap: 2mm; padding: 1mm 0; font-size: 9pt; }
+.cv-m12-linea-marca { font-family: "Courier New", Consolas, monospace; font-size: 8pt; font-weight: 700; color: #1b3a2b; flex: 0 0 auto; }
+.cv-m12-linea-icono { color: #1b3a2b; flex: 0 0 auto; font-size: calc(9pt * var(--cv-escala-iconos, 1)); }
+.cv-m12-linea-txt { flex: 0 1 auto; }
+.cv-m12-leader { flex: 1 1 auto; border-bottom: 0.25mm dotted #4f6a5a; margin: 0 1.6mm; height: 0.5em; }
+.cv-m12-linea-val { flex: 0 0 auto; font-family: "Courier New", Consolas, monospace; font-size: 8.4pt; color: #4f6a5a; }
+.cv-m12-ref { display: flex; gap: 3mm; padding: 2mm 0; border-top: 0.28mm solid rgba(27,58,43,0.35); font-size: 9pt; }
+.cv-m12-ref:first-child { border-top: none; }
+.cv-m12-ref-num { font-family: "Courier New", Consolas, monospace; font-size: 8.4pt; font-weight: 700; color: #1b3a2b; }
+.cv-m12-ref-nombre { font-weight: 700; }
+.cv-m12-ref-datos { font-family: "Courier New", Consolas, monospace; font-size: 8pt; color: #4f6a5a; margin-top: 0.5mm; }
+@media print { .cv-m12-fila, .cv-m12-cert, .cv-m12-ref { break-inside: avoid; } }
+
+/* ---- Modelo 13 "Prism" ---- */
+.cv-m13-page { background: #fbfaf8; color: #241b2e; font-family: var(--cv-font-cuerpo); }
+.cv-m13-header { display: flex; align-items: center; gap: 8mm; }
+.cv-m13-facets { position: relative; flex: 0 0 auto; width: 78mm; height: 58mm; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.cv-m13-facet { position: absolute; inset: 0; }
+.cv-m13-facet-a { background: #d6336c; opacity: .82; clip-path: polygon(0 0, 62% 0, 0 78%); }
+.cv-m13-facet-b { background: #6741d9; opacity: .78; clip-path: polygon(100% 0, 100% 66%, 34% 0); }
+.cv-m13-facet-c { background: #f76707; opacity: .55; clip-path: polygon(0 100%, 55% 100%, 100% 42%, 100% 100%); }
+.cv-m13-facet-d { background: #ffd43b; opacity: .35; clip-path: polygon(18% 22%, 70% 8%, 84% 60%, 30% 76%); }
+.cv-m13-foto-marco { position: relative; z-index: 2; width: calc(32mm * var(--cv-escala-foto, 1)); height: calc(32mm * var(--cv-escala-foto, 1)); }
+.cv-m13-foto { width: 100%; height: 100%; object-fit: cover; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); filter: drop-shadow(0 1mm 2mm rgba(0,0,0,0.2)); }
+.cv-m13-heading { flex: 1 1 auto; padding: 4mm 12mm 4mm 0; }
+.cv-m13-nombre { font-family: var(--cv-font-titulos); font-size: 25pt; font-weight: 800; margin: 0; line-height: 1.05; color: #241b2e; }
+.cv-m13-puesto { font-size: 11.5pt; font-weight: 600; color: #6741d9; margin-top: 1.4mm; }
+.cv-m13-subtitulo { font-size: 9.4pt; color: #6b6376; margin-top: 0.6mm; }
+.cv-m13-contacto { display: flex; flex-wrap: wrap; gap: 1.2mm 4mm; margin-top: 3.4mm; }
+.cv-m13-contacto-item { display: inline-flex; align-items: center; gap: 1.2mm; font-size: 8.4pt; color: #4b4356; }
+.cv-m13-contacto-icono { color: #d6336c; font-size: calc(9pt * var(--cv-escala-iconos, 1)); }
+.cv-m13-body { display: grid; grid-template-columns: 1fr 60mm; gap: 0; padding: 10mm 12mm 14mm; }
+.cv-m13-col-main { padding-right: 8mm; }
+.cv-m13-col-side { padding-left: 8mm; border-left: 0.3mm solid #e7e2ea; }
+.cv-m13-seccion { margin-bottom: 7mm; }
+.cv-m13-titulo {
+  display: flex; align-items: center; gap: 2.4mm; font-family: var(--cv-font-titulos); font-weight: 700;
+  font-size: 11.5pt; text-transform: uppercase; letter-spacing: .05em; color: #241b2e; margin: 0 0 3mm;
+}
+.cv-m13-titulo::before {
+  content: ""; width: 0; height: 0; flex: 0 0 auto;
+  border-left: 1.8mm solid transparent; border-right: 1.8mm solid transparent; border-bottom: 3mm solid #d6336c;
+}
+#cv-m13-perfil { font-size: 9.6pt; line-height: 1.6; margin: 0; }
+.cv-m13-job, .cv-m13-edu { margin-bottom: 5mm; padding-left: 3mm; border-left: 0.7mm solid #d6336c; }
+.cv-m13-job:nth-child(2n), .cv-m13-edu:nth-child(2n) { border-left-color: #6741d9; }
+.cv-m13-job:nth-child(3n), .cv-m13-edu:nth-child(3n) { border-left-color: #f76707; }
+.cv-m13-job-head, .cv-m13-edu-head { display: flex; justify-content: space-between; gap: 3mm; font-size: 10pt; }
+.cv-m13-job-rol, .cv-m13-edu-inst { font-weight: 700; }
+.cv-m13-job-fecha, .cv-m13-edu-fecha { font-size: 8.6pt; color: #6b6376; white-space: nowrap; }
+.cv-m13-job-empresa { font-size: 9pt; color: #6741d9; font-weight: 600; margin-bottom: 0.8mm; }
+.cv-m13-job-desc { font-size: 9pt; line-height: 1.5; margin: 1.4mm 0; }
+.cv-m13-job-bullets, .cv-m13-edu-bullets { margin: 1.2mm 0 0 4mm; padding: 0; font-size: 8.8pt; line-height: 1.5; }
+.cv-m13-job-bullets li, .cv-m13-edu-bullets li { margin-bottom: 0.6mm; }
+.cv-m13-job-tools { display: flex; flex-wrap: wrap; gap: 1.4mm; margin-top: 1.6mm; }
+.cv-m13-tool { font-size: 7.6pt; background: #f3eef7; color: #6741d9; padding: 0.6mm 2mm; border-radius: 3mm; }
+.cv-m13-chip { display: inline-block; font-size: 8.2pt; padding: 1mm 2.6mm; margin: 0 1.2mm 1.6mm 0; border-radius: 3mm; background: #fbe8ee; color: #a5265a; }
+.cv-m13-chip:nth-of-type(3n+2) { background: #ece6fb; color: #4a2ea6; }
+.cv-m13-chip:nth-of-type(3n) { background: #fdece0; color: #b04e0a; }
+.cv-m13-chip-soft { background: #f3f1ee; color: #5b5560; }
+.cv-m13-idioma { display: flex; justify-content: space-between; font-size: 9pt; padding: 1mm 0; }
+.cv-m13-idioma-nivel { color: #6b6376; }
+.cv-m13-cert { padding: 1.8mm 0; border-top: 0.28mm solid #e7e2ea; font-size: 8.8pt; }
+.cv-m13-cert:first-child { border-top: none; }
+.cv-m13-cert-titulo { display: block; font-weight: 700; }
+.cv-m13-cert-sub { color: #6b6376; font-size: 8.2pt; }
+#cv-m13-logros { margin: 0; padding-left: 4mm; font-size: 8.8pt; line-height: 1.6; }
+#cv-m13-logros li { margin-bottom: 1mm; }
+.cv-m13-ref { padding: 1.8mm 0; border-top: 0.28mm solid #e7e2ea; font-size: 8.8pt; }
+.cv-m13-ref:first-child { border-top: none; }
+.cv-m13-ref-nombre { font-weight: 700; }
+.cv-m13-ref-rol { color: #6741d9; }
+.cv-m13-ref-dato { color: #6b6376; font-size: 8.2pt; }
+@media print { .cv-m13-job, .cv-m13-edu, .cv-m13-cert, .cv-m13-ref { break-inside: avoid; } }
+
+/* ---- Modelo 14 "Circuit" ---- */
+.cv-m14-outer { background: #05070a; min-height: 297mm; padding: 9mm; box-sizing: border-box; }
+.cv-m14-page {
+  background: #0b1114; border-radius: 4mm; overflow: hidden;
+  box-shadow: 0 0 0 0.3mm #16323a, 0 4mm 10mm rgba(0,0,0,0.5);
+  font-family: var(--cv-font-cuerpo); color: #d7f7fb;
+}
+.cv-m14-titlebar { display: flex; align-items: center; gap: 2.4mm; padding: 4mm 6mm; background: #0d1a1e; border-bottom: 0.3mm solid #16323a; }
+.cv-m14-dot { width: 2.6mm; height: 2.6mm; border-radius: 50%; display: inline-block; }
+.cv-m14-dot-r { background: #ff5f56; } .cv-m14-dot-y { background: #ffbd2e; margin-right: 4mm; } .cv-m14-dot-g { background: #27c93f; margin-right: 4mm; }
+.cv-m14-avatar { width: 8mm; height: 8mm; border-radius: 1.6mm; overflow: hidden; border: 0.3mm solid #4dd9e8; flex: 0 0 auto; }
+.cv-m14-foto { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cv-m14-titlebar-text { display: flex; flex-direction: column; line-height: 1.15; }
+.cv-m14-titlebar-nombre { font-weight: 700; font-size: 9.6pt; color: #eafcff; }
+.cv-m14-titlebar-puesto { font-size: 7.6pt; color: #6b8b90; }
+.cv-m14-body { padding: 7mm 8mm 10mm; }
+.cv-m14-subtitulo { font-family: "Consolas", "Courier New", monospace; font-size: 8pt; color: #4dd9e8; margin-bottom: 5mm; }
+.cv-m14-panel { position: relative; border: 0.3mm solid #1c3a3f; border-radius: 2mm; margin: 8mm 0 0; padding: 6mm; background: #0f1a1d; }
+.cv-m14-panel:first-of-type { margin-top: 0; }
+.cv-m14-panel::before {
+  content: attr(data-tab); position: absolute; top: -3.4mm; left: 5mm;
+  background: #0b2226; color: #5ff2ff; border: 0.3mm solid #1c3a3f;
+  font-family: "Consolas", "Courier New", monospace; font-size: 6.6pt; letter-spacing: .04em;
+  padding: 0.6mm 2.4mm; border-radius: 1mm;
+}
+.cv-m14-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 8mm; align-items: stretch; }
+.cv-m14-grid2 .cv-m14-panel { margin-top: 0; }
+#cv-m14-perfil { font-size: 9.4pt; line-height: 1.6; margin: 0; color: #cdeff2; }
+.cv-m14-row { display: flex; align-items: center; gap: 2mm; font-size: 8.8pt; padding: 1mm 0; color: #cdeff2; }
+.cv-m14-row-icono { color: #4dd9e8; font-size: calc(9pt * var(--cv-escala-iconos, 1)); }
+.cv-m14-row-txt { flex: 1 1 auto; }
+.cv-m14-tag {
+  font-family: "Consolas", "Courier New", monospace; font-size: 7.2pt; color: #4dd9e8;
+  border: 0.28mm solid #245a62; background: #0b2226; padding: 0.4mm 1.8mm; border-radius: 1mm; white-space: nowrap;
+}
+.cv-m14-tag-fecha { color: #ffd166; border-color: #4a3a1c; background: #1a1408; }
+.cv-m14-job { margin-bottom: 5mm; padding-bottom: 4mm; border-bottom: 0.28mm solid #16323a; }
+.cv-m14-job:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.cv-m14-job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; }
+.cv-m14-job-rol { font-weight: 700; font-size: 10pt; color: #eafcff; }
+.cv-m14-job-empresa { font-size: 8.8pt; color: #6b8b90; margin: 0.6mm 0 1.4mm; }
+.cv-m14-job-desc { font-size: 8.8pt; line-height: 1.55; color: #b9dde1; margin: 0 0 1.6mm; }
+.cv-m14-job-bullets { list-style: none; margin: 0 0 1.6mm; padding: 0; font-size: 8.6pt; line-height: 1.55; color: #cdeff2; }
+.cv-m14-job-bullets li { position: relative; padding-left: 4mm; margin-bottom: 0.7mm; }
+.cv-m14-job-bullets li::before { content: "›"; position: absolute; left: 0; color: #4dd9e8; font-family: "Consolas", "Courier New", monospace; }
+.cv-m14-job-tools { display: flex; flex-wrap: wrap; gap: 1.4mm; }
+.cv-m14-cert { display: flex; flex-direction: column; padding: 1.6mm 0; border-bottom: 0.28mm solid #16323a; font-size: 8.8pt; }
+.cv-m14-cert:last-child { border-bottom: none; }
+.cv-m14-cert-titulo { font-weight: 700; color: #eafcff; }
+.cv-m14-cert-sub { color: #6b8b90; font-size: 8pt; }
+.cv-m14-chip { display: inline-block; font-size: 8pt; padding: 1mm 2.6mm; margin: 0 1.2mm 1.6mm 0; border-radius: 1mm; background: #0b2226; border: 0.28mm solid #245a62; color: #9fe8ee; }
+.cv-m14-chip-soft { border-color: #2a2a45; color: #b7b8e0; background: #101020; }
+.cv-m14-panel-sub { font-family: "Consolas", "Courier New", monospace; font-size: 7pt; letter-spacing: .06em; color: #6b8b90; margin: 3mm 0 1.4mm; }
+#cv-m14-logros { list-style: none; margin: 0; padding: 0; font-size: 8.8pt; line-height: 1.6; color: #cdeff2; }
+#cv-m14-logros li { position: relative; padding-left: 4mm; margin-bottom: 1mm; }
+#cv-m14-logros li::before { content: "$"; position: absolute; left: 0; color: #4dd9e8; font-family: "Consolas", "Courier New", monospace; }
+.cv-m14-ref { padding: 1.6mm 0; border-bottom: 0.28mm solid #16323a; font-size: 8.8pt; display: flex; flex-wrap: wrap; gap: 1.6mm 2.4mm; align-items: baseline; }
+.cv-m14-ref:last-child { border-bottom: none; }
+.cv-m14-ref-nombre { font-weight: 700; color: #eafcff; }
+.cv-m14-ref-rol { color: #6b8b90; }
+@media print { .cv-m14-job, .cv-m14-cert, .cv-m14-ref, .cv-m14-panel { break-inside: avoid; } }
+
+/* ---- Modelo 15 "Solstice" ---- */
+.cv-m15-page { position: relative; background: #fbf6ee; color: #3a2f28; font-family: var(--cv-font-cuerpo); overflow: hidden; }
+.cv-m15-sky {
+  position: relative; z-index: 2; text-align: center;
+  padding: 11mm 14mm 15mm;
+  background: linear-gradient(178deg, #f6b64d 0%, #e37c3f 32%, #c85a4a 55%, #8c4a63 75%, #4c3a5e 100%);
+  border-bottom: 0.6mm solid rgba(255,246,230,0.55);
+}
+.cv-m15-nombre { margin: 0; font-family: var(--cv-font-titulos); font-size: 27pt; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #fff6e8; text-shadow: 0 1.5px 5px rgba(60,20,10,0.35); }
+.cv-m15-puesto { margin-top: 2mm; font-size: 11.5pt; font-weight: 600; letter-spacing: 0.03em; color: #ffe9c7; }
+.cv-m15-subtitulo { margin-top: 1mm; font-size: 9pt; color: #f4d9b8; }
+.cv-m15-photowrap { position: relative; z-index: 3; width: calc(26mm * var(--cv-escala-foto, 1)); margin: calc(-13mm * var(--cv-escala-foto, 1)) auto 5mm; }
+.cv-m15-foto { display: block; width: 100%; height: calc(26mm * var(--cv-escala-foto, 1)); border-radius: 50%; object-fit: cover; border: 1mm solid #fbf6ee; box-shadow: 0 0 0 0.5mm #2d6e6b, 0 3px 10px rgba(60,30,10,0.35); }
+.cv-m15-contacto { text-align: center; font-size: 8.6pt; color: #5c4b3c; margin: 0 0 6mm; display: flex; justify-content: center; gap: 4mm; flex-wrap: wrap; }
+.cv-m15-contacto-item { display: inline-flex; align-items: center; gap: 1.2mm; }
+.cv-m15-contacto-icono { color: #c1573d; }
+.cv-m15-body { position: relative; padding: 0 0 12mm; }
+.cv-m15-body::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    repeating-radial-gradient(circle at 12% 6%, transparent 0 8mm, rgba(74,92,66,0.05) 8mm 8.4mm, transparent 8.4mm 16mm),
+    repeating-radial-gradient(circle at 90% 40%, transparent 0 10mm, rgba(74,92,66,0.045) 10mm 10.4mm, transparent 10.4mm 20mm),
+    repeating-radial-gradient(circle at 35% 95%, transparent 0 12mm, rgba(74,92,66,0.04) 12mm 12.4mm, transparent 12.4mm 24mm);
+}
+.cv-m15-inner { position: relative; z-index: 1; padding: 0 14mm; }
+.cv-m15-section { margin-bottom: 7mm; }
+.cv-m15-h2 { font-family: var(--cv-font-titulos); font-size: 12.5pt; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #8c3f2e; margin: 0 0 3.5mm; padding-bottom: 1.5mm; border-bottom: 0.3mm solid #dcc49a; }
+.cv-m15-h3 { font-family: var(--cv-font-titulos); font-size: 9pt; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #2d6e6b; margin: 0 0 2mm; }
+.cv-m15-perfil { font-size: 9.6pt; line-height: 1.65; margin: 0; color: #3a2f28; }
+.cv-m15-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6mm; padding: 4mm 0; border-top: 0.25mm solid var(--cv-linea, #e4e6ea); border-bottom: 0.25mm solid var(--cv-linea, #e4e6ea); }
+.cv-m15-chip { display: inline-block; font-size: 8.2pt; padding: 1mm 2.6mm; margin: 0 1mm 1mm 0; border-radius: 2mm; background: #f0e3cd; color: #6b4a2e; }
+.cv-m15-chip-soft { background: #e3ede9; color: #2d6e6b; }
+.cv-m15-idioma { display: flex; justify-content: space-between; font-size: 8.6pt; padding: 0.6mm 0; }
+.cv-m15-idioma-nivel { color: #8c6a4a; }
+.cv-m15-trail { position: relative; padding-left: 6mm; }
+.cv-m15-trail::before { content: ""; position: absolute; left: 1.1mm; top: 1mm; bottom: 1mm; width: 0; border-left: 0.3mm dashed #c1a583; }
+.cv-m15-job { position: relative; margin-bottom: 6mm; }
+.cv-m15-job::before { content: ""; position: absolute; left: -6mm; top: 1mm; width: 2.6mm; height: 2.6mm; background: #c1573d; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.cv-m15-job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; font-size: 10.5pt; }
+.cv-m15-job-rol { font-weight: 800; color: #3a2f28; }
+.cv-m15-job-fecha { font-size: 8.4pt; color: #8c6a4a; font-style: italic; white-space: nowrap; }
+.cv-m15-job-empresa { font-size: 9pt; color: #2d6e6b; font-weight: 600; margin-bottom: 1.2mm; }
+.cv-m15-job-desc { font-size: 8.9pt; line-height: 1.55; color: #4a3d33; margin: 0 0 1.8mm; }
+.cv-m15-job-bullets { margin: 0 0 1.8mm; padding-left: 4mm; font-size: 8.6pt; color: #4a3d33; }
+.cv-m15-job-bullets li { margin-bottom: 0.6mm; }
+.cv-m15-job-tools { font-size: 7.8pt; color: #8c6a4a; }
+.cv-m15-edu { margin-bottom: 3mm; }
+.cv-m15-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m15-edu-inst { font-weight: 700; color: #3a2f28; }
+.cv-m15-edu-fecha { font-size: 8.4pt; color: #8c6a4a; font-style: italic; }
+.cv-m15-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.4pt; color: #4a3d33; }
+.cv-m15-cert { font-size: 8.8pt; margin-bottom: 1.4mm; }
+.cv-m15-cert-titulo { font-weight: 700; color: #3a2f28; }
+.cv-m15-cert-sub { color: #8c6a4a; }
+.cv-m15-logros { list-style: none; margin: 0; padding: 0; }
+.cv-m15-logros li { position: relative; padding-left: 4.5mm; font-size: 8.8pt; margin-bottom: 1.4mm; color: #4a3d33; }
+.cv-m15-logros li::before { content: "▲"; position: absolute; left: 0; top: 0; font-size: 6.5pt; color: #2d6e6b; }
+.cv-m15-referencia { font-size: 8.6pt; margin-bottom: 2.6mm; color: #4a3d33; }
+.cv-m15-ref-nombre { font-weight: 700; color: #3a2f28; }
+.cv-m15-ref-rol { color: #8c6a4a; }
+.cv-m15-ref-dato { color: #8c6a4a; }
+@media print { .cv-m15-job, .cv-m15-edu, .cv-m15-cert, .cv-m15-referencia { break-inside: avoid; } }
+
+/* ---- Modelo 16 "Aperture" ---- */
+.cv-m16-page { background: #f7f5f0; color: #141414; font-family: var(--cv-font-cuerpo); }
+.cv-m16-header { display: flex; align-items: center; gap: 8mm; padding: 12mm 14mm; background: #0a0a0a; color: #f5f2ea; }
+.cv-m16-photoblock { flex-shrink: 0; }
+.cv-m16-aperture { position: relative; width: calc(30mm * var(--cv-escala-foto, 1)); height: calc(30mm * var(--cv-escala-foto, 1)); display: flex; align-items: center; justify-content: center; }
+.cv-m16-ticks { position: absolute; inset: 0; }
+.cv-m16-tick { position: absolute; top: 50%; left: 50%; width: 0.35mm; height: 2.4mm; background: #d99a2b; margin: -1.2mm 0 0 -0.175mm; }
+.cv-m16-foto {
+  width: calc(24mm * var(--cv-escala-foto, 1)); height: calc(24mm * var(--cv-escala-foto, 1)); border-radius: 50%; object-fit: cover;
+  box-shadow: 0 0 0 0.8mm #0a0a0a, 0 0 0 1.6mm #d99a2b, 0 0 0 2mm #0a0a0a;
+}
+.cv-m16-heading { flex: 1; }
+.cv-m16-nombre { font-family: var(--cv-font-titulos); font-size: 25pt; font-weight: 800; letter-spacing: 0.02em; margin: 0; color: #fff; }
+.cv-m16-puesto { font-family: var(--cv-font-cuerpo); font-size: 11pt; color: #d99a2b; font-weight: 600; margin-top: 1.5mm; letter-spacing: 0.03em; text-transform: uppercase; }
+.cv-m16-subtitulo { font-size: 8.8pt; color: #b8b4a8; margin-top: 1mm; }
+.cv-m16-contacto { margin-top: 4mm; font-size: 8.2pt; color: #cfcac0; display: flex; flex-wrap: wrap; gap: 3.5mm; font-family: "Courier New", monospace; }
+.cv-m16-filmstrip { height: 4.4mm; margin: 0; background: repeating-linear-gradient(90deg, #111 0 6mm, #2a2a2a 6mm 6.6mm); position: relative; }
+.cv-m16-filmstrip::before, .cv-m16-filmstrip::after {
+  content: ""; position: absolute; left: 2mm; right: 2mm; height: 1mm;
+  background-image: repeating-linear-gradient(90deg, #f7f5f0 0 1.2mm, transparent 1.2mm 4mm);
+}
+.cv-m16-filmstrip::before { top: 0.4mm; }
+.cv-m16-filmstrip::after { bottom: 0.4mm; }
+.cv-m16-section { padding: 6mm 14mm 0; }
+.cv-m16-h2 { display: flex; align-items: baseline; gap: 2.5mm; font-family: var(--cv-font-titulos); font-size: 12pt; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: #141414; margin: 0 0 3.5mm; }
+.cv-m16-tag { font-family: "Courier New", monospace; font-size: 8pt; font-weight: 700; color: #0a0a0a; background: #d99a2b; padding: 0.6mm 1.6mm; border-radius: 1mm; }
+.cv-m16-perfil { font-size: 9.5pt; line-height: 1.6; margin: 0; color: #2b2b2b; }
+.cv-m16-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.cv-m16-job { margin-bottom: 5.5mm; }
+.cv-m16-job-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5pt; }
+.cv-m16-job-rol { font-weight: 800; }
+.cv-m16-job-fecha { font-family: "Courier New", monospace; font-size: 8.4pt; color: #8a8a8a; }
+.cv-m16-job-empresa { font-size: 9pt; color: #b9791a; font-weight: 700; margin-bottom: 1.4mm; text-transform: uppercase; letter-spacing: 0.02em; }
+.cv-m16-job-desc { font-size: 8.9pt; line-height: 1.55; margin: 0 0 1.8mm; color: #2b2b2b; }
+.cv-m16-job-bullets { margin: 0 0 1.8mm; padding-left: 4mm; font-size: 8.6pt; color: #2b2b2b; }
+.cv-m16-job-tools { font-family: "Courier New", monospace; font-size: 7.6pt; color: #8a8a8a; }
+.cv-m16-edu { margin-bottom: 3mm; }
+.cv-m16-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m16-edu-inst { font-weight: 700; color: #141414; }
+.cv-m16-edu-fecha { font-family: "Courier New", monospace; font-size: 8.2pt; color: #8a8a8a; }
+.cv-m16-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.4pt; color: #2b2b2b; }
+.cv-m16-cert { font-size: 8.8pt; margin-bottom: 1.4mm; }
+.cv-m16-cert-titulo { font-weight: 700; color: #141414; }
+.cv-m16-cert-sub { color: #8a8a8a; }
+.cv-m16-chip { display: inline-block; font-size: 8.2pt; padding: 1mm 2.6mm; margin: 0 1mm 1mm 0; border: 0.2mm solid #141414; }
+.cv-m16-chip-soft { border-color: #d99a2b; color: #8a5f16; }
+.cv-m16-idioma { display: flex; justify-content: space-between; font-size: 8.8pt; padding: 0.6mm 0; }
+.cv-m16-idioma-nivel { color: #8a8a8a; }
+.cv-m16-logros { list-style: none; margin: 0; padding: 0; }
+.cv-m16-logros li { position: relative; padding-left: 4.5mm; font-size: 8.8pt; margin-bottom: 1.4mm; color: #2b2b2b; }
+.cv-m16-logros li::before { content: "◍"; position: absolute; left: 0; top: 0; font-size: 7pt; color: #d99a2b; }
+.cv-m16-referencia { font-size: 8.6pt; margin-bottom: 2.6mm; color: #2b2b2b; }
+.cv-m16-ref-nombre { font-weight: 700; color: #141414; }
+.cv-m16-ref-rol { color: #8a8a8a; }
+.cv-m16-ref-dato { color: #8a8a8a; }
+.cv-m16-page .cv-m16-section:last-of-type { padding-bottom: 12mm; }
+@media print { .cv-m16-job, .cv-m16-edu, .cv-m16-cert, .cv-m16-referencia { break-inside: avoid; } }
+
+/* ---- Modelo 17 "Lattice" ---- */
+.cv-m17-page {
+  position: relative;
+  background-color: #ffffff;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(15,42,84,0.07) 0 0.15mm, transparent 0.15mm 6mm),
+    repeating-linear-gradient(90deg, rgba(15,42,84,0.07) 0 0.15mm, transparent 0.15mm 6mm);
+  color: #0f2a54;
+  font-family: var(--cv-font-cuerpo);
+  padding: 14mm 14mm 14mm 26mm;
+}
+.cv-m17-header { display: flex; align-items: flex-start; gap: 7mm; margin-bottom: 8mm; padding-bottom: 5mm; border-bottom: 0.3mm solid #0f2a54; }
+.cv-m17-photo-ring {
+  position: relative; flex-shrink: 0;
+  width: calc(24mm * var(--cv-escala-foto, 1)); height: calc(24mm * var(--cv-escala-foto, 1));
+  clip-path: polygon(29% 0, 71% 0, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0 71%, 0 29%);
+  background: #fff;
+}
+.cv-m17-photo-ring::after {
+  content: ""; position: absolute; inset: 0;
+  clip-path: polygon(29% 0, 71% 0, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0 71%, 0 29%);
+  border: 0.35mm dashed #0891b2; pointer-events: none;
+}
+.cv-m17-foto { display: block; width: 100%; height: 100%; object-fit: cover; clip-path: polygon(29% 0, 71% 0, 100% 29%, 100% 71%, 71% 100%, 29% 100%, 0 71%, 0 29%); }
+.cv-m17-heading { flex: 1; padding-top: 1mm; }
+.cv-m17-kicker { font-family: "Courier New", monospace; font-size: 7.5pt; letter-spacing: 0.18em; text-transform: uppercase; color: #0891b2; margin-bottom: 1.5mm; }
+.cv-m17-nombre { margin: 0; font-family: var(--cv-font-titulos); font-size: 23pt; font-weight: 800; letter-spacing: -0.01em; color: #0f2a54; }
+.cv-m17-puesto { font-size: 10.5pt; font-weight: 600; letter-spacing: 0.02em; color: #0891b2; margin-top: 1.5mm; text-transform: uppercase; }
+.cv-m17-subtitulo { font-size: 8.6pt; color: #5a6b85; margin-top: 1mm; }
+.cv-m17-contacto { margin-top: 3mm; font-size: 8pt; color: #334a6b; display: flex; flex-wrap: wrap; gap: 3.5mm; font-family: "Courier New", monospace; }
+.cv-m17-section { position: relative; margin-bottom: 7mm; }
+.cv-m17-tag {
+  position: absolute; left: -15mm; top: 0.5mm; width: 9mm;
+  font-family: "Courier New", monospace; font-size: 8pt; font-weight: 700; color: #0891b2; text-align: right;
+}
+.cv-m17-tag-line { position: absolute; top: 50%; left: calc(100% + 1mm); width: 3mm; height: 0; border-top: 0.3mm solid #0891b2; }
+.cv-m17-h2 { font-family: var(--cv-font-titulos); font-size: 11.5pt; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #0f2a54; margin: 0 0 3.5mm; }
+.cv-m17-perfil { font-size: 9.4pt; line-height: 1.6; margin: 0; color: #233855; }
+.cv-m17-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+.cv-m17-job { margin-bottom: 5.5mm; }
+.cv-m17-job-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5pt; }
+.cv-m17-job-rol { font-weight: 800; color: #0f2a54; letter-spacing: -0.01em; }
+.cv-m17-job-fecha { font-family: "Courier New", monospace; font-size: 8.2pt; color: #5a6b85; }
+.cv-m17-job-empresa { font-size: 9pt; color: #0891b2; font-weight: 700; margin-bottom: 1.4mm; text-transform: uppercase; letter-spacing: 0.03em; }
+.cv-m17-job-desc { font-size: 8.8pt; line-height: 1.55; margin: 0 0 1.8mm; color: #233855; }
+.cv-m17-job-bullets { margin: 0 0 1.8mm; padding-left: 4mm; font-size: 8.5pt; color: #233855; }
+.cv-m17-job-tools { font-family: "Courier New", monospace; font-size: 7.6pt; color: #5a6b85; }
+.cv-m17-edu { margin-bottom: 3mm; }
+.cv-m17-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m17-edu-inst { font-weight: 700; color: #0f2a54; }
+.cv-m17-edu-fecha { font-family: "Courier New", monospace; font-size: 8.2pt; color: #5a6b85; }
+.cv-m17-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.4pt; color: #233855; }
+.cv-m17-cert { font-size: 8.8pt; margin-bottom: 1.4mm; }
+.cv-m17-cert-titulo { font-weight: 700; color: #0f2a54; }
+.cv-m17-cert-sub { color: #5a6b85; }
+.cv-m17-chip { display: inline-block; font-size: 8.2pt; padding: 1mm 2.6mm; margin: 0 1mm 1mm 0; border: 0.2mm solid #0f2a54; color: #0f2a54; }
+.cv-m17-chip-soft { border-color: #0891b2; color: #0891b2; }
+.cv-m17-idioma { display: flex; justify-content: space-between; font-size: 8.8pt; padding: 0.6mm 0; }
+.cv-m17-idioma-nivel { color: #5a6b85; }
+.cv-m17-logros { list-style: none; margin: 0; padding: 0; }
+.cv-m17-logros li { position: relative; padding-left: 4.5mm; font-size: 8.8pt; margin-bottom: 1.4mm; color: #233855; }
+.cv-m17-logros li::before { content: ""; position: absolute; left: 0; top: 1.2mm; width: 1.6mm; height: 1.6mm; border: 0.3mm solid #0891b2; }
+.cv-m17-referencia { font-size: 8.6pt; margin-bottom: 2.6mm; color: #233855; }
+.cv-m17-ref-nombre { font-weight: 700; color: #0f2a54; }
+.cv-m17-ref-rol { color: #5a6b85; }
+.cv-m17-ref-dato { color: #5a6b85; }
+@media print { .cv-m17-job, .cv-m17-edu, .cv-m17-cert, .cv-m17-referencia { break-inside: avoid; } }
+
+/* ---- Modelo 18 "Bloom" ---- */
+.cv-m18-page { font-family: var(--cv-font-cuerpo); color: #4a3229; background: #fffaf5; padding: 14mm 16mm 18mm; }
+.cv-m18-header { display: flex; align-items: center; gap: 8mm; margin-bottom: 10mm; }
+.cv-m18-halo-wrap { position: relative; width: calc(32mm * var(--cv-escala-foto, 1)); height: calc(32mm * var(--cv-escala-foto, 1)); flex: none; display: grid; place-items: center; }
+.cv-m18-halo { position: absolute; inset: -6mm; background: linear-gradient(135deg, #ffb199, #ffe0c7 60%, #fff0e6); border-radius: 62% 38% 55% 45% / 45% 40% 60% 55%; opacity: 0.85; z-index: 0; }
+.cv-m18-foto { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3pt solid #fffaf5; box-shadow: 0 2mm 4mm rgba(200, 110, 80, 0.18); }
+.cv-m18-heading { flex: 1; min-width: 0; }
+.cv-m18-nombre { font-family: var(--cv-font-titulos); font-size: 26pt; font-weight: 700; margin: 0 0 1mm; color: #c2452b; }
+.cv-m18-puesto { font-size: 13pt; font-weight: 600; color: #d97a53; margin-bottom: 1mm; }
+.cv-m18-subtitulo { font-size: 10pt; color: #8a6a5c; margin-bottom: 2mm; }
+.cv-m18-contacto { display: flex; flex-wrap: wrap; gap: 3mm; font-size: 9pt; }
+.cv-m18-contacto-item { display: inline-flex; align-items: center; gap: 1.2mm; color: #7a5b4d; }
+.cv-m18-contacto-icono { font-size: calc(9pt * var(--cv-escala-iconos, 1)); color: #e08a63; }
+.cv-m18-section { margin-bottom: 7mm; }
+.cv-m18-h2 { position: relative; font-family: var(--cv-font-titulos); font-size: 13pt; font-weight: 700; color: #c2452b; margin: 0 0 4mm 6mm; }
+.cv-m18-h2::before, .cv-m18-h2::after { content: ""; position: absolute; left: -6mm; border-radius: 50%; background: #ffb199; }
+.cv-m18-h2::before { width: 3mm; height: 3mm; top: 0.5mm; opacity: 0.9; }
+.cv-m18-h2::after { width: 2mm; height: 2mm; top: -1mm; left: -4.2mm; background: #f7d9c4; opacity: 0.85; }
+.cv-m18-perfil { font-size: 10pt; line-height: 1.55; color: #5c4238; margin: 0; }
+.cv-m18-job { background: #fff3ea; border-radius: 4mm; padding: 5mm 6mm; margin-bottom: 4mm; }
+.cv-m18-job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; }
+.cv-m18-job-rol { font-weight: 700; font-size: 11pt; color: #4a3229; }
+.cv-m18-job-fecha { font-size: 8.5pt; color: #b5806a; white-space: nowrap; }
+.cv-m18-job-empresa { font-size: 9.5pt; font-weight: 600; color: #d97a53; margin-bottom: 1.5mm; }
+.cv-m18-job-desc { font-size: 9.5pt; color: #5c4238; margin: 0 0 2mm; line-height: 1.5; }
+.cv-m18-job-bullets { margin: 0 0 2mm; padding-left: 4mm; font-size: 9.5pt; color: #5c4238; line-height: 1.45; }
+.cv-m18-job-bullets li { margin-bottom: 0.8mm; }
+.cv-m18-tools { display: flex; flex-wrap: wrap; gap: 1.5mm; }
+.cv-m18-tool { font-size: 8pt; background: #ffe0c7; color: #a3502f; border-radius: 3mm; padding: 0.6mm 2.4mm; }
+.cv-m18-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+.cv-m18-col { display: flex; flex-direction: column; }
+.cv-m18-edu, .cv-m18-cert { margin-bottom: 3mm; }
+.cv-m18-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m18-edu-inst { font-weight: 700; color: #4a3229; }
+.cv-m18-edu-fecha { color: #b5806a; font-size: 8.5pt; }
+.cv-m18-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 9pt; color: #5c4238; }
+.cv-m18-cert-titulo { font-weight: 700; font-size: 9.5pt; color: #4a3229; }
+.cv-m18-cert-sub { font-size: 8.5pt; color: #8a6a5c; }
+.cv-m18-logros { margin: 0 0 5mm; padding-left: 4mm; font-size: 9.5pt; color: #5c4238; line-height: 1.5; }
+.cv-m18-logros li { margin-bottom: 1mm; }
+.cv-m18-chips { display: flex; flex-wrap: wrap; gap: 1.8mm; margin-bottom: 5mm; }
+.cv-m18-chip { font-size: 8.5pt; background: #ffe0c7; color: #a3502f; border-radius: 4mm; padding: 1mm 3.2mm; }
+.cv-m18-chip-soft { background: #fbe4e0; color: #b25a4a; }
+.cv-m18-idioma { display: flex; justify-content: space-between; font-size: 9.5pt; margin-bottom: 1.5mm; }
+.cv-m18-idioma-nivel { color: #b5806a; }
+.cv-m18-referencia { font-size: 9pt; margin-bottom: 3mm; color: #5c4238; }
+.cv-m18-ref-nombre { font-weight: 700; color: #4a3229; }
+.cv-m18-ref-rol { color: #8a6a5c; }
+.cv-m18-ref-dato { color: #b5806a; }
+@media print { .cv-m18-job, .cv-m18-edu, .cv-m18-cert { break-inside: avoid; } }
+
+/* ---- Modelo 19 "Monolith" ---- */
+.cv-m19-page { font-family: var(--cv-font-cuerpo); color: #111; background: #fff; padding: 20mm 18mm 20mm; }
+.cv-m19-hero { padding: 18mm 0 20mm; margin-bottom: 10mm; }
+.cv-m19-nombre { font-family: var(--cv-font-titulos); font-weight: 200; font-size: 52pt; line-height: 1.02; letter-spacing: -0.01em; margin: 0; color: #0a0a0a; }
+.cv-m19-puesto { font-size: 11pt; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: #6b6b6b; margin-top: 4mm; }
+.cv-m19-body { display: grid; grid-template-columns: 46mm 1px 1fr; gap: 0 8mm; align-items: start; }
+.cv-m19-rule { background: #d8d8d8; width: 1px; height: 100%; align-self: stretch; }
+.cv-m19-identity { display: flex; flex-direction: column; gap: 6mm; }
+.cv-m19-foto-wrap { width: calc(24mm * var(--cv-escala-foto, 1)); height: calc(24mm * var(--cv-escala-foto, 1)); }
+.cv-m19-foto { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cv-m19-subtitulo { font-size: 8.5pt; color: #6b6b6b; line-height: 1.4; }
+.cv-m19-contacto { display: flex; flex-direction: column; gap: 1mm; font-size: 8.5pt; color: #333; }
+.cv-m19-h3 { font-size: 8pt; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #9a9a9a; margin: 0 0 2.5mm; }
+.cv-m19-tag { font-size: 8.5pt; color: #222; margin-bottom: 1mm; }
+.cv-m19-idioma { display: flex; justify-content: space-between; font-size: 8.5pt; color: #222; margin-bottom: 1mm; }
+.cv-m19-idioma-nivel { color: #8a8a8a; }
+.cv-m19-edu { margin-bottom: 3mm; font-size: 8.5pt; }
+.cv-m19-edu-inst { font-weight: 600; color: #111; }
+.cv-m19-edu-fecha { color: #9a9a9a; font-size: 8pt; }
+.cv-m19-edu-bullets { margin: 1mm 0 0; padding-left: 3.5mm; color: #444; }
+.cv-m19-cert { font-size: 8.5pt; margin-bottom: 2.5mm; color: #111; }
+.cv-m19-cert-sub { color: #8a8a8a; font-size: 8pt; }
+.cv-m19-referencia { font-size: 8.5pt; margin-bottom: 3mm; }
+.cv-m19-ref-nombre { font-weight: 600; color: #111; }
+.cv-m19-ref-rol, .cv-m19-ref-dato { color: #8a8a8a; }
+.cv-m19-content { min-width: 0; }
+.cv-m19-h2 { font-family: var(--cv-font-titulos); font-size: 10pt; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #111; border-bottom: 1px solid #e2e2e2; padding-bottom: 2mm; margin: 0 0 5mm; }
+.cv-m19-content section { margin-bottom: 10mm; }
+.cv-m19-content p#cv-m19-perfil { font-size: 10pt; line-height: 1.65; color: #2a2a2a; margin: 0; }
+.cv-m19-job { margin-bottom: 6mm; }
+.cv-m19-job-head { display: flex; justify-content: space-between; align-items: baseline; }
+.cv-m19-job-rol { font-weight: 600; font-size: 11pt; color: #111; }
+.cv-m19-job-fecha { font-size: 8.5pt; color: #9a9a9a; }
+.cv-m19-job-empresa { font-size: 9.5pt; color: #6b6b6b; margin-bottom: 2mm; }
+.cv-m19-job-desc { font-size: 9.5pt; line-height: 1.55; color: #333; margin: 0 0 2mm; }
+.cv-m19-job-bullets { margin: 0 0 2mm; padding-left: 4mm; font-size: 9.5pt; color: #333; line-height: 1.5; }
+.cv-m19-job-bullets li { margin-bottom: 1mm; }
+.cv-m19-tools { font-size: 8pt; color: #9a9a9a; }
+.cv-m19-content ul#cv-m19-logros { margin: 0; padding-left: 4mm; font-size: 9.5pt; color: #333; line-height: 1.6; }
+@media print { .cv-m19-aside-block, .cv-m19-job { break-inside: avoid; } }
+@media (max-width: 480px) {
+  .cv-m19-body { grid-template-columns: 1fr; }
+  .cv-m19-rule { display: none; }
+  .cv-m19-nombre { font-size: 34pt; }
+}
+
+/* ---- Modelo 20 "Odyssey" ---- */
+.cv-m20-page { font-family: var(--cv-font-cuerpo); color: #2e2418; background: #faf3e7; padding: 16mm 16mm 20mm; }
+.cv-m20-title-block { text-align: center; margin-bottom: 8mm; }
+.cv-m20-nombre { font-family: var(--cv-font-titulos); font-size: 30pt; font-weight: 700; color: #1f2d3d; margin: 0; letter-spacing: 0.01em; }
+.cv-m20-puesto { font-size: 11pt; font-style: italic; color: #6b5a44; margin-top: 1.5mm; }
+.cv-m20-bio { display: flex; gap: 6mm; align-items: flex-start; background: #f2e6d3; border-radius: 2mm; padding: 6mm 7mm; margin-bottom: 9mm; border: 1px solid #e3d2b3; }
+.cv-m20-bio-foto-wrap { flex: none; width: calc(26mm * var(--cv-escala-foto, 1)); height: calc(26mm * var(--cv-escala-foto, 1)); }
+.cv-m20-bio-foto { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 2pt solid #faf3e7; }
+.cv-m20-bio-text { flex: 1; min-width: 0; }
+.cv-m20-bio-label { font-family: var(--cv-font-titulos); font-size: 9pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #8a6a3f; margin-bottom: 1.5mm; }
+.cv-m20-subtitulo { font-size: 9.5pt; color: #6b5a44; margin-bottom: 2mm; }
+.cv-m20-perfil { font-size: 10pt; line-height: 1.6; margin: 0 0 3mm; color: #2e2418; }
+.cv-m20-contacto { display: flex; flex-wrap: wrap; gap: 3mm; font-size: 8.5pt; color: #6b5a44; }
+.cv-m20-contacto-icono { color: #8a6a3f; margin-right: 1mm; font-size: calc(8.5pt * var(--cv-escala-iconos, 1)); }
+.cv-m20-h2 { font-family: var(--cv-font-titulos); font-size: 14pt; font-weight: 700; color: #1f2d3d; border-bottom: 1px solid var(--cv-linea, #d8c9a8); padding-bottom: 2mm; margin: 0 0 5mm; }
+.cv-m20-chapters-section { margin-bottom: 9mm; }
+.cv-m20-chapters-wrap { position: relative; }
+.cv-m20-journey { position: absolute; left: -3mm; top: 2mm; width: 10mm; height: 100%; overflow: visible; z-index: 0; }
+.cv-m20-journey-path { fill: none; stroke: #c9a568; stroke-width: 1.6; stroke-linecap: round; opacity: 0.6; }
+.cv-m20-chapter { position: relative; padding-left: 10mm; margin-bottom: 8mm; }
+.cv-m20-chapter-marker { position: absolute; left: 1.5mm; top: 1mm; width: 4mm; height: 4mm; border-radius: 50%; background: #faf3e7; border: 1.6pt solid #c9a568; z-index: 1; }
+.cv-m20-chapter-head { display: flex; align-items: baseline; gap: 3mm; flex-wrap: wrap; margin-bottom: 2mm; }
+.cv-m20-chapter-num { font-family: var(--cv-font-titulos); font-size: 20pt; font-weight: 700; color: #c9a568; line-height: 1; }
+.cv-m20-chapter-titles { flex: 1; min-width: 0; }
+.cv-m20-chapter-empresa { font-family: var(--cv-font-titulos); font-size: 13pt; font-weight: 700; color: #1f2d3d; }
+.cv-m20-chapter-rol { font-size: 9.5pt; font-style: italic; color: #6b5a44; }
+.cv-m20-chapter-fecha { font-size: 8.5pt; color: #8a6a3f; white-space: nowrap; }
+.cv-m20-chapter-desc { font-size: 9.5pt; line-height: 1.55; color: #3a2f22; margin: 0 0 2mm; }
+.cv-m20-chapter-bullets { margin: 0 0 2mm; padding-left: 4mm; font-size: 9.5pt; color: #3a2f22; line-height: 1.5; }
+.cv-m20-chapter-bullets li { margin-bottom: 1mm; }
+.cv-m20-tools { display: flex; flex-wrap: wrap; gap: 1.5mm; }
+.cv-m20-tool { font-size: 8pt; background: #ecdcb8; color: #6b5a2f; border-radius: 1mm; padding: 0.6mm 2.2mm; }
+.cv-m20-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+.cv-m20-col { display: flex; flex-direction: column; }
+.cv-m20-col section { margin-bottom: 7mm; }
+.cv-m20-edu, .cv-m20-cert { margin-bottom: 3mm; }
+.cv-m20-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
+.cv-m20-edu-inst { font-weight: 700; color: #1f2d3d; }
+.cv-m20-edu-fecha { color: #8a6a3f; font-size: 8.5pt; }
+.cv-m20-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 9pt; color: #3a2f22; }
+.cv-m20-cert-titulo { font-weight: 700; font-size: 9.5pt; color: #1f2d3d; }
+.cv-m20-cert-sub { font-size: 8.5pt; color: #6b5a44; }
+.cv-m20-inline-list { font-size: 9.5pt; color: #3a2f22; margin: 0 0 4mm; line-height: 1.6; }
+.cv-m20-idioma { display: flex; justify-content: space-between; font-size: 9.5pt; margin-bottom: 1.5mm; }
+.cv-m20-idioma-nivel { color: #8a6a3f; }
+.cv-m20-referencia { font-size: 9pt; margin-bottom: 3mm; color: #3a2f22; }
+.cv-m20-ref-nombre { font-weight: 700; color: #1f2d3d; }
+.cv-m20-ref-rol { color: #6b5a44; }
+.cv-m20-ref-dato { color: #8a6a3f; }
+@media print { .cv-m20-bio, .cv-m20-chapter, .cv-m20-edu, .cv-m20-cert { break-inside: avoid; } }
+@media (max-width: 480px) {
+  .cv-m20-bio { flex-direction: column; align-items: center; text-align: center; }
+  .cv-m20-grid { grid-template-columns: 1fr; }
+  .cv-m20-journey { display: none; }
+  .cv-m20-chapter { padding-left: 0; }
+  .cv-m20-chapter-marker { display: none; }
+}
+
