@@ -24,10 +24,20 @@ Not 20 recolors of the same layout — 20 actually different structures, each wi
 
 Pick one from the "Modelo de plantilla" dropdown — your data stays exactly the same, only the layout changes.
 
+## ✉️ Cover letters too, 6 templates
+
+Same underlying data — name, contact, photo — plus a small set of fields for the letter itself (who it's for, the role, the body). Switch "Documento a generar" to **Carta de presentación** and pick one of 6 letter designs, from a classic business letter to an editorial layout with a drop cap.
+
+<p align="center">
+  <img src="docs/cover-letter-1.png" alt="Cover letter template — sidebar layout" width="48%">
+  <img src="docs/cover-letter-2.png" alt="Cover letter template — editorial layout" width="48%">
+</p>
+
 ## 🚀 What it does (today)
 
 - **20 templates, one editor.** Switch layouts freely — the form on the left never changes, so nothing you typed gets lost.
-- **6 color themes + full custom colors + 30 font pairings + 10 contact-icon packs.** Or just leave the theme picker alone — every template ships with its own strong default look.
+- **56 color themes** (metallics, jewel tones, neons, pastels, warm/cool gradients) **+ full custom colors + 30 font pairings + 13 contact-icon packs** (including Google's Material Symbols in outlined/rounded/sharp)**.** Picking a theme also updates the background colors to match — or leave the picker alone, every template ships with its own strong default look.
+- **Cover letter generator, 6 templates.** Same data (name, contact, photo), a separate set of fields for the letter itself — pick "Carta de presentación" from the document-type dropdown.
 - **Bilingual output, one click.** A 🌐 EN/ES toggle flips every section title on the *printed CV* (Skills ↔ Habilidades, Work Experience ↔ Experiencia laboral, etc.) — independent from the editor, which stays in Spanish for editing convenience.
 - **Live preview, always in sync.** Every field you edit updates the actual print layout instantly — what you see is exactly what lands in the PDF.
 - **Add/remove anything.** Work experience, education, certifications, references, skills, languages, achievements — all repeatable, reorderable, no fixed number of entries.
@@ -42,9 +52,9 @@ Pick one from the "Modelo de plantilla" dropdown — your data stays exactly the
 
 There's no embedded AI API here — no key to configure, nothing to pay for. The AI part is **you, plus whatever AI assistant you already have** (ChatGPT, Claude, Claude Code, Cursor, whatever). The fastest path in:
 
-1. Click **🧩 Plantilla JSON** in the app — downloads a blank `.json` with the exact shape the app expects (every field labeled with instructions, right inside the file).
-2. Paste that file into your AI assistant of choice, along with your work history — a LinkedIn export, a messy bullet list, your old CV, whatever you've got — and ask it to fill in the template, keeping the same keys/structure.
-3. Click **⬆ Importar datos** in the app and pick the file the AI gave you back. Your CV builds itself.
+1. Click **🧩 Plantilla JSON** in the app — opens a ready-to-paste prompt (instructions + the blank template, already embedded) with a one-click **Copiar prompt** button.
+2. Paste it into your AI assistant of choice, along with your work history — a LinkedIn export, a messy bullet list, your old CV, whatever you've got — and it fills in the template, keeping the same keys/structure.
+3. Click **⬆ Importar datos** in the app and pick the `.json` file the AI gave you back (or paste it into a file and import that). Your CV builds itself.
 4. Open `index.html`, hit print, done.
 
 (You can also just fill in the form on the left by hand — no AI required, same result.)
@@ -53,7 +63,6 @@ That's it. If we're already using AI to automate our work, why are we still upda
 
 ## 🚧 Roadmap (not there yet)
 
-- [ ] Cover letter generator (same drag-and-drop-easy philosophy)
 - [ ] More templates (20 is not a ceiling)
 
 Is it perfect? Nope. Does it need improvements? Absolutely. But that's the point — a simple tool built to save time and make life a little easier.

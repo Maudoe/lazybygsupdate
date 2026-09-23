@@ -31,6 +31,12 @@
   --cv-acento: #2bb0d6;
   --cv-acento-2: var(--cv-acento);
   --cv-badge-texto: #ffffff;
+  /* texto legible sobre un círculo/chip relleno con --cv-acento (íconos
+     de sección, etc.) — blanco funciona con casi todos los acentos
+     (son oscuros/saturados), pero algunos temas nuevos tienen un acento
+     bien claro (limón, ámbar) donde el texto blanco se pierde: esos temas
+     pisan esta variable a un tono oscuro (ver .cv-pagina[data-tema=...]). */
+  --cv-acento-texto: #ffffff;
   --cv-fondo-cuerpo: #ffffff;
   --cv-texto: #1c1e22;
   --cv-tenue: #5b5e66;
@@ -57,6 +63,91 @@
    frío), combinación clásica de diseño — más armónica acá que el dorado,
    que compite en calidez con el coral en vez de contrastar. */
 .cv-pagina[data-tema="coral"]   { --cv-acento: #e8613f; --cv-acento-2: #2a9d8f; --cv-badge-texto: #ffffff; }
+
+/* ---- 50 temas más, agrupados por familia (ver <optgroup> en index.html).
+   Mismo mecanismo de siempre: sólo pisan --cv-acento/--cv-acento-2/
+   --cv-badge-texto, así que aplican tal cual a los 20 modelos sin tocar
+   ninguno. En los modelos que ya arman un degradé propio con
+   linear-gradient(var(--cv-acento), var(--cv-acento-2)) (banners,
+   diagonales, marcadores de línea de tiempo), elegir un --cv-acento-2
+   bien distinto de --cv-acento (en vez de repetir el mismo o un dorado
+   fijo) hace que ESE degradé ya construido se vea a pleno con el tema
+   nuevo, sin tener que tocar los 20 renders. */
+
+/* Metálicos (color + dorado, mismo "escudo" que azul/verde/bordo/violeta) */
+.cv-pagina[data-tema="grafito-dorado"] { --cv-acento: #33383f; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="rosa-dorado"]    { --cv-acento: #c2185b; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="cian-dorado"]    { --cv-acento: #0891b2; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="oliva-dorado"]   { --cv-acento: #6b7a2e; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="granate-dorado"] { --cv-acento: #6e1423; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="marino-dorado"]  { --cv-acento: #1b2a4a; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+
+/* Duotono contrastante (dos colores reales, no color+metal) */
+.cv-pagina[data-tema="lima-violeta"]    { --cv-acento: #7cb518; --cv-acento-2: #6a2fa0; --cv-badge-texto: #ffffff; --cv-acento-texto: #12200a; }
+.cv-pagina[data-tema="mandarina-azul"]  { --cv-acento: #f2760c; --cv-acento-2: #1f4e8c; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="fucsia-verde"]    { --cv-acento: #d6249f; --cv-acento-2: #1f8f5c; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="amarillo-morado"] { --cv-acento: #e0b400; --cv-acento-2: #4b2e83; --cv-badge-texto: #ffffff; --cv-acento-texto: #241c04; }
+.cv-pagina[data-tema="rojo-cian"]       { --cv-acento: #d7263d; --cv-acento-2: #0a9396; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="rosa-azul"]       { --cv-acento: #ef476f; --cv-acento-2: #118ab2; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="naranja-verde"]   { --cv-acento: #f4a300; --cv-acento-2: #2a9134; --cv-badge-texto: #ffffff; --cv-acento-texto: #1f1206; }
+
+/* Degradé cálido — pensados para que el linear-gradient(acento, acento-2)
+   que ya arman algunos modelos quede tipo atardecer/fuego. */
+.cv-pagina[data-tema="atardecer"] { --cv-acento: #ff6b35; --cv-acento-2: #f72585; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="fuego"]     { --cv-acento: #ff4d00; --cv-acento-2: #e09400; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="mango"]     { --cv-acento: #ff9f1c; --cv-acento-2: #e63946; --cv-badge-texto: #ffffff; --cv-acento-texto: #1f0f04; }
+.cv-pagina[data-tema="lava"]      { --cv-acento: #9d0208; --cv-acento-2: #f48c06; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="brasa"]     { --cv-acento: #7f0000; --cv-acento-2: #ff9505; --cv-badge-texto: #1c1e22; }
+
+/* Degradé frío */
+.cv-pagina[data-tema="glaciar"]    { --cv-acento: #023e8a; --cv-acento-2: #1b8fa8; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="abismo"]     { --cv-acento: #03045e; --cv-acento-2: #0077b6; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="menta-azul"] { --cv-acento: #007f5f; --cv-acento-2: #2ec4b6; --cv-badge-texto: #06342c; }
+.cv-pagina[data-tema="aurora"]     { --cv-acento: #4361ee; --cv-acento-2: #1f9bc7; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="nocturno"]   { --cv-acento: #240046; --cv-acento-2: #5a189a; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="polar"]      { --cv-acento: #14213d; --cv-acento-2: #4895ef; --cv-badge-texto: #ffffff; }
+
+/* Joya (piedra preciosa + dorado, o + grafito/verde para las que ya usan dorado como acento) */
+.cv-pagina[data-tema="esmeralda"] { --cv-acento: #0b6e4f; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="rubi"]      { --cv-acento: #9b111e; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="zafiro"]    { --cv-acento: #0f52ba; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="amatista"]  { --cv-acento: #6f2da8; --cv-acento-2: #d4af37; --cv-badge-texto: #1c1e22; }
+.cv-pagina[data-tema="topacio"]   { --cv-acento: #d99a2b; --cv-acento-2: #1b1b1b; --cv-badge-texto: #ffffff; --cv-acento-texto: #1c1608; }
+.cv-pagina[data-tema="peridoto"]  { --cv-acento: #a4c639; --cv-acento-2: #355e3b; --cv-badge-texto: #ffffff; --cv-acento-texto: #141c0a; }
+
+/* Pastel — tonos suaves, pensados para modelos minimalistas/editoriales */
+.cv-pagina[data-tema="lavanda"]        { --cv-acento: #8e7cc3; --cv-acento-2: #8f6fc9; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="durazno-suave"]  { --cv-acento: #e08e79; --cv-acento-2: #d98f3a; --cv-badge-texto: #3a2317; --cv-acento-texto: #3a2317; }
+.cv-pagina[data-tema="cielo-suave"]    { --cv-acento: #6fa8dc; --cv-acento-2: #3a7ca8; --cv-badge-texto: #ffffff; --cv-acento-texto: #103048; }
+.cv-pagina[data-tema="menta-suave"]    { --cv-acento: #6fbf9c; --cv-acento-2: #4f9c86; --cv-badge-texto: #ffffff; --cv-acento-texto: #123528; }
+.cv-pagina[data-tema="rosa-polvo"]     { --cv-acento: #c98ea3; --cv-acento-2: #c76b85; --cv-badge-texto: #ffffff; --cv-acento-texto: #4a1f2c; }
+.cv-pagina[data-tema="arena"]          { --cv-acento: #c9a876; --cv-acento-2: #b8895a; --cv-badge-texto: #ffffff; --cv-acento-texto: #3e2f1c; }
+
+/* Neón — DOS colores vivos que combinan entre sí (no un acento-2 casi
+   negro): --cv-acento-2 pinta cosas como el apellido en negrita
+   (.cv-nombre-acento) y el fondo del badge de fecha — si fuera gris/negro
+   ahí se pierde el efecto "neón" (queda un texto opaco en vez de un
+   segundo color que resalte). El panel oscuro de la franja lateral ya
+   tiene su propio degradé bien oscuro (ver TEMAS_FONDOS en app.js), así
+   que no depende de este color. */
+.cv-pagina[data-tema="neon-lima"]    { --cv-acento: #b6ff00; --cv-acento-2: #ff2fb6; --cv-badge-texto: #ffffff; --cv-acento-texto: #14200a; }
+.cv-pagina[data-tema="neon-fucsia"]  { --cv-acento: #ff006e; --cv-acento-2: #00b4d8; --cv-badge-texto: #062529; }
+.cv-pagina[data-tema="neon-cian"]    { --cv-acento: #00c2d1; --cv-acento-2: #ff2fb6; --cv-badge-texto: #ffffff; --cv-acento-texto: #062529; }
+.cv-pagina[data-tema="neon-violeta"] { --cv-acento: #b537f2; --cv-acento-2: #7cb518; --cv-badge-texto: #14200a; }
+.cv-pagina[data-tema="neon-naranja"] { --cv-acento: #ff5400; --cv-acento-2: #00b4d8; --cv-badge-texto: #062529; }
+
+/* Neutros — look más corporativo/serio, sin color "de fantasía" */
+.cv-pagina[data-tema="grafito"] { --cv-acento: #37474f; --cv-acento-2: #78909c; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="pizarra"] { --cv-acento: #4a5568; --cv-acento-2: #a0aec0; --cv-badge-texto: #1a202c; }
+.cv-pagina[data-tema="carbon"]  { --cv-acento: #212529; --cv-acento-2: #6c757d; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="plata"]   { --cv-acento: #708090; --cv-acento-2: #8a8f96; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="acero"]   { --cv-acento: #2f3e46; --cv-acento-2: #84a98c; --cv-badge-texto: #16261f; }
+
+/* Tierra — tonos cálidos/naturales */
+.cv-pagina[data-tema="terracota"] { --cv-acento: #b5533c; --cv-acento-2: #e0a458; --cv-badge-texto: #3a2313; }
+.cv-pagina[data-tema="bosque"]    { --cv-acento: #344e41; --cv-acento-2: #a3b18a; --cv-badge-texto: #2b331e; }
+.cv-pagina[data-tema="cafe"]      { --cv-acento: #4b3621; --cv-acento-2: #a47148; --cv-badge-texto: #ffffff; }
+.cv-pagina[data-tema="arcilla"]   { --cv-acento: #a44a3f; --cv-acento-2: #d68c45; --cv-badge-texto: #3a2211; }
 
 * { box-sizing: border-box; }
 .oculto { display: none !important; }
@@ -339,6 +430,16 @@ a.btn { display: inline-block; text-decoration: none; }
   margin-bottom: 2.4mm; word-break: break-word;
 }
 .cv-contacto-icono { color: var(--cv-acento); flex: 0 0 auto; margin-top: 0.1em; font-size: calc(1em * var(--cv-escala-iconos, 1)); }
+
+/* Material Symbols (packs "Material — contorno/redondeado/angular", ver
+   PAQUETES_ICONOS en app.js) — el navegador dibuja la ligadura como ícono
+   sólo con estas propiedades puestas; el color/tamaño lo sigue heredando
+   normal del contenedor de cada modelo (cv-contacto-icono y equivalentes). */
+.cv-icono-material {
+  font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal;
+  text-transform: none; white-space: nowrap; word-wrap: normal; direction: ltr;
+  vertical-align: -0.15em; display: inline-block;
+}
 .cv-contacto-fila a { color: var(--cv-lateral-tenue); text-decoration: none; }
 
 .cv-idioma-fila, .cv-cert-item, .cv-edu-item, .cv-ref-item { margin-bottom: 4mm; }
@@ -384,7 +485,12 @@ a.btn { display: inline-block; text-decoration: none; }
   margin: 0 0 4mm; position: relative; padding-bottom: 2.6mm;
 }
 .cv-titulo-seccion::after {
-  content: ""; position: absolute; left: 0; bottom: 0; width: 11mm; height: 2.4px; background: var(--cv-acento);
+  content: ""; position: absolute; left: 0; bottom: 0; width: 11mm; height: 2.4px;
+  /* degradé real cuando el tema tiene dos acentos distintos (la mayoría de
+     los temas nuevos) — en el tema turquesa original --cv-acento-2 es
+     igual a --cv-acento, así que ahí se sigue viendo como color sólido,
+     sin cambiar nada. */
+  background: linear-gradient(90deg, var(--cv-acento), var(--cv-acento-2));
 }
 
 .cv-perfil-texto { font-size: 9pt; line-height: 1.65; color: var(--cv-tenue); text-align: left; margin: 0; }
@@ -462,12 +568,29 @@ a.btn { display: inline-block; text-decoration: none; }
   .vista-envoltorio { padding: 0; min-height: 0; background: none; display: block; }
   .cv-pagina { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; }
 
-  /* evita que un bloque (una experiencia, un título de sección) se corte
-     a la mitad justo en el salto de página — se empuja entero a la
-     siguiente. */
-  .cv-experiencia, .cv-educ-principal-item, .cv-lateral-bloque,
-  .cv-bloque-principal, .cv-titulo-seccion,
-  .cv-m2-item, .cv-m2-bloque, .cv-m2-header { break-inside: avoid; }
+  /* Por defecto, al imprimir/guardar como PDF el navegador descarta
+     colores y degradados de fondo salvo que el usuario tilde a mano
+     "Gráficos de fondo" en el diálogo de impresión — algo que casi nadie
+     hace. Esto fuerza a respetarlos siempre, sin depender de esa opción. */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+
+  /* evita que un bloque CHICO (una certificación, un título de sección)
+     se corte a la mitad justo en el salto de página. IMPORTANTE: acá NO
+     van los contenedores de SECCIÓN COMPLETA (como .cv-bloque-principal o
+     .cv-lateral-bloque, que agrupan TODAS las experiencias/certificaciones
+     juntas) ni los ítems de experiencia (que con varios bullets pueden ser
+     más altos que una página entera) — si esos tuvieran "avoid" y no
+     entraran en el espacio que queda de la página actual, el motor de
+     impresión empuja el bloque ENTERO a la siguiente hoja, dejando un
+     espacio en blanco enorme en la página anterior (el bug reportado:
+     "se ve cortado en secciones con muchos espacios en blanco"). Esos
+     bloques grandes se dejan con el comportamiento por defecto (pueden
+     partirse entre líneas) y en cambio se protege sólo lo chico: que no
+     se corte un bullet a la mitad ni quede un título de sección solo al
+     pie de la página (ver .cv-bullets li y break-after más abajo). */
+  .cv-educ-principal-item, .cv-titulo-seccion, .cv-m2-header { break-inside: avoid; }
+  .cv-bullets li { break-inside: avoid; }
+  .cv-titulo-seccion, .cv-experiencia-fila, .cv-m2-item-titulo { break-after: avoid-page; }
 }
 
 /* ============================================================
@@ -545,7 +668,7 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m2-bloque:last-child { margin-bottom: 0; }
 .cv-m2-banner {
   font-family: var(--cv-font-titulos); font-weight: 700; font-size: 9.5pt;
-  letter-spacing: 0.6px; text-transform: uppercase; color: #ffffff;
+  letter-spacing: 0.6px; text-transform: uppercase; color: var(--cv-acento-texto);
   background: var(--cv-acento); margin: 0 0 4mm; padding: 2.4mm 4mm;
   border-radius: 1.5mm;
 }
@@ -595,7 +718,7 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m3-seccion-titulo { display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3.4mm; }
 .cv-m3-seccion-icono {
   width: calc(6mm * var(--cv-escala-iconos, 1)); height: calc(6mm * var(--cv-escala-iconos, 1));
-  border-radius: 50%; background: var(--cv-acento); color: #ffffff;
+  border-radius: 50%; background: var(--cv-acento); color: var(--cv-acento-texto);
   display: grid; place-items: center; font-size: calc(7pt * var(--cv-escala-iconos, 1)); flex: 0 0 auto;
 }
 .cv-m3-seccion-titulo span:last-child {
@@ -646,7 +769,13 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m3-timeline-desc { font-size: 8.6pt; line-height: 1.55; color: var(--cv-tenue); margin: 0 0 0 4.8mm; }
 
 @media print {
-  .cv-m3-bloque, .cv-m3-bloque-principal, .cv-m3-timeline-item { break-inside: avoid; }
+  /* .cv-m3-bloque y .cv-m3-bloque-principal envuelven la SECCIÓN entera
+     (todas las experiencias/certificaciones juntas) — con "avoid" ahí, si
+     la sección no entra en lo que queda de página se empuja entera a la
+     siguiente, dejando un espacio en blanco enorme (ver el comentario
+     largo del primer @media print, arriba). Se protege sólo el título
+     para que no quede solo al pie de página. */
+  .cv-m3-timeline-titulo-fila { break-after: avoid-page; }
 }
 
 /* ---- Modelo 4: blanco y negro, franja lateral con dos rectángulos ---- */
@@ -707,7 +836,7 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m4-titulo { display: flex; align-items: center; gap: 2.6mm; margin-bottom: 3.4mm; }
 .cv-m4-titulo-icono {
   width: calc(6mm * var(--cv-escala-iconos, 1)); height: calc(6mm * var(--cv-escala-iconos, 1));
-  border-radius: 50%; background: var(--cv-acento); color: #ffffff;
+  border-radius: 50%; background: var(--cv-acento); color: var(--cv-acento-texto);
   display: grid; place-items: center; font-size: calc(7pt * var(--cv-escala-iconos, 1)); flex: 0 0 auto;
 }
 .cv-m4-titulo span:last-child {
@@ -741,7 +870,12 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m4-lista-clara li::before { background: var(--cv-acento); }
 
 @media print {
-  .cv-m4-bloque, .cv-m4-bloque-principal, .cv-m4-exp-item { break-inside: avoid; }
+  /* .cv-m4-bloque/.cv-m4-bloque-principal envuelven la sección entera y
+     .cv-m4-exp-item puede ser más alto que una página con varios bullets
+     — ver el comentario largo del primer @media print sobre por qué NO
+     llevan "avoid" (causaría el espacio en blanco grande al saltar de
+     página). Sólo se protege el título de cada experiencia. */
+  .cv-m4-exp-fila { break-after: avoid-page; }
 }
 
 /* ---- Modelo 5 "Atelier": una sola columna editorial, sin franja
@@ -826,7 +960,12 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m5-ref-nombre { color: var(--cv-texto); font-weight: 700; }
 
 @media print {
-  .cv-m5-experiencia-item, .cv-m5-meta-col { break-inside: avoid; }
+  /* .cv-m5-meta-col envuelve la sección lateral entera y
+     .cv-m5-experiencia-item puede ser alto — sin "avoid" ahí, ver el
+     comentario largo del primer @media print. .cv-m5-ref-item sí es
+     chico y fijo, se protege entero. */
+  .cv-m5-ref-item { break-inside: avoid; }
+  .cv-m5-experiencia-fila { break-after: avoid-page; }
 }
 
 /* ============================================================
@@ -860,19 +999,19 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m6-job:last-child { border-bottom: none; }
 .cv-m6-job-head { display: flex; justify-content: space-between; font-size: 10.5pt; }
 .cv-m6-job-rol { font-weight: 700; color: #f2f7fa; }
-.cv-m6-job-fecha { font-family: "Courier New", monospace; font-size: 8pt; color: #6f8794; }
+.cv-m6-job-fecha { font-family: "Courier New", monospace; font-size: 8pt; color: var(--cv-acento); }
 .cv-m6-job-empresa { color: var(--cv-acento); font-size: 9pt; margin-bottom: 1.5mm; }
 .cv-m6-job-desc { font-size: 9pt; color: #b7c6ce; line-height: 1.55; margin: 0 0 2mm; }
 .cv-m6-bullets { border-left: 0.3mm solid #1c2a33; margin-left: 1mm; }
 .cv-m6-bullet-row { display: flex; gap: 3mm; font-size: 8.8pt; padding: 0.6mm 0 0.6mm 2.5mm; }
-.cv-m6-linenum { font-family: "Courier New", monospace; color: #435560; min-width: 5mm; text-align: right; }
+.cv-m6-linenum { font-family: "Courier New", monospace; color: var(--cv-acento); min-width: 5mm; text-align: right; opacity: 0.75; }
 .cv-m6-bullet-text { color: #cdd9e0; }
 .cv-m6-tools { display: flex; flex-wrap: wrap; gap: 2mm; margin-top: 2mm; }
 .cv-m6-tool { font-size: 7.5pt; background: #101820; color: #8fa3af; border-radius: 1mm; padding: 0.8mm 1.8mm; }
 .cv-m6-edu { margin-bottom: 3mm; }
 .cv-m6-edu-head { display: flex; justify-content: space-between; font-size: 9.5pt; }
 .cv-m6-edu-inst { font-weight: 700; color: #f2f7fa; }
-.cv-m6-edu-fecha { font-family: "Courier New", monospace; font-size: 8pt; color: #6f8794; }
+.cv-m6-edu-fecha { font-family: "Courier New", monospace; font-size: 8pt; color: var(--cv-acento); }
 .cv-m6-edu-bullets { margin: 1mm 0 0; padding-left: 4mm; font-size: 8.5pt; color: #b7c6ce; }
 .cv-m6-certs { display: flex; flex-direction: column; gap: 1.5mm; }
 .cv-m6-cert { font-size: 9pt; display: flex; gap: 2mm; }
@@ -883,7 +1022,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m6-referencia { display: flex; flex-direction: column; font-size: 8.5pt; color: #b7c6ce; }
 .cv-m6-ref-nombre { font-weight: 700; color: #f2f7fa; }
 .cv-m6-ref-rol { color: var(--cv-acento); font-size: 8pt; }
-@media print { .cv-m6-job, .cv-m6-edu, .cv-m6-cert, .cv-m6-referencia { break-inside: avoid; } }
+@media print {
+  .cv-m6-edu, .cv-m6-cert, .cv-m6-referencia { break-inside: avoid; }
+  .cv-m6-bullet-row { break-inside: avoid; }
+  .cv-m6-job-head { break-after: avoid-page; }
+}
 
 /* ============================================================
    Modelo 7 "Meridian" — masthead centrado y simétrico, foto chica tipo
@@ -924,17 +1067,36 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m7-page ul#cv-m7-logros li { font-size: 9pt; padding: 1mm 0; }
 .cv-m7-referencia { font-size: 8.8pt; text-align: center; margin-bottom: 2.5mm; color: #333e4d; }
 .cv-m7-ref-nombre { font-weight: 700; color: var(--cv-acento); }
-@media print { .cv-m7-job, .cv-m7-edu, .cv-m7-cert, .cv-m7-referencia { break-inside: avoid; } }
+@media print {
+  .cv-m7-edu, .cv-m7-cert, .cv-m7-referencia { break-inside: avoid; }
+  .cv-m7-job-bullets li { break-inside: avoid; }
+  .cv-m7-job-head { break-after: avoid-page; }
+}
 
 /* ============================================================
    Modelo 8 "Nova" — bloque diagonal de color detrás de nombre+foto,
    grid asimétrico tipo revista con tarjetas "recortadas" a la derecha.
    ============================================================ */
 .cv-m8-page { position: relative; background: #fffdf9; font-family: var(--cv-font-cuerpo); color: #2a2733; overflow: hidden; padding-bottom: 12mm; }
-.cv-m8-diagonal { position: absolute; top: 0; left: 0; width: 140mm; height: 62mm; background: linear-gradient(135deg, var(--cv-acento), var(--cv-acento-2)); clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%); z-index: 0; }
+/* el bloque diagonal ya NO tiene una altura fija en mm — antes (62mm)
+   quedaba más alto que el header real cuando el nombre era corto o la
+   foto chica, y el sobrante invadía la fila de contacto de abajo con
+   texto oscuro sobre fondo de color (ilegible). Ahora ocupa el 100% del
+   contenedor (.cv-m8-header-wrap), cuya altura la define el propio
+   header — así el diagonal SIEMPRE termina exactamente donde termina el
+   header, sea cual sea el largo del nombre o la escala de la foto. */
+.cv-m8-header-wrap { position: relative; }
+.cv-m8-diagonal { position: absolute; top: 0; left: 0; bottom: 0; width: 140mm; height: 100%; background: linear-gradient(135deg, var(--cv-acento), var(--cv-acento-2)); clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%); z-index: 0; }
 .cv-m8-header { position: relative; z-index: 1; display: flex; align-items: flex-end; gap: 6mm; padding: 12mm 12mm 8mm 12mm; }
-.cv-m8-photo-wrap { flex: 0 0 auto; transform: translateY(4mm); }
-.cv-m8-foto { width: calc(30mm * var(--cv-escala-foto, 1)); height: calc(30mm * var(--cv-escala-foto, 1)); border-radius: 50%; object-fit: cover; border: 1.2mm solid #fffdf9; box-shadow: 0 1mm 3mm rgba(0,0,0,0.18); }
+.cv-m8-photo-wrap {
+  flex: 0 0 auto; transform: translateY(4mm);
+  width: calc(30mm * var(--cv-escala-foto, 1)); height: calc(30mm * var(--cv-escala-foto, 1));
+  border-radius: 50%; overflow: hidden; background: #23262c;
+  border: 1.2mm solid #fffdf9; box-shadow: 0 1mm 3mm rgba(0,0,0,0.18);
+  display: grid; place-items: center;
+}
+.cv-m8-foto { width: 100%; height: 100%; object-fit: cover; }
+.cv-m8-foto-placeholder { font-size: 2.2rem; opacity: 0.5; }
 .cv-m8-heading { padding-bottom: 2mm; }
 .cv-m8-nombre { font-family: var(--cv-font-titulos); font-size: 23pt; font-weight: 800; color: #fff; margin: 0; line-height: 1.05; text-shadow: 0 0.5mm 2mm rgba(0,0,0,0.25); }
 .cv-m8-apellido { color: #1a1620; text-shadow: none; }
@@ -980,7 +1142,15 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m8-cert { font-size: 8.8pt; margin-bottom: 2mm; display: flex; flex-direction: column; }
 .cv-m8-cert-titulo { font-weight: 700; }
 .cv-m8-cert-sub { color: #7a7488; font-size: 8pt; }
-@media print { .cv-m8-job, .cv-m8-card, .cv-m8-edu, .cv-m8-cert, .cv-m8-referencia { break-inside: avoid; } }
+@media print {
+  /* .cv-m8-card envuelve la sección entera (todas las certificaciones o
+     toda la educación juntas) — sin "avoid" ahí, ver el comentario largo
+     del primer @media print. .cv-m8-edu/.cv-m8-cert/.cv-m8-referencia son
+     por ítem individual, esos sí quedan protegidos. */
+  .cv-m8-edu, .cv-m8-cert, .cv-m8-referencia { break-inside: avoid; }
+  .cv-m8-job-bullets li { break-inside: avoid; }
+  .cv-m8-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 9 "Ignite" ---- */
 .cv-m9-page {
@@ -1031,7 +1201,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m9-logros { margin: 0; padding-left: 4mm; font-size: 9pt; line-height: 1.5; }
 .cv-m9-ref-nombre { font-weight: 800; font-size: 9.5pt; }
 .cv-m9-ref-detalle { font-size: 8.5pt; opacity: 0.75; }
-@media print { .cv-m9-exp-item, .cv-m9-edu-item, .cv-m9-cert-item, .cv-m9-ref-item, .cv-m9-skill, .cv-m9-banda { break-inside: avoid; } }
+@media print {
+  .cv-m9-edu-item, .cv-m9-cert-item, .cv-m9-ref-item, .cv-m9-skill, .cv-m9-banda { break-inside: avoid; }
+  .cv-m9-exp-bullets li { break-inside: avoid; }
+  .cv-m9-exp-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 10 "Halcyon" ---- */
 .cv-m10-page {
@@ -1084,7 +1258,15 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m10-card-referencia { flex: 1 1 78mm; background: var(--cv-m10-blush); }
 .cv-m10-ref-nombre { font-weight: 700; font-size: 9.5pt; }
 .cv-m10-ref-detalle { font-size: 8.5pt; opacity: 0.8; }
-@media print { .cv-m10-card-experiencia, .cv-m10-edu-item, .cv-m10-cert-item, .cv-m10-card-referencia, .cv-m10-card { break-inside: avoid; } }
+@media print {
+  /* .cv-m10-card es la envoltura de CADA sección completa (todas las
+     certificaciones/educación juntas) y .cv-m10-card-experiencia puede
+     ser alto con varios bullets — ninguno lleva "avoid", ver el
+     comentario largo del primer @media print. */
+  .cv-m10-edu-item, .cv-m10-cert-item, .cv-m10-card-referencia { break-inside: avoid; }
+  .cv-m10-exp-bullets li { break-inside: avoid; }
+  .cv-m10-exp-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 11 "Vertex" ---- */
 .cv-m11-page { font-family: var(--cv-font-cuerpo); color: #cfe3f2; background: #0b1524; padding-bottom: 10mm; }
@@ -1159,7 +1341,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m11-ref-nombre { font-weight: 700; color: #f2f8fd; }
 .cv-m11-ref-rol { color: var(--cv-acento); font-size: 8pt; }
 .cv-m11-ref-dato { color: #9fb4c8; font-size: 8pt; }
-@media print { .cv-m11-job, .cv-m11-edu, .cv-m11-cert, .cv-m11-referencia { break-inside: avoid; } }
+@media print {
+  .cv-m11-edu, .cv-m11-cert, .cv-m11-referencia { break-inside: avoid; }
+  .cv-m11-job-bullets li { break-inside: avoid; }
+  .cv-m11-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 12 "Ledger" ---- */
 .cv-m12-page {
@@ -1226,7 +1412,14 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m12-ref-num { font-family: "Courier New", Consolas, monospace; font-size: 8.4pt; font-weight: 700; color: var(--cv-acento); }
 .cv-m12-ref-nombre { font-weight: 700; }
 .cv-m12-ref-datos { font-family: "Courier New", Consolas, monospace; font-size: 8pt; color: #4f6a5a; margin-top: 0.5mm; }
-@media print { .cv-m12-fila, .cv-m12-cert, .cv-m12-ref { break-inside: avoid; } }
+@media print {
+  /* .cv-m12-fila se reusa tanto para experiencia (puede ser alta) como
+     para educación — no lleva "avoid" para ninguna de las dos, ver el
+     comentario largo del primer @media print. */
+  .cv-m12-cert, .cv-m12-ref { break-inside: avoid; }
+  .cv-m12-fila-bullets li { break-inside: avoid; }
+  .cv-m12-fila-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 13 "Prism" ---- */
 .cv-m13-page { background: #fbfaf8; color: #241b2e; font-family: var(--cv-font-cuerpo); }
@@ -1288,7 +1481,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m13-ref-nombre { font-weight: 700; }
 .cv-m13-ref-rol { color: var(--cv-acento-2); }
 .cv-m13-ref-dato { color: #6b6376; font-size: 8.2pt; }
-@media print { .cv-m13-job, .cv-m13-edu, .cv-m13-cert, .cv-m13-ref { break-inside: avoid; } }
+@media print {
+  .cv-m13-edu, .cv-m13-cert, .cv-m13-ref { break-inside: avoid; }
+  .cv-m13-job-bullets li { break-inside: avoid; }
+  .cv-m13-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 14 "Circuit" ---- */
 .cv-m14-outer { background: #05070a; min-height: 297mm; padding: 9mm; box-sizing: border-box; }
@@ -1350,7 +1547,15 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m14-ref:last-child { border-bottom: none; }
 .cv-m14-ref-nombre { font-weight: 700; color: #eafcff; }
 .cv-m14-ref-rol { color: #6b8b90; }
-@media print { .cv-m14-job, .cv-m14-cert, .cv-m14-ref, .cv-m14-panel { break-inside: avoid; } }
+@media print {
+  /* .cv-m14-panel envuelve cada sección/pestaña ENTERA (todas las
+     experiencias, toda la educación) y .cv-m14-job se reusa para
+     experiencia (puede ser alta) y educación — ninguno de los dos lleva
+     "avoid", ver el comentario largo del primer @media print. */
+  .cv-m14-cert, .cv-m14-ref { break-inside: avoid; }
+  .cv-m14-job-bullets li { break-inside: avoid; }
+  .cv-m14-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 15 "Solstice" ---- */
 .cv-m15-page { position: relative; background: #fbf6ee; color: #3a2f28; font-family: var(--cv-font-cuerpo); overflow: hidden; }
@@ -1413,7 +1618,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m15-ref-nombre { font-weight: 700; color: #3a2f28; }
 .cv-m15-ref-rol { color: #8c6a4a; }
 .cv-m15-ref-dato { color: #8c6a4a; }
-@media print { .cv-m15-job, .cv-m15-edu, .cv-m15-cert, .cv-m15-referencia { break-inside: avoid; } }
+@media print {
+  .cv-m15-edu, .cv-m15-cert, .cv-m15-referencia { break-inside: avoid; }
+  .cv-m15-job-bullets li { break-inside: avoid; }
+  .cv-m15-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 16 "Aperture" ---- */
 .cv-m16-page { background: #f7f5f0; color: #141414; font-family: var(--cv-font-cuerpo); }
@@ -1471,7 +1680,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m16-ref-rol { color: #8a8a8a; }
 .cv-m16-ref-dato { color: #8a8a8a; }
 .cv-m16-page .cv-m16-section:last-of-type { padding-bottom: 12mm; }
-@media print { .cv-m16-job, .cv-m16-edu, .cv-m16-cert, .cv-m16-referencia { break-inside: avoid; } }
+@media print {
+  .cv-m16-edu, .cv-m16-cert, .cv-m16-referencia { break-inside: avoid; }
+  .cv-m16-job-bullets li { break-inside: avoid; }
+  .cv-m16-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 17 "Lattice" ---- */
 .cv-m17-page {
@@ -1539,7 +1752,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m17-ref-nombre { font-weight: 700; color: var(--cv-acento-2); }
 .cv-m17-ref-rol { color: #5a6b85; }
 .cv-m17-ref-dato { color: #5a6b85; }
-@media print { .cv-m17-job, .cv-m17-edu, .cv-m17-cert, .cv-m17-referencia { break-inside: avoid; } }
+@media print {
+  .cv-m17-edu, .cv-m17-cert, .cv-m17-referencia { break-inside: avoid; }
+  .cv-m17-job-bullets li { break-inside: avoid; }
+  .cv-m17-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 18 "Bloom" ---- */
 .cv-m18-page { font-family: var(--cv-font-cuerpo); color: #4a3229; background: #fffaf5; padding: 14mm 16mm 18mm; }
@@ -1590,7 +1807,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m18-ref-nombre { font-weight: 700; color: #4a3229; }
 .cv-m18-ref-rol { color: #8a6a5c; }
 .cv-m18-ref-dato { color: #b5806a; }
-@media print { .cv-m18-job, .cv-m18-edu, .cv-m18-cert { break-inside: avoid; } }
+@media print {
+  .cv-m18-edu, .cv-m18-cert { break-inside: avoid; }
+  .cv-m18-job-bullets li { break-inside: avoid; }
+  .cv-m18-job-head { break-after: avoid-page; }
+}
 
 /* ---- Modelo 19 "Monolith" ---- */
 .cv-m19-page { font-family: var(--cv-font-cuerpo); color: #111; background: #fff; padding: 20mm 18mm 20mm; }
@@ -1631,7 +1852,13 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m19-job-bullets li { margin-bottom: 1mm; }
 .cv-m19-tools { font-size: 8pt; color: #9a9a9a; }
 .cv-m19-content ul#cv-m19-logros { margin: 0; padding-left: 4mm; font-size: 9.5pt; color: #333; line-height: 1.6; }
-@media print { .cv-m19-aside-block, .cv-m19-job { break-inside: avoid; } }
+@media print {
+  /* .cv-m19-aside-block envuelve cada sección lateral ENTERA (toda la
+     educación, todas las referencias juntas) — no lleva "avoid", ver el
+     comentario largo del primer @media print. */
+  .cv-m19-job-bullets li { break-inside: avoid; }
+  .cv-m19-job-head { break-after: avoid-page; }
+}
 @media (max-width: 480px) {
   .cv-m19-body { grid-template-columns: 1fr; }
   .cv-m19-rule { display: none; }
@@ -1687,7 +1914,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m20-ref-nombre { font-weight: 700; color: var(--cv-acento-2); }
 .cv-m20-ref-rol { color: #6b5a44; }
 .cv-m20-ref-dato { color: var(--cv-acento); }
-@media print { .cv-m20-bio, .cv-m20-chapter, .cv-m20-edu, .cv-m20-cert { break-inside: avoid; } }
+@media print {
+  .cv-m20-bio, .cv-m20-edu, .cv-m20-cert { break-inside: avoid; }
+  .cv-m20-chapter-bullets li { break-inside: avoid; }
+  .cv-m20-chapter-head { break-after: avoid-page; }
+}
 @media (max-width: 480px) {
   .cv-m20-bio { flex-direction: column; align-items: center; text-align: center; }
   .cv-m20-grid { grid-template-columns: 1fr; }
@@ -1695,4 +1926,149 @@ a.btn { display: inline-block; text-decoration: none; }
   .cv-m20-chapter { padding-left: 0; }
   .cv-m20-chapter-marker { display: none; }
 }
+
+/* ============================================================
+   CARTAS DE PRESENTACIÓN — 6 modelos. Reusan las mismas variables
+   --cv-* (tema/colores libres/fuentes) que los 20 CV, así que el
+   selector de tema y los colores libres también recolorean la carta.
+   ============================================================ */
+.cv-carta { padding: 20mm 22mm; box-sizing: border-box; }
+.cv-carta p { margin: 0 0 4mm; line-height: 1.55; font-size: 10pt; }
+.cv-carta-punto { opacity: 0.5; margin: 0 1.5mm; }
+
+/* ---- Carta 1 — Clásica ---- */
+.cv-carta1 { font-family: var(--cv-font-cuerpo); }
+.cv-carta1-remitente { margin-bottom: 10mm; }
+.cv-carta1-nombre { font-family: var(--cv-font-titulos); font-size: 17pt; margin: 0 0 1mm; color: var(--cv-acento); }
+.cv-carta1-puesto { margin: 0 0 2mm; font-size: 10pt; color: var(--cv-tenue); }
+.cv-carta1-contacto { margin: 0; font-size: 9pt; color: var(--cv-tenue); }
+.cv-carta1-fecha { color: var(--cv-tenue); font-size: 9.5pt; margin-bottom: 6mm; }
+.cv-carta1-destinatario { margin-bottom: 6mm; font-size: 10pt; }
+.cv-carta1-destinatario span { display: block; }
+.cv-carta1-saludo { font-weight: 600; margin-bottom: 4mm; }
+.cv-carta1-cuerpo p { text-align: justify; }
+.cv-carta1-despedida { margin-top: 6mm; margin-bottom: 10mm; }
+.cv-carta1-firma { font-weight: 700; color: var(--cv-acento); margin: 0; }
+
+/* ---- Carta 2 — A juego con el CV: franja lateral + columna carta ---- */
+.cv-pagina[data-modelo="carta2"] { display: grid; grid-template-columns: 70mm 1fr; padding: 0; }
+.cv-carta2-lateral { background: var(--cv-lateral-fondo); color: var(--cv-lateral-texto); padding: 11mm 8mm; text-align: center; }
+.cv-carta2-nombre { font-family: var(--cv-font-titulos); font-size: 14pt; margin: 0 0 3mm; line-height: 1.25; }
+.cv-carta2-puesto { font-size: 9pt; opacity: 0.85; margin: 0 0 6mm; }
+.cv-carta2-contacto { text-align: left; font-size: 8.3pt; }
+.cv-carta2-contacto-fila { display: flex; gap: 2mm; align-items: flex-start; margin-bottom: 2.5mm; }
+.cv-carta2-principal { padding: 16mm 14mm; }
+.cv-carta2-fecha { color: var(--cv-tenue); font-size: 9.5pt; margin-bottom: 6mm; }
+.cv-carta2-destinatario { margin-bottom: 6mm; font-size: 10pt; }
+.cv-carta2-destinatario span { display: block; }
+.cv-carta2-saludo { font-weight: 600; margin-bottom: 4mm; }
+.cv-carta2-cuerpo p { text-align: justify; }
+.cv-carta2-despedida { margin-top: 6mm; margin-bottom: 10mm; }
+.cv-carta2-firma { font-weight: 700; color: var(--cv-acento); margin: 0; }
+
+/* ---- Carta 3 — Encabezado moderno: banner sólido arriba ---- */
+.cv-carta3 { padding: 0; }
+.cv-carta3-banner {
+  background: linear-gradient(120deg, var(--cv-acento), var(--cv-acento-2));
+  color: var(--cv-badge-texto, #fff);
+  padding: 16mm 22mm;
+}
+.cv-carta3-nombre { font-family: var(--cv-font-titulos); font-size: 19pt; margin: 0 0 1mm; }
+.cv-carta3-puesto { margin: 0 0 3mm; font-size: 10.5pt; opacity: 0.9; }
+.cv-carta3-contacto { margin: 0; font-size: 9pt; opacity: 0.85; }
+.cv-carta3-cuerpo-envoltorio { padding: 14mm 22mm; }
+.cv-carta3-fecha { color: var(--cv-tenue); font-size: 9.5pt; margin-bottom: 6mm; }
+.cv-carta3-destinatario { margin-bottom: 6mm; font-size: 10pt; }
+.cv-carta3-destinatario span { display: block; }
+.cv-carta3-saludo { font-weight: 600; margin-bottom: 4mm; }
+.cv-carta3-cuerpo p { text-align: justify; }
+.cv-carta3-despedida { margin-top: 6mm; margin-bottom: 10mm; }
+.cv-carta3-firma { font-weight: 700; color: var(--cv-acento); margin: 0; }
+
+/* ---- Carta 4 — Minimalista ---- */
+.cv-carta4 { padding: 26mm 24mm; }
+.cv-carta4-header { margin-bottom: 12mm; }
+.cv-carta4-nombre {
+  font-family: var(--cv-font-titulos); font-size: 12pt; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; margin: 0 0 2mm;
+}
+.cv-carta4-contacto { font-size: 8.5pt; color: var(--cv-tenue); margin: 0; padding-bottom: 4mm; border-bottom: 0.4mm solid var(--cv-linea); }
+.cv-carta4-fecha { color: var(--cv-tenue); font-size: 9pt; margin-bottom: 8mm; }
+.cv-carta4-destinatario { margin-bottom: 8mm; font-size: 9.5pt; }
+.cv-carta4-destinatario span { display: block; }
+.cv-carta4-saludo { margin-bottom: 5mm; }
+.cv-carta4-cuerpo p { font-size: 9.5pt; }
+.cv-carta4-despedida { margin-top: 8mm; margin-bottom: 12mm; }
+.cv-carta4-firma { font-weight: 600; margin: 0; }
+
+/* ---- Carta 5 — Editorial: masthead grande + columna angosta ---- */
+.cv-carta5 { padding: 18mm 30mm; }
+.cv-carta5-masthead { text-align: center; margin-bottom: 10mm; }
+.cv-carta5-nombre { font-family: var(--cv-font-titulos); font-size: 24pt; margin: 0; letter-spacing: 0.02em; }
+.cv-carta5-linea { width: 16mm; height: 0.6mm; background: var(--cv-acento); margin: 3mm auto; }
+.cv-carta5-puesto { font-size: 10pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cv-acento); margin: 0 0 2mm; }
+.cv-carta5-contacto { font-size: 8.5pt; color: var(--cv-tenue); margin: 0; }
+.cv-carta5-fecha { color: var(--cv-tenue); font-size: 9pt; text-align: center; margin-bottom: 6mm; }
+.cv-carta5-destinatario { margin-bottom: 6mm; font-size: 9.5pt; text-align: center; }
+.cv-carta5-destinatario span { display: block; }
+.cv-carta5-saludo { font-weight: 600; margin-bottom: 4mm; }
+.cv-carta5-cuerpo p { text-align: justify; font-size: 9.5pt; }
+.cv-carta5-primer-parrafo::first-letter {
+  font-family: var(--cv-font-titulos); font-size: 26pt; font-weight: 700;
+  color: var(--cv-acento); float: left; line-height: 0.8; margin: 1mm 1.5mm 0 0;
+}
+.cv-carta5-despedida { margin-top: 6mm; margin-bottom: 10mm; text-align: center; }
+.cv-carta5-firma { font-weight: 700; text-align: center; color: var(--cv-acento); margin: 0; }
+
+/* ---- Carta 6 — Ejecutiva: barra oscura de ancho completo ---- */
+.cv-carta6 { padding: 0; }
+.cv-carta6-barra {
+  background: var(--cv-lateral-fondo); color: var(--cv-lateral-texto);
+  padding: 14mm 22mm; display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm;
+}
+.cv-carta6-nombre { font-family: var(--cv-font-titulos); font-size: 17pt; margin: 0 0 1mm; }
+.cv-carta6-puesto { margin: 0; font-size: 10pt; opacity: 0.8; }
+.cv-carta6-contacto { margin: 0; font-size: 8.5pt; opacity: 0.8; text-align: right; white-space: nowrap; }
+.cv-carta6-cuerpo-envoltorio { padding: 14mm 22mm; }
+.cv-carta6-fecha { color: var(--cv-tenue); font-size: 9.5pt; margin-bottom: 6mm; }
+.cv-carta6-destinatario { margin-bottom: 6mm; font-size: 10pt; }
+.cv-carta6-destinatario span { display: block; }
+.cv-carta6-saludo { font-weight: 600; margin-bottom: 4mm; }
+.cv-carta6-cuerpo p { text-align: justify; }
+.cv-carta6-despedida { margin-top: 6mm; margin-bottom: 1mm; }
+.cv-carta6-firma { font-weight: 700; color: var(--cv-acento); margin: 0; }
+.cv-carta6-firma-cargo { font-size: 9pt; color: var(--cv-tenue); margin: 0 0 10mm; }
+
+/* ============================================================
+   MODAL "Plantilla JSON" — pantalla completa, chrome de la app (no se
+   imprime, no tiene nada que ver con .cv-pagina).
+   ============================================================ */
+.modal-fondo {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(6, 8, 10, 0.72); backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-caja {
+  position: relative; width: min(720px, 100%); max-height: 88vh;
+  background: var(--app-panel); border: 1px solid var(--app-borde); border-radius: 14px;
+  padding: 28px 28px 22px; box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.modal-caja h2 { margin: 0; font-size: 1.15rem; color: var(--app-texto); padding-right: 28px; }
+.modal-ayuda { margin: 0; font-size: 0.86rem; line-height: 1.55; color: var(--app-tenue); }
+.modal-ayuda strong { color: var(--app-texto); }
+.modal-cerrar {
+  position: absolute; top: 18px; right: 18px; width: 30px; height: 30px;
+  border-radius: 8px; border: 1px solid var(--app-borde); background: var(--app-panel-2);
+  color: var(--app-tenue); font-size: 0.9rem; cursor: pointer; line-height: 1;
+}
+.modal-cerrar:hover { color: var(--app-texto); }
+#modal-plantilla-json-texto {
+  width: 100%; min-height: 280px; max-height: 42vh; resize: vertical;
+  background: #0d0f12; border: 1px solid var(--app-borde); border-radius: 10px;
+  color: #cfd3da; font-family: "Courier New", monospace; font-size: 0.78rem; line-height: 1.5;
+  padding: 12px; box-sizing: border-box;
+}
+.modal-acciones { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.modal-copiado { font-size: 0.82rem; color: #45c97a; font-weight: 600; }
 

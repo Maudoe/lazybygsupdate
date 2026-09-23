@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="css/style.css?v=15">
+<link rel="stylesheet" href="css/style.css?v=27">
 </head>
 <body>
 
@@ -28,7 +28,7 @@
       <div class="app-header-acciones">
         <span class="autoguardado" id="autoguardado">Guardado</span>
         <button class="btn btn-fantasma" id="btn-idioma-cv" title="Cambia el idioma de los TÍTULOS DE SECCIÓN del CV impreso (Skills/Habilidades, etc.) — el editor de acá a la izquierda se queda siempre en español">🌐 EN</button>
-        <a class="btn btn-fantasma" id="btn-plantilla-json" href="docs/plantilla-datos-cv.json" download="plantilla-datos-cv.json" title="Descarga un .json en blanco con la forma exacta que espera esta app — pegaselo a un asistente de IA (ChatGPT, Claude, etc.) junto a tu CV viejo o tu LinkedIn para que te lo complete, y después importalo acá abajo">🧩 Plantilla JSON</a>
+        <button class="btn btn-fantasma" id="btn-plantilla-json" type="button" title="Abre un prompt listo para pegarle a ChatGPT (u otro asistente de IA) junto a tu CV viejo o tu LinkedIn, para que te complete los datos">🧩 Plantilla JSON</button>
         <button class="btn btn-fantasma" id="btn-exportar" title="Descarga todos tus datos como un archivo .json — guardalo donde quieras como respaldo">⬇ Exportar datos</button>
         <label class="btn btn-fantasma" id="btn-importar" title="Carga un .json exportado antes — reemplaza todo lo que hay ahora" style="cursor:pointer;">
           ⬆ Importar datos
@@ -54,6 +54,13 @@
           <summary>Plantilla</summary>
           <div class="editor-cuerpo">
             <div class="campo">
+              <label for="in-tipo-documento">Documento a generar</label>
+              <select id="in-tipo-documento">
+                <option value="cv">CV</option>
+                <option value="carta">Carta de presentación</option>
+              </select>
+            </div>
+            <div class="campo" id="campo-modelo-cv">
               <label for="in-modelo">Modelo de plantilla</label>
               <select id="in-modelo">
                 <option value="modelo1">Modelo 1</option>
@@ -78,15 +85,96 @@
                 <option value="modelo20">Modelo 20 — Odyssey</option>
               </select>
             </div>
+            <div class="campo oculto" id="campo-modelo-carta">
+              <label for="in-modelo-carta">Modelo de carta</label>
+              <select id="in-modelo-carta">
+                <option value="carta1">Carta 1 — Clásica</option>
+                <option value="carta2">Carta 2 — A juego con el CV</option>
+                <option value="carta3">Carta 3 — Encabezado moderno</option>
+                <option value="carta4">Carta 4 — Minimalista</option>
+                <option value="carta5">Carta 5 — Editorial</option>
+                <option value="carta6">Carta 6 — Ejecutiva</option>
+              </select>
+            </div>
             <div class="campo">
               <label for="in-tema">Tema de color</label>
               <select id="in-tema">
-                <option value="turquesa">Turquesa (original)</option>
-                <option value="azul">Azul y dorado</option>
-                <option value="verde">Verde y dorado</option>
-                <option value="bordo">Bordó y dorado</option>
-                <option value="violeta">Violeta y dorado</option>
-                <option value="coral">Coral y turquesa</option>
+                <optgroup label="Clásicos">
+                  <option value="turquesa">Turquesa (original)</option>
+                  <option value="azul">Azul y dorado</option>
+                  <option value="verde">Verde y dorado</option>
+                  <option value="bordo">Bordó y dorado</option>
+                  <option value="violeta">Violeta y dorado</option>
+                  <option value="coral">Coral y turquesa</option>
+                </optgroup>
+                <optgroup label="Metálicos (color + dorado)">
+                  <option value="grafito-dorado">Grafito y dorado</option>
+                  <option value="rosa-dorado">Rosa y dorado</option>
+                  <option value="cian-dorado">Cian y dorado</option>
+                  <option value="oliva-dorado">Oliva y dorado</option>
+                  <option value="granate-dorado">Granate y dorado</option>
+                  <option value="marino-dorado">Azul marino y dorado</option>
+                </optgroup>
+                <optgroup label="Duotono contrastante">
+                  <option value="lima-violeta">Lima y violeta</option>
+                  <option value="mandarina-azul">Mandarina y azul</option>
+                  <option value="fucsia-verde">Fucsia y verde</option>
+                  <option value="amarillo-morado">Amarillo y morado</option>
+                  <option value="rojo-cian">Rojo y cian</option>
+                  <option value="rosa-azul">Rosa y azul</option>
+                  <option value="naranja-verde">Naranja y verde</option>
+                </optgroup>
+                <optgroup label="Degradé cálido">
+                  <option value="atardecer">Atardecer (naranja y fucsia)</option>
+                  <option value="fuego">Fuego (rojo y ámbar)</option>
+                  <option value="mango">Mango (naranja y rojo)</option>
+                  <option value="lava">Lava (rojo oscuro y naranja)</option>
+                  <option value="brasa">Brasa (bordó y naranja)</option>
+                </optgroup>
+                <optgroup label="Degradé frío">
+                  <option value="glaciar">Glaciar (azul y celeste)</option>
+                  <option value="abismo">Abismo (azul noche y azul)</option>
+                  <option value="menta-azul">Menta y azul</option>
+                  <option value="aurora">Aurora (azul y celeste)</option>
+                  <option value="nocturno">Nocturno (violeta oscuro)</option>
+                  <option value="polar">Polar (azul noche y celeste)</option>
+                </optgroup>
+                <optgroup label="Joya (+ dorado o grafito)">
+                  <option value="esmeralda">Esmeralda y dorado</option>
+                  <option value="rubi">Rubí y dorado</option>
+                  <option value="zafiro">Zafiro y dorado</option>
+                  <option value="amatista">Amatista y dorado</option>
+                  <option value="topacio">Topacio y grafito</option>
+                  <option value="peridoto">Peridoto y verde bosque</option>
+                </optgroup>
+                <optgroup label="Pastel">
+                  <option value="lavanda">Lavanda</option>
+                  <option value="durazno-suave">Durazno suave</option>
+                  <option value="cielo-suave">Cielo suave</option>
+                  <option value="menta-suave">Menta suave</option>
+                  <option value="rosa-polvo">Rosa polvo</option>
+                  <option value="arena">Arena</option>
+                </optgroup>
+                <optgroup label="Neón">
+                  <option value="neon-lima">Neón lima</option>
+                  <option value="neon-fucsia">Neón fucsia</option>
+                  <option value="neon-cian">Neón cian</option>
+                  <option value="neon-violeta">Neón violeta</option>
+                  <option value="neon-naranja">Neón naranja</option>
+                </optgroup>
+                <optgroup label="Neutros">
+                  <option value="grafito">Grafito</option>
+                  <option value="pizarra">Pizarra</option>
+                  <option value="carbon">Carbón</option>
+                  <option value="plata">Plata</option>
+                  <option value="acero">Acero y salvia</option>
+                </optgroup>
+                <optgroup label="Tierra">
+                  <option value="terracota">Terracota</option>
+                  <option value="bosque">Bosque</option>
+                  <option value="cafe">Café</option>
+                  <option value="arcilla">Arcilla</option>
+                </optgroup>
               </select>
             </div>
             <div class="campo campo-fila">
@@ -268,6 +356,44 @@
           </div>
         </details>
 
+        <!-- ---- carta de presentación: sólo importa cuando "Documento a
+             generar" = Carta, pero se deja siempre visible en el editor
+             (no vale la pena esconderla — es raro que moleste) ---- -->
+        <details class="editor-seccion">
+          <summary>Carta de presentación</summary>
+          <div class="editor-cuerpo">
+            <p class="editor-ayuda">Se arma con tu nombre y contacto de más arriba — acá sólo cargás los datos propios de la carta.</p>
+            <div class="campo">
+              <label for="in-carta-empresa">Empresa a la que aplicás</label>
+              <input type="text" id="in-carta-empresa" placeholder="Acme Inc.">
+            </div>
+            <div class="campo">
+              <label for="in-carta-puesto">Puesto al que aplicás</label>
+              <input type="text" id="in-carta-puesto" placeholder="Senior QA Engineer">
+            </div>
+            <div class="campo">
+              <label for="in-carta-destinatario">A la atención de (opcional)</label>
+              <input type="text" id="in-carta-destinatario" placeholder="Hiring Manager">
+            </div>
+            <div class="campo">
+              <label for="in-carta-fecha">Fecha (opcional — si la dejás vacía, usa la de hoy)</label>
+              <input type="text" id="in-carta-fecha" placeholder="September 23, 2026">
+            </div>
+            <div class="campo">
+              <label for="in-carta-saludo">Saludo</label>
+              <input type="text" id="in-carta-saludo" placeholder="Dear Hiring Manager,">
+            </div>
+            <div class="campo">
+              <label for="in-carta-cuerpo">Cuerpo de la carta (un párrafo por renglón en blanco)</label>
+              <textarea id="in-carta-cuerpo" rows="10" placeholder="I'm writing to apply for..."></textarea>
+            </div>
+            <div class="campo">
+              <label for="in-carta-despedida">Despedida</label>
+              <input type="text" id="in-carta-despedida" placeholder="Sincerely,">
+            </div>
+          </div>
+        </details>
+
       </aside>
 
       <!-- ============ vista previa (esto es lo que se imprime) ============ -->
@@ -280,6 +406,30 @@
         <div class="cv-pagina" id="cv-pagina"></div>
       </main>
 
+    </div>
+  </div>
+
+  <!-- ============ modal "Plantilla JSON" — reemplaza la vieja descarga
+       directa: bajo file:// Chrome ignora el atributo download de un <a>
+       hacia otro archivo y en vez de descargarlo lo ABRE (pantalla negra
+       con el JSON crudo), lo cual confunde a cualquiera que no sea
+       técnico. Ahora es un modal con un prompt ya armado para pegarle a
+       un asistente de IA. ============ -->
+  <div class="modal-fondo oculto" id="modal-plantilla-json">
+    <div class="modal-caja" role="dialog" aria-modal="true" aria-labelledby="modal-plantilla-json-titulo">
+      <button class="modal-cerrar" id="modal-plantilla-json-cerrar" type="button" title="Cerrar">✕</button>
+      <h2 id="modal-plantilla-json-titulo">🧩 Completá tus datos con IA</h2>
+      <p class="modal-ayuda">
+        Copiá el texto de abajo y pegaselo a ChatGPT (o el asistente que uses), junto con tu CV viejo o tu perfil de LinkedIn.
+        Ya tiene la plantilla y las instrucciones adentro — el asistente te va a devolver un JSON completo.
+        Después, volvé acá y usá el botón <strong>⬆ Importar datos</strong> con lo que te devuelva.
+      </p>
+      <textarea id="modal-plantilla-json-texto" readonly spellcheck="false"></textarea>
+      <div class="modal-acciones">
+        <button class="btn btn-acento" id="modal-plantilla-json-copiar" type="button">📋 Copiar prompt</button>
+        <button class="btn btn-fantasma" id="modal-plantilla-json-descargar" type="button">⬇ Descargar el .json solo (opcional)</button>
+        <span class="modal-copiado oculto" id="modal-plantilla-json-copiado">¡Copiado!</span>
+      </div>
     </div>
   </div>
 
@@ -296,7 +446,7 @@
        no rompe la página) y js/app.js sigue con el ejemplo lorem-ipsum.
        Tiene que ir ANTES de app.js: es lo único que decide qué datos
        arrancan como estado inicial. -->
-  <script src="js/datos-privados.js?v=15"></script>
-  <script src="js/app.js?v=15"></script>
+  <script src="js/datos-privados.js?v=27"></script>
+  <script src="js/app.js?v=27"></script>
 </body>
 </html>

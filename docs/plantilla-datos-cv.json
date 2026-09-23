@@ -1,7 +1,9 @@
 {
-  "_instrucciones": "Esto NO es un dato del CV — es solo una guía para quien complete este archivo (vos o un asistente de IA como ChatGPT/Claude). Borrá esta clave '_instrucciones' antes de importar, o dejala: la app la ignora sin problema. Guía completa: pegale este archivo a tu asistente de IA junto con tu CV viejo, tu LinkedIn exportado o una lista de tu experiencia, y pedile que complete cada campo respetando exactamente esta forma (mismas claves, mismos tipos: listas siguen siendo listas, texto sigue siendo texto). Después: en la app, botón 'Importar datos' arriba a la derecha, elegís el .json ya completo, listo — tu CV se genera solo. Campos que podés dejar tal cual (son de diseño, se cambian después desde la app si querés): modelo, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv. Valores válidos — modelo: 'modelo1' a 'modelo20'. tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral'. idiomaCv: 'en' o 'es' (idioma de los TÍTULOS DE SECCIÓN del CV impreso, no de tu contenido). contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url es opcional, solo tiene efecto en el tipo 'linkedin' (convierte tu nombre en un link a tu perfil). experiencia[].empresaUrl es opcional (convierte el nombre de la empresa en un link a su sitio). experiencia[].ubicacion es opcional (ciudad y país donde trabajaste ese puesto, ej. 'Buenos Aires, Argentina' — se muestra al lado del nombre de la empresa; dejalo vacío si no querés mostrarlo). Todo lo demás es texto libre en el idioma que quieras (inglés recomendado, es lo más común en CVs). 'foto' se deja en null — la foto se carga por separado, arrastrándola en la app, no va en este archivo.",
+  "_instrucciones": "Esto NO es un dato del CV — es solo una guía para quien complete este archivo (vos o un asistente de IA como ChatGPT/Claude). Borrá esta clave '_instrucciones' antes de importar, o dejala: la app la ignora sin problema. Guía completa: pegale este archivo a tu asistente de IA junto con tu CV viejo, tu LinkedIn exportado o una lista de tu experiencia, y pedile que complete cada campo respetando exactamente esta forma (mismas claves, mismos tipos: listas siguen siendo listas, texto sigue siendo texto). Después: en la app, botón 'Importar datos' arriba a la derecha, elegís el .json ya completo, listo — tu CV se genera solo. Campos que podés dejar tal cual (son de diseño, se cambian después desde la app si querés): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valores válidos — modelo: 'modelo1' a 'modelo20'. modeloCarta: 'carta1' a 'carta6' (sólo se usa si tipoDocumento es 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral'. idiomaCv: 'en' o 'es' (idioma de los TÍTULOS DE SECCIÓN del CV impreso, no de tu contenido). tipoDocumento: 'cv' o 'carta' — qué documento se genera con esta plantilla (podés cambiarlo también desde la app). contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url es opcional, solo tiene efecto en el tipo 'linkedin' (convierte tu nombre en un link a tu perfil). experiencia[].empresaUrl es opcional (convierte el nombre de la empresa en un link a su sitio). experiencia[].ubicacion es opcional (ciudad y país donde trabajaste ese puesto, ej. 'Buenos Aires, Argentina' — se muestra al lado del nombre de la empresa; dejalo vacío si no querés mostrarlo). El bloque 'carta' son los datos propios de la carta de presentación (el nombre/contacto/foto los toma del resto del archivo). Todo lo demás es texto libre en el idioma que quieras (inglés recomendado, es lo más común en CVs). 'foto' se deja en null — la foto se carga por separado, arrastrándola en la app, no va en este archivo.",
 
   "modelo": "modelo1",
+  "modeloCarta": "carta1",
+  "tipoDocumento": "cv",
   "tema": "turquesa",
   "fuente": "jakarta",
   "iconos": "emoji1",
@@ -79,5 +81,15 @@
         { "id": "x1h1", "etiqueta": "A category label (e.g. Automation, Cloud & Infrastructure)", "valor": "Comma-separated tools/tech used in that category" }
       ]
     }
-  ]
+  ],
+
+  "carta": {
+    "empresaDestino": "Company you're applying to",
+    "puestoDestino": "Job title you're applying for",
+    "destinatario": "Optional — e.g. 'Hiring Manager' or a specific recruiter's name",
+    "fecha": "Optional — leave empty to use today's date automatically",
+    "saludo": "Dear Hiring Manager,",
+    "cuerpo": "The letter body — write it as one or more paragraphs separated by a blank line (each blank line becomes a new paragraph in the printed letter).",
+    "despedida": "Sincerely,"
+  }
 }

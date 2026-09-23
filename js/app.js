@@ -83,7 +83,16 @@ function ubicacionSufijo(item) {
 
 function iconoDe(tipo) {
   const pack = PAQUETES_ICONOS[estado.iconos] || PAQUETES_ICONOS.emoji1;
-  return pack.iconos[tipo] ?? "•";
+  const valor = pack.iconos[tipo] ?? "•";
+  // los packs "Material" no son un carácter Unicode sino el NOMBRE de una
+  // ligadura (ej. "call") que sólo se dibuja como ícono si el elemento
+  // tiene la fuente de Google "Material Symbols" aplicada — por eso van
+  // envueltos en su propio span con esa fuente, a diferencia de los demás
+  // packs que son texto plano y heredan la tipografía del CV.
+  if (pack.fuenteMaterial) {
+    return `<span class="cv-icono-material" style="font-family:'${pack.fuenteMaterial}';">${valor}</span>`;
+  }
+  return valor;
 }
 
 const ETIQUETA_TIPO_CONTACTO = {
@@ -97,6 +106,196 @@ const ETIQUETA_TIPO_CONTACTO = {
 // fuera bordó). Los packs "Símbolo" de acá abajo usan caracteres Unicode
 // de texto (sin variante emoji) en vez de emoji — esos SÍ heredan el
 // color del tema porque el navegador los dibuja como texto normal.
+// Color de fondo de la franja oscura (colorOscuro) y del cuerpo
+// (colorClaro) que combina con cada tema — ver .cv-pagina[data-tema=...]
+// en style.css para los --cv-acento/--cv-acento-2 de cada uno. Elegir un
+// tema actualiza estos dos colores automáticamente (ver
+// aplicarFondosDeTema() más abajo); el usuario los puede seguir ajustando
+// a mano después con los selectores de color libre, como siempre.
+// --cv-lateral-fondo/--cv-fondo-cuerpo SIEMPRE se usan como valor de
+// "background" (nunca como color de texto, borde, ni adentro de un
+// color-mix()) — ver los usos en style.css — así que un degradé acá es
+// 100% seguro: no rompe nada, y varios temas de abajo lo aprovechan para
+// tener onda propia además del color plano.
+const TEMAS_FONDOS = {
+  turquesa: { oscuro: "#16191e", claro: "#ffffff" },
+  azul: { oscuro: "#12203a", claro: "#ffffff" },
+  verde: { oscuro: "#12241c", claro: "#ffffff" },
+  bordo: { oscuro: "#2a1216", claro: "#ffffff" },
+  violeta: { oscuro: "#1e1430", claro: "#ffffff" },
+  coral: { oscuro: "#1a2624", claro: "#fffaf7" },
+
+  "grafito-dorado": { oscuro: "#1c2024", claro: "#ffffff" },
+  "rosa-dorado": { oscuro: "#241019", claro: "#fff7fa" },
+  "cian-dorado": { oscuro: "#0f2229", claro: "#f5fbfd" },
+  "oliva-dorado": { oscuro: "#1c2013", claro: "#fdfdf5" },
+  "granate-dorado": { oscuro: "#200a0d", claro: "#fff8f8" },
+  "marino-dorado": { oscuro: "#0f1830", claro: "#f7f9ff" },
+
+  "lima-violeta": { oscuro: "linear-gradient(160deg, #182b06 0%, #0e0c1e 100%)", claro: "#fbfff2" },
+  "mandarina-azul": { oscuro: "#0f2038", claro: "#fff8f0" },
+  "fucsia-verde": { oscuro: "#200c1a", claro: "#f7fff9" },
+  "amarillo-morado": { oscuro: "linear-gradient(160deg, #241c04 0%, #160a2e 100%)", claro: "#fffdf0" },
+  "rojo-cian": { oscuro: "#1c0a0d", claro: "#f2fffd" },
+  "rosa-azul": { oscuro: "#200c16", claro: "#f2faff" },
+  "naranja-verde": { oscuro: "#1f1206", claro: "#f5fff2" },
+
+  /* familia "degradé" de verdad: sidebar con un degradé de 3 paradas que
+     se hunde hacia el negro, cuerpo con un lavado sutil del mismo tono
+     que se disuelve en blanco a mitad de página (no compite con el
+     texto). */
+  atardecer: { oscuro: "linear-gradient(160deg, #2b0f24 0%, #170a1c 60%, #0d0714 100%)", claro: "linear-gradient(180deg, #fff5f8 0%, #ffffff 45%)" },
+  fuego: { oscuro: "linear-gradient(160deg, #2b0f00 0%, #180800 60%, #0d0400 100%)", claro: "linear-gradient(180deg, #fffaf0 0%, #ffffff 45%)" },
+  mango: { oscuro: "linear-gradient(160deg, #2b1200 0%, #190a02 60%, #0d0501 100%)", claro: "linear-gradient(180deg, #fff7f2 0%, #ffffff 45%)" },
+  lava: { oscuro: "linear-gradient(160deg, #260404 0%, #140202 60%, #0a0101 100%)", claro: "linear-gradient(180deg, #fff5ee 0%, #ffffff 45%)" },
+  brasa: { oscuro: "linear-gradient(160deg, #210303 0%, #120101 60%, #090000 100%)", claro: "linear-gradient(180deg, #fff3e8 0%, #ffffff 45%)" },
+
+  glaciar: { oscuro: "linear-gradient(160deg, #062338 0%, #041420 60%, #020a12 100%)", claro: "linear-gradient(180deg, #f0fbff 0%, #ffffff 45%)" },
+  abismo: { oscuro: "linear-gradient(160deg, #060a3a 0%, #04051f 60%, #020310 100%)", claro: "linear-gradient(180deg, #f2f7ff 0%, #ffffff 45%)" },
+  "menta-azul": { oscuro: "linear-gradient(160deg, #062b26 0%, #041a17 60%, #020d0b 100%)", claro: "linear-gradient(180deg, #f0fffb 0%, #ffffff 45%)" },
+  aurora: { oscuro: "linear-gradient(160deg, #0d1850 0%, #080f30 60%, #040718 100%)", claro: "linear-gradient(180deg, #f0fbff 0%, #ffffff 45%)" },
+  nocturno: { oscuro: "linear-gradient(160deg, #160532 0%, #0d031f 60%, #06010f 100%)", claro: "linear-gradient(180deg, #f8f2ff 0%, #ffffff 45%)" },
+  polar: { oscuro: "linear-gradient(160deg, #0c1224 0%, #070a16 60%, #04050c 100%)", claro: "linear-gradient(180deg, #f2f7ff 0%, #ffffff 45%)" },
+
+  /* degradé "de piedra pulida" — más contenido, sin las 3 paradas */
+  esmeralda: { oscuro: "linear-gradient(160deg, #0d2b1f 0%, #06140e 60%, #030a07 100%)", claro: "#f5fdf9" },
+  rubi: { oscuro: "linear-gradient(160deg, #2b0810 0%, #140407 60%, #0a0203 100%)", claro: "#fff5f6" },
+  zafiro: { oscuro: "linear-gradient(160deg, #0a2340 0%, #051020 60%, #020810 100%)", claro: "#f2f8ff" },
+  amatista: { oscuro: "linear-gradient(160deg, #1e0d31 0%, #0e0619 60%, #07030d 100%)", claro: "#faf5ff" },
+  topacio: { oscuro: "#1c1608", claro: "#fffdf5" },
+  peridoto: { oscuro: "linear-gradient(160deg, #1a2410 0%, #0e1309 60%, #070a05 100%)", claro: "#f9fff2" },
+
+  /* pastel: cuerpo con un lavado de color muy suave (casi imperceptible
+     al imprimir, pero se nota en pantalla) en vez de blanco plano */
+  lavanda: { oscuro: "#241d33", claro: "linear-gradient(180deg, #f5f0ff 0%, #fdfbff 60%)" },
+  "durazno-suave": { oscuro: "#2e1f16", claro: "linear-gradient(180deg, #fff0e8 0%, #fffaf5 60%)" },
+  "cielo-suave": { oscuro: "#16222e", claro: "linear-gradient(180deg, #eef6ff 0%, #f5faff 60%)" },
+  "menta-suave": { oscuro: "#16261f", claro: "linear-gradient(180deg, #eafff5 0%, #f5fffa 60%)" },
+  "rosa-polvo": { oscuro: "#2b1a20", claro: "linear-gradient(180deg, #fff0f4 0%, #fff8fa 60%)" },
+  arena: { oscuro: "#241d14", claro: "linear-gradient(180deg, #fbf3e4 0%, #fffdf7 60%)" },
+
+  /* neón: resplandor radial en la esquina superior de la franja oscura,
+     como un panel iluminado, en vez de un color plano */
+  "neon-lima": { oscuro: "radial-gradient(120% 80% at 15% 0%, #1e2b06 0%, #141414 55%)", claro: "#fbfff0" },
+  "neon-fucsia": { oscuro: "radial-gradient(120% 80% at 15% 0%, #2b0619 0%, #141414 55%)", claro: "#fff5fa" },
+  "neon-cian": { oscuro: "radial-gradient(120% 80% at 15% 0%, #062b2e 0%, #141414 55%)", claro: "#f0feff" },
+  "neon-violeta": { oscuro: "radial-gradient(120% 80% at 15% 0%, #200a33 0%, #141414 55%)", claro: "#f9f2ff" },
+  "neon-naranja": { oscuro: "radial-gradient(120% 80% at 15% 0%, #331400 0%, #141414 55%)", claro: "#fff8f0" },
+
+  grafito: { oscuro: "#20262b", claro: "#ffffff" },
+  pizarra: { oscuro: "#262c36", claro: "#fafbfc" },
+  carbon: { oscuro: "#18191b", claro: "#ffffff" },
+  plata: { oscuro: "#2b2e33", claro: "#ffffff" },
+  acero: { oscuro: "#1b2420", claro: "#f5f9f6" },
+
+  terracota: { oscuro: "linear-gradient(160deg, #2e1710 0%, #180b07 60%, #0c0503 100%)", claro: "#fffaf5" },
+  bosque: { oscuro: "linear-gradient(160deg, #1c2a20 0%, #101a14 60%, #080d0a 100%)", claro: "#f7faf5" },
+  cafe: { oscuro: "linear-gradient(160deg, #241a0d 0%, #140e07 60%, #0a0704 100%)", claro: "#fff9f2" },
+  arcilla: { oscuro: "linear-gradient(160deg, #2c1710 0%, #170b07 60%, #0c0503 100%)", claro: "#fff7f0" },
+};
+
+// Plantilla en blanco para el modal "Plantilla JSON" (ver
+// bindearControlesEstaticos()) — misma forma que docs/plantilla-datos-cv.json,
+// pero embebida acá como objeto en vez de bajarse con fetch() del archivo:
+// bajo file:// (cómo corre esta app normalmente) el navegador bloquea el
+// fetch de un archivo local por CORS, así que no se puede leer el .json
+// hermano en tiempo de ejecución — tiene que estar en el propio JS.
+// Si se edita la forma de la plantilla acá, replicar el cambio también en
+// docs/plantilla-datos-cv.json (ese archivo es el que la gente puede
+// descargar/inspeccionar directo, este es el que arma el prompt).
+const PLANTILLA_JSON_EJEMPLO = {
+  _instrucciones: "Esto NO es un dato del CV — es solo una guía para quien complete este archivo (vos o un asistente de IA como ChatGPT/Claude). Borrá esta clave '_instrucciones' antes de importar, o dejala: la app la ignora sin problema. Campos que podés dejar tal cual (son de diseño, se cambian después desde la app si querés): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valores válidos — modelo: 'modelo1' a 'modelo20'. modeloCarta: 'carta1' a 'carta6' (sólo se usa si tipoDocumento es 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (hay más de 50 temas adicionales, ver el selector de la app — dejalo en 'turquesa' si no sabés cuál elegir). idiomaCv: 'en' o 'es' (idioma de los TÍTULOS DE SECCIÓN del CV impreso, no de tu contenido). tipoDocumento: 'cv' o 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url es opcional, solo tiene efecto en el tipo 'linkedin' (convierte tu nombre en un link a tu perfil). experiencia[].empresaUrl es opcional (convierte el nombre de la empresa en un link a su sitio). experiencia[].ubicacion es opcional (ciudad y país donde trabajaste ese puesto, ej. 'Buenos Aires, Argentina'; dejalo vacío si no querés mostrarlo). El bloque 'carta' son los datos propios de la carta de presentación (el nombre/contacto/foto los toma del resto del archivo). Todo lo demás es texto libre en el idioma que quieras (inglés recomendado, es lo más común en CVs). 'foto' se deja en null — la foto se carga por separado, arrastrándola en la app, no va en este archivo.",
+  modelo: "modelo1", modeloCarta: "carta1", tipoDocumento: "cv",
+  tema: "turquesa", fuente: "jakarta", iconos: "emoji1",
+  colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
+  nombre: "Your first name", apellido: "Your last name",
+  puesto: "Your current job title (e.g. Senior Backend Engineer)",
+  subtitulo: "Optional short tag next to your title (e.g. a language level like C1, or leave empty)",
+  foto: null,
+  contacto: [
+    { id: "c1", tipo: "telefono", etiqueta: "Optional short label (e.g. country code like US)", valor: "+1 234 567 8900" },
+    { id: "c2", tipo: "email", etiqueta: "", valor: "you@example.com" },
+    { id: "c3", tipo: "ubicacion", etiqueta: "", valor: "City, Country" },
+    { id: "c4", tipo: "linkedin", etiqueta: "", valor: "linkedin.com/in/your-handle", url: "" },
+  ],
+  perfil: "A 3-5 sentence professional summary: who you are, your years of experience, your specialty/focus area, and what kind of impact or track record you bring. Write it in first-person-implied style (no 'I' — CVs usually drop the subject), like: 'Senior backend engineer with 8+ years building...'",
+  habilidades: [
+    { id: "h1", texto: "A hard/technical skill (e.g. Python, React, AWS, SQL) — group related tools into one line if you have many, e.g. 'CI/CD — GitHub Actions & GitLab CI'" },
+  ],
+  blandas: [
+    { id: "b1", texto: "A soft skill (e.g. Effective communication, Critical thinking, Team leadership)" },
+  ],
+  idiomas: [
+    { id: "i1", nombre: "Spanish", nivel: "Native" },
+    { id: "i2", nombre: "English", nivel: "C1 (or B2, Fluent, etc.)" },
+  ],
+  educacion: [
+    {
+      id: "e1", institucion: "School/University name", fecha: "Free-text date range, e.g. 2016 - 2020",
+      bullets: [{ id: "e1b1", texto: "Degree name, honors, or a relevant detail" }],
+    },
+  ],
+  certificaciones: [
+    { id: "cert1", titulo: "Certification name | Issuing org | Year", subtitulo: "Optional one-line detail about the certification" },
+  ],
+  referencias: [
+    { id: "r1", nombre: "Reference full name", rol: "Company / Their role there", email: "reference@example.com", linkedin: "linkedin.com/in/reference-handle" },
+  ],
+  logros: [
+    { id: "l1", texto: "One standout achievement, ideally with a number/result (e.g. 'Reduced deploy time by 40% by...')" },
+  ],
+  experiencia: [
+    {
+      id: "x1", empresa: "Company name", empresaUrl: "",
+      ubicacion: "City, Country (e.g. Buenos Aires, Argentina) — optional, leave empty to hide it",
+      fecha: "Free-text date range, e.g. JAN 2023 - PRESENT",
+      rol: "Your job title at this company",
+      descripcion: "1-3 sentences about the company/team context and your overall mandate in this role.",
+      bullets: [
+        { id: "x1b1", texto: "A specific responsibility or achievement, ideally with concrete numbers/impact." },
+        { id: "x1b2", texto: "Another bullet — aim for 4-8 per job, each one a single clear sentence." },
+      ],
+      herramientas: [
+        { id: "x1h1", etiqueta: "A category label (e.g. Automation, Cloud & Infrastructure)", valor: "Comma-separated tools/tech used in that category" },
+      ],
+    },
+  ],
+  carta: {
+    empresaDestino: "Company you're applying to",
+    puestoDestino: "Job title you're applying for",
+    destinatario: "Optional — e.g. 'Hiring Manager' or a specific recruiter's name",
+    fecha: "Optional — leave empty to use today's date automatically",
+    saludo: "Dear Hiring Manager,",
+    cuerpo: "The letter body — write it as one or more paragraphs separated by a blank line (each blank line becomes a new paragraph in the printed letter).",
+    despedida: "Sincerely,",
+  },
+};
+
+// Arma el prompt completo (instrucciones + plantilla embebida) que se
+// muestra en el modal "Plantilla JSON" — un solo texto listo para pegarle
+// a un asistente de IA junto con el CV viejo del usuario.
+function armarPromptPlantillaJson() {
+  const json = JSON.stringify(PLANTILLA_JSON_EJEMPLO, null, 2);
+  return `Necesito que completes la siguiente plantilla JSON con mis datos, para generar mi CV con una herramienta que uso. Te voy a pegar mi CV viejo y/o mi perfil de LinkedIn más abajo — usalo como fuente para completar cada campo.
+
+Reglas importantes:
+- Respetá EXACTAMENTE esta estructura: las mismas claves, los mismos tipos de dato (una lista sigue siendo una lista, un texto sigue siendo texto). No agregues ni quites claves.
+- Borrá la clave "_instrucciones" del resultado final (es sólo una guía para vos, no un dato del CV).
+- Los campos de diseño (modelo, modeloCarta, tipoDocumento, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv) dejalos tal cual están en la plantilla — no los toques.
+- Escribí el contenido en inglés (es el estándar para CVs), salvo que yo te pida otro idioma más abajo.
+- Si algún dato no lo tenés porque no estaba en lo que te pasé, dejá el campo vacío ("") en vez de inventar información.
+- Devolveme ÚNICAMENTE el JSON completo dentro de un bloque de código \`\`\`json, sin explicaciones antes ni después.
+
+Plantilla a completar:
+\`\`\`json
+${json}
+\`\`\`
+
+Mi CV viejo y/o mi perfil de LinkedIn (pegalo acá abajo):
+[PEGÁ ACÁ TU INFO]
+`;
+}
+
 const PAQUETES_ICONOS = {
   emoji1: { nombre: "Emoji clásico", iconos: { telefono: "📞", email: "✉️", ubicacion: "📍", linkedin: "🔗", web: "🌐" } },
   emoji2: { nombre: "Emoji teléfono fijo", iconos: { telefono: "☎️", email: "📧", ubicacion: "📌", linkedin: "💼", web: "🌍" } },
@@ -108,6 +307,14 @@ const PAQUETES_ICONOS = {
   simbolo4: { nombre: "Símbolo flechas", iconos: { telefono: "▸", email: "▸", ubicacion: "▸", linkedin: "▸", web: "▸" } },
   letras: { nombre: "Iniciales (Tel / Mail / Dir)", iconos: { telefono: "Tel", email: "Mail", ubicacion: "Dir", linkedin: "in", web: "Web" } },
   sinIcono: { nombre: "Sin ícono", iconos: { telefono: "", email: "", ubicacion: "", linkedin: "", web: "" } },
+  // Material Symbols de Google — el mismo proveedor que ya usamos para las
+  // 30 combinaciones de fuente, así que no suma una dependencia nueva.
+  // A diferencia de los packs de arriba (texto/emoji plano), estos son
+  // nombres de ligadura que necesitan la fuente "Material Symbols"
+  // aplicada para dibujarse como ícono — ver iconoDe() y fuenteMaterial acá abajo.
+  materialOutline: { nombre: "Material — contorno", fuenteMaterial: "Material Symbols Outlined", iconos: { telefono: "call", email: "mail", ubicacion: "location_on", linkedin: "link", web: "language" } },
+  materialRound: { nombre: "Material — redondeado", fuenteMaterial: "Material Symbols Rounded", iconos: { telefono: "call", email: "mail", ubicacion: "location_on", linkedin: "link", web: "language" } },
+  materialSharp: { nombre: "Material — angular", fuenteMaterial: "Material Symbols Sharp", iconos: { telefono: "call", email: "mail", ubicacion: "location_on", linkedin: "link", web: "language" } },
 };
 
 // ---------------- combinaciones de fuente (30 opciones) ----------------
@@ -159,6 +366,18 @@ const FUENTES = {
   const familias = new Set();
   Object.values(FUENTES).forEach((f) => f.familias.forEach((seg) => familias.add(seg)));
   const href = "https://fonts.googleapis.com/css2?" + [...familias].map((f) => `family=${f}`).join("&") + "&display=swap";
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+})();
+
+// Material Symbols (Google) para los 3 packs de íconos "materialOutline/
+// Round/Sharp" — mismo proveedor que las fuentes de arriba, cargado una
+// sola vez con las 3 variantes juntas (contorno/redondeado/angular) para
+// que cambiar de pack en el dropdown sea instantáneo.
+(function inyectarMaterialSymbols() {
+  const href = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&family=Material+Symbols+Rounded&family=Material+Symbols+Sharp&display=block";
   const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = href;
@@ -258,6 +477,16 @@ function estadoPorDefecto() {
       { id: id(), titulo: "Consilium Lorem Ipsum | 2024", subtitulo: "Certificatio Fundamentorum Dolor Sit Amet" },
       { id: id(), titulo: "Instituto Consectetur | 2021", subtitulo: "Adipiscing Elit Practitioner" },
     ],
+    tipoDocumento: "cv", modeloCarta: "carta1",
+    carta: {
+      empresaDestino: "Acme Inc.",
+      puestoDestino: "Senior Dolor Sit Amet Engineer",
+      destinatario: "Hiring Manager",
+      fecha: "",
+      saludo: "Dear Hiring Manager,",
+      cuerpo: "I'm writing to apply for the Senior Dolor Sit Amet Engineer position at Acme Inc. With over five years of experience in consectetur adipiscing elit, I've built a track record of shipping reliable, well-tested systems in fast-moving teams.\n\nIn my current role at Lorem Corp, I led the adoption of automated testing across three product lines, cutting regression time by 40% while mentoring two junior engineers. I'm drawn to Acme Inc. specifically because of its focus on dolor sit amet — a space where I believe my background in ipsum dolor and hands-on leadership could make an immediate impact.\n\nI'd welcome the chance to talk through how my experience lines up with what your team needs right now. Thank you for your time and consideration.",
+      despedida: "Sincerely,",
+    },
   };
 }
 
@@ -325,9 +554,39 @@ const MODELOS = {
   modelo20: { nombre: "Modelo 20 — Odyssey", render: renderModelo20 },
 };
 
+// ---------------- registro de cartas de presentación ----------------
+// Mismo patrón que MODELOS, pero para el generador de carta de
+// presentación: reusa nombre/contacto/foto del CV, sólo agrega los campos
+// propios de estado.carta (ver estadoPorDefecto()).
+const CARTAS = {
+  carta1: { nombre: "Carta 1 — Clásica", render: renderCarta1 },
+  carta2: { nombre: "Carta 2 — A juego con el CV", render: renderCarta2 },
+  carta3: { nombre: "Carta 3 — Encabezado moderno", render: renderCarta3 },
+  carta4: { nombre: "Carta 4 — Minimalista", render: renderCarta4 },
+  carta5: { nombre: "Carta 5 — Editorial", render: renderCarta5 },
+  carta6: { nombre: "Carta 6 — Ejecutiva", render: renderCarta6 },
+};
+
+// Si el usuario no cargó una fecha propia, usa la de hoy (formateada,
+// nunca un valor inventado) — mismo criterio de "no fabricar contenido"
+// que ya se usa para datos derivados en el resto de la app.
+function fechaCartaFormateada() {
+  if (estado.carta.fecha && estado.carta.fecha.trim()) return esc(estado.carta.fecha.trim());
+  const MESES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const hoy = new Date();
+  return `${MESES[hoy.getMonth()]} ${hoy.getDate()}, ${hoy.getFullYear()}`;
+}
+
+// Línea de contacto compacta (usada en el encabezado de las 6 cartas) —
+// mismos datos que el CV, separados por "·", sin ícono ni etiqueta.
+function contactoLineaCarta() {
+  return estado.contacto.map((c) => contactoValorHTML(c)).join(' <span class="cv-carta-punto">·</span> ');
+}
+
 function renderPreview() {
   const pagina = $("#cv-pagina");
-  pagina.dataset.modelo = estado.modelo || "modelo1";
+  const esCarta = estado.tipoDocumento === "carta";
+  pagina.dataset.modelo = esCarta ? (estado.modeloCarta || "carta1") : (estado.modelo || "modelo1");
   pagina.dataset.tema = estado.tema || "turquesa";
   pagina.dataset.fuente = estado.fuente || "jakarta"; // sólo para inspeccionar en devtools, el efecto real es el setProperty de abajo
   const fdata = FUENTES[estado.fuente] || FUENTES.jakarta;
@@ -345,8 +604,13 @@ function renderPreview() {
   // en el editor y ajustarEscala() más abajo.
   pagina.style.setProperty("--cv-escala-foto", estado.escalaFoto ?? 1);
   pagina.style.setProperty("--cv-escala-iconos", estado.escalaIconos ?? 1);
-  const modelo = MODELOS[estado.modelo] || MODELOS.modelo1;
-  modelo.render();
+  if (esCarta) {
+    const carta = CARTAS[estado.modeloCarta] || CARTAS.carta1;
+    carta.render();
+  } else {
+    const modelo = MODELOS[estado.modelo] || MODELOS.modelo1;
+    modelo.render();
+  }
 }
 
 // ---- Modelo 1: el layout original (franja lateral + timeline) ----
@@ -422,6 +686,7 @@ function igualarAlturaLateral() {
   igualarAlturaPar("#cv-m2-col-der", "#cv-m2-col-izq");
   igualarAlturaPar("#cv-m3-principal", "#cv-m3-lateral");
   igualarAlturaPar("#cv-m4-principal", "#cv-m4-lateral");
+  igualarAlturaPar(".cv-carta2-principal", "#cv-c2-lateral");
 }
 function igualarAlturaPar(idLargo, idCorto) {
   const largo = $(idLargo);
@@ -1474,15 +1739,17 @@ function asegurarEsqueletoModelo8() {
   pagina.dataset.esqueleto = "modelo8";
   pagina.innerHTML = `
     <div class="cv-m8-page">
-      <div class="cv-m8-diagonal"></div>
-      <header class="cv-m8-header">
-        <div class="cv-m8-photo-wrap" id="cv-m8-foto-wrap"><img id="cv-m8-foto" class="cv-m8-foto" alt="Foto de perfil"></div>
-        <div class="cv-m8-heading">
-          <h1 class="cv-m8-nombre"><span id="cv-m8-nombre-nombre"></span> <span class="cv-m8-apellido" id="cv-m8-nombre-apellido"></span></h1>
-          <div class="cv-m8-puesto" id="cv-m8-puesto"></div>
-          <div class="cv-m8-subtitulo" id="cv-m8-subtitulo"></div>
-        </div>
-      </header>
+      <div class="cv-m8-header-wrap">
+        <div class="cv-m8-diagonal"></div>
+        <header class="cv-m8-header">
+          <div class="cv-m8-photo-wrap" id="cv-m8-foto-wrap"><img id="cv-m8-foto" class="cv-m8-foto" alt="Foto de perfil" hidden><div class="cv-m8-foto-placeholder" id="cv-m8-foto-placeholder">🙂</div></div>
+          <div class="cv-m8-heading">
+            <h1 class="cv-m8-nombre"><span id="cv-m8-nombre-nombre"></span> <span class="cv-m8-apellido" id="cv-m8-nombre-apellido"></span></h1>
+            <div class="cv-m8-puesto" id="cv-m8-puesto"></div>
+            <div class="cv-m8-subtitulo" id="cv-m8-subtitulo"></div>
+          </div>
+        </header>
+      </div>
 
       <div class="cv-m8-contacto" id="cv-m8-contacto"></div>
 
@@ -1568,9 +1835,9 @@ function renderModelo8() {
   $("#cv-m8-puesto").textContent = estado.puesto || "";
   $("#cv-m8-subtitulo").textContent = estado.subtitulo || "";
 
-  const fotoWrap = $("#cv-m8-foto-wrap");
-  if (estado.foto) { $("#cv-m8-foto").src = estado.foto; fotoWrap.style.display = ""; }
-  else { fotoWrap.style.display = "none"; }
+  const foto8 = $("#cv-m8-foto"), placeholder8 = $("#cv-m8-foto-placeholder");
+  if (estado.foto) { foto8.src = estado.foto; foto8.hidden = false; placeholder8.hidden = true; }
+  else { foto8.hidden = true; placeholder8.hidden = false; }
 
   $("#cv-m8-contacto").innerHTML = _m8ContactoHTML(estado.contacto || []);
 
@@ -3644,6 +3911,275 @@ function renderModelo20() {
 }
 
 // ============================================================
+// CARTAS DE PRESENTACIÓN — 6 modelos, misma lógica de esqueleto+render
+// que los CV (ver comentario de asegurarEsqueletoModelo1 más arriba).
+// Reusan nombre/apellido/puesto/foto/contacto de `estado` y sólo agregan
+// los campos propios de `estado.carta`.
+// ============================================================
+
+// ---- Carta 1 — Clásica: carta comercial de toda la vida, remitente
+// arriba a la izquierda, fecha, destinatario, cuerpo justificado. ----
+function asegurarEsqueletoCarta1() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta1") return;
+  pagina.dataset.esqueleto = "carta1";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta1">
+      <header class="cv-carta1-remitente">
+        <h1 class="cv-carta1-nombre"><span id="cv-c1-nombre"></span> <span id="cv-c1-apellido"></span></h1>
+        <p class="cv-carta1-puesto" id="cv-c1-puesto"></p>
+        <p class="cv-carta1-contacto" id="cv-c1-contacto"></p>
+      </header>
+      <p class="cv-carta1-fecha" id="cv-c1-fecha"></p>
+      <div class="cv-carta1-destinatario" id="cv-c1-destinatario"></div>
+      <p class="cv-carta1-saludo" id="cv-c1-saludo"></p>
+      <div class="cv-carta1-cuerpo" id="cv-c1-cuerpo"></div>
+      <p class="cv-carta1-despedida" id="cv-c1-despedida"></p>
+      <p class="cv-carta1-firma" id="cv-c1-firma"></p>
+    </div>
+  `;
+}
+function renderCarta1() {
+  asegurarEsqueletoCarta1();
+  const c = estado.carta;
+  $("#cv-c1-nombre").textContent = estado.nombre || "";
+  $("#cv-c1-apellido").textContent = estado.apellido || "";
+  $("#cv-c1-puesto").textContent = estado.puesto || "";
+  $("#cv-c1-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c1-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c1-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c1-saludo").textContent = c.saludo || "";
+  $("#cv-c1-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c1-despedida").textContent = c.despedida || "";
+  $("#cv-c1-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+}
+
+// ---- Carta 2 — A juego con el CV: franja lateral oscura con
+// nombre/foto/contacto, igual que el Modelo 1, carta a la derecha. ----
+function asegurarEsqueletoCarta2() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta2") return;
+  pagina.dataset.esqueleto = "carta2";
+  pagina.innerHTML = `
+    <div class="cv-carta2-lateral" id="cv-c2-lateral">
+      <div class="cv-foto-marco">
+        <img class="cv-foto" id="cv-c2-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-foto-placeholder" id="cv-c2-foto-placeholder">🙂</div>
+      </div>
+      <h1 class="cv-carta2-nombre"><span id="cv-c2-nombre"></span><br><span id="cv-c2-apellido"></span></h1>
+      <p class="cv-carta2-puesto" id="cv-c2-puesto"></p>
+      <div class="cv-carta2-contacto" id="cv-c2-contacto"></div>
+    </div>
+    <div class="cv-carta2-principal">
+      <p class="cv-carta2-fecha" id="cv-c2-fecha"></p>
+      <div class="cv-carta2-destinatario" id="cv-c2-destinatario"></div>
+      <p class="cv-carta2-saludo" id="cv-c2-saludo"></p>
+      <div class="cv-carta2-cuerpo" id="cv-c2-cuerpo"></div>
+      <p class="cv-carta2-despedida" id="cv-c2-despedida"></p>
+      <p class="cv-carta2-firma" id="cv-c2-firma"></p>
+    </div>
+  `;
+}
+function renderCarta2() {
+  asegurarEsqueletoCarta2();
+  const c = estado.carta;
+  $("#cv-c2-nombre").textContent = estado.nombre || "";
+  $("#cv-c2-apellido").textContent = estado.apellido || "";
+  $("#cv-c2-puesto").textContent = estado.puesto || "";
+  $("#cv-c2-contacto").innerHTML = estado.contacto.map((x) =>
+    `<div class="cv-carta2-contacto-fila"><span class="cv-contacto-icono">${iconoDe(x.tipo)}</span><span>${contactoValorHTML(x)}</span></div>`
+  ).join("");
+  const foto = $("#cv-c2-foto"), placeholder = $("#cv-c2-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; placeholder.hidden = true; }
+  else { foto.hidden = true; placeholder.hidden = false; }
+  $("#cv-c2-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c2-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c2-saludo").textContent = c.saludo || "";
+  $("#cv-c2-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c2-despedida").textContent = c.despedida || "";
+  $("#cv-c2-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+}
+
+// ---- Carta 3 — Encabezado moderno: banner de color sólido arriba con
+// nombre+contacto, cuerpo abajo sobre blanco. ----
+function asegurarEsqueletoCarta3() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta3") return;
+  pagina.dataset.esqueleto = "carta3";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta3">
+      <header class="cv-carta3-banner">
+        <h1 class="cv-carta3-nombre"><span id="cv-c3-nombre"></span> <span id="cv-c3-apellido"></span></h1>
+        <p class="cv-carta3-puesto" id="cv-c3-puesto"></p>
+        <p class="cv-carta3-contacto" id="cv-c3-contacto"></p>
+      </header>
+      <div class="cv-carta3-cuerpo-envoltorio">
+        <p class="cv-carta3-fecha" id="cv-c3-fecha"></p>
+        <div class="cv-carta3-destinatario" id="cv-c3-destinatario"></div>
+        <p class="cv-carta3-saludo" id="cv-c3-saludo"></p>
+        <div class="cv-carta3-cuerpo" id="cv-c3-cuerpo"></div>
+        <p class="cv-carta3-despedida" id="cv-c3-despedida"></p>
+        <p class="cv-carta3-firma" id="cv-c3-firma"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta3() {
+  asegurarEsqueletoCarta3();
+  const c = estado.carta;
+  $("#cv-c3-nombre").textContent = estado.nombre || "";
+  $("#cv-c3-apellido").textContent = estado.apellido || "";
+  $("#cv-c3-puesto").textContent = estado.puesto || "";
+  $("#cv-c3-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c3-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c3-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c3-saludo").textContent = c.saludo || "";
+  $("#cv-c3-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c3-despedida").textContent = c.despedida || "";
+  $("#cv-c3-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+}
+
+// ---- Carta 4 — Minimalista: mucho blanco, nombre chico en mayúsculas
+// espaciadas, una línea fina, todo alineado a la izquierda. ----
+function asegurarEsqueletoCarta4() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta4") return;
+  pagina.dataset.esqueleto = "carta4";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta4">
+      <header class="cv-carta4-header">
+        <p class="cv-carta4-nombre" id="cv-c4-nombre"></p>
+        <p class="cv-carta4-contacto" id="cv-c4-contacto"></p>
+      </header>
+      <p class="cv-carta4-fecha" id="cv-c4-fecha"></p>
+      <div class="cv-carta4-destinatario" id="cv-c4-destinatario"></div>
+      <p class="cv-carta4-saludo" id="cv-c4-saludo"></p>
+      <div class="cv-carta4-cuerpo" id="cv-c4-cuerpo"></div>
+      <p class="cv-carta4-despedida" id="cv-c4-despedida"></p>
+      <p class="cv-carta4-firma" id="cv-c4-firma"></p>
+    </div>
+  `;
+}
+function renderCarta4() {
+  asegurarEsqueletoCarta4();
+  const c = estado.carta;
+  $("#cv-c4-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c4-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c4-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c4-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c4-saludo").textContent = c.saludo || "";
+  $("#cv-c4-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c4-despedida").textContent = c.despedida || "";
+  $("#cv-c4-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+}
+
+// ---- Carta 5 — Editorial: masthead tipo revista, nombre grande serif,
+// columna de cuerpo angosta con letra capital en el primer párrafo. ----
+function asegurarEsqueletoCarta5() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta5") return;
+  pagina.dataset.esqueleto = "carta5";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta5">
+      <header class="cv-carta5-masthead">
+        <h1 class="cv-carta5-nombre"><span id="cv-c5-nombre"></span> <span id="cv-c5-apellido"></span></h1>
+        <div class="cv-carta5-linea"></div>
+        <p class="cv-carta5-puesto" id="cv-c5-puesto"></p>
+        <p class="cv-carta5-contacto" id="cv-c5-contacto"></p>
+      </header>
+      <p class="cv-carta5-fecha" id="cv-c5-fecha"></p>
+      <div class="cv-carta5-destinatario" id="cv-c5-destinatario"></div>
+      <p class="cv-carta5-saludo" id="cv-c5-saludo"></p>
+      <div class="cv-carta5-cuerpo" id="cv-c5-cuerpo"></div>
+      <p class="cv-carta5-despedida" id="cv-c5-despedida"></p>
+      <p class="cv-carta5-firma" id="cv-c5-firma"></p>
+    </div>
+  `;
+}
+function renderCarta5() {
+  asegurarEsqueletoCarta5();
+  const c = estado.carta;
+  $("#cv-c5-nombre").textContent = estado.nombre || "";
+  $("#cv-c5-apellido").textContent = estado.apellido || "";
+  $("#cv-c5-puesto").textContent = estado.puesto || "";
+  $("#cv-c5-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c5-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c5-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c5-saludo").textContent = c.saludo || "";
+  const parrafos = escPárrafo(c.cuerpo || "").split("<br><br>").filter(Boolean);
+  $("#cv-c5-cuerpo").innerHTML = parrafos.map((p, i) => `<p${i === 0 ? ' class="cv-carta5-primer-parrafo"' : ""}>${p}</p>`).join("");
+  $("#cv-c5-despedida").textContent = c.despedida || "";
+  $("#cv-c5-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+}
+
+// ---- Carta 6 — Ejecutiva: barra oscura de ancho completo arriba con
+// nombre+puesto, cuerpo formal abajo, bloque de firma con cargo. ----
+function asegurarEsqueletoCarta6() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta6") return;
+  pagina.dataset.esqueleto = "carta6";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta6">
+      <header class="cv-carta6-barra">
+        <div>
+          <h1 class="cv-carta6-nombre"><span id="cv-c6-nombre"></span> <span id="cv-c6-apellido"></span></h1>
+          <p class="cv-carta6-puesto" id="cv-c6-puesto"></p>
+        </div>
+        <p class="cv-carta6-contacto" id="cv-c6-contacto"></p>
+      </header>
+      <div class="cv-carta6-cuerpo-envoltorio">
+        <p class="cv-carta6-fecha" id="cv-c6-fecha"></p>
+        <div class="cv-carta6-destinatario" id="cv-c6-destinatario"></div>
+        <p class="cv-carta6-saludo" id="cv-c6-saludo"></p>
+        <div class="cv-carta6-cuerpo" id="cv-c6-cuerpo"></div>
+        <p class="cv-carta6-despedida" id="cv-c6-despedida"></p>
+        <p class="cv-carta6-firma" id="cv-c6-firma"></p>
+        <p class="cv-carta6-firma-cargo" id="cv-c6-firma-cargo"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta6() {
+  asegurarEsqueletoCarta6();
+  const c = estado.carta;
+  $("#cv-c6-nombre").textContent = estado.nombre || "";
+  $("#cv-c6-apellido").textContent = estado.apellido || "";
+  $("#cv-c6-puesto").textContent = estado.puesto || "";
+  $("#cv-c6-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c6-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c6-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c6-saludo").textContent = c.saludo || "";
+  $("#cv-c6-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c6-despedida").textContent = c.despedida || "";
+  $("#cv-c6-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c6-firma-cargo").textContent = estado.puesto || "";
+}
+
+// ============================================================
 // EDITOR — construcción imperativa de cada fila/tarjeta (no se
 // re-renderiza todo desde `estado` en cada tecla: eso le haría perder el
 // foco al input activo en medio de la escritura). Cada nodo se crea UNA
@@ -3940,6 +4476,20 @@ function enlazarCampoSimple(inputId, clave) {
   input.oninput = () => { estado[clave] = input.value; renderPreview(); guardar(); };
 }
 
+// Variante de enlazarCampoSimple() para los campos anidados en estado.carta.
+function enlazarCampoCarta(inputId, clave) {
+  const input = $(inputId);
+  input.value = estado.carta[clave] || "";
+  input.oninput = () => { estado.carta[clave] = input.value; renderPreview(); guardar(); };
+}
+
+// Muestra el bloque de modelo-CV o modelo-carta según estado.tipoDocumento.
+function actualizarVisibilidadTipoDocumento() {
+  const esCarta = estado.tipoDocumento === "carta";
+  $("#campo-modelo-cv").classList.toggle("oculto", esCarta);
+  $("#campo-modelo-carta").classList.toggle("oculto", !esCarta);
+}
+
 // Cada color libre (oscuro, claro) tiene DOS inputs para el mismo valor
 // (el swatch nativo <input type=color> y un campo de texto para pegar un
 // hex a mano) — hay que mantenerlos sincronizados entre sí, por eso no
@@ -3948,9 +4498,14 @@ function enlazarCampoSimple(inputId, clave) {
 function enlazarColorLibre(idPicker, idTexto, clave, porDefecto) {
   const HEX_VALIDO = /^#[0-9a-fA-F]{6}$/;
   const picker = $(idPicker), texto = $(idTexto);
-  const valorInicial = HEX_VALIDO.test(estado[clave]) ? estado[clave] : porDefecto;
-  picker.value = valorInicial;
-  texto.value = valorInicial;
+  // el valor real puede ser un degradé (algunos temas lo usan para
+  // colorOscuro/colorClaro, ver TEMAS_FONDOS) — el <input type=color>
+  // nativo sólo entiende hex, así que ahí se aproxima con el primer color
+  // del degradé; el campo de texto sí muestra el valor real completo.
+  const valorReal = estado[clave] || porDefecto;
+  const aproxHex = HEX_VALIDO.test(valorReal) ? valorReal : ((valorReal.match(/#[0-9a-fA-F]{6}/) || [])[0] || porDefecto);
+  picker.value = aproxHex;
+  texto.value = valorReal;
   picker.oninput = () => {
     estado[clave] = picker.value;
     texto.value = picker.value;
@@ -3964,6 +4519,18 @@ function enlazarColorLibre(idPicker, idTexto, clave, porDefecto) {
   };
 }
 
+// Al elegir un tema, actualiza colorOscuro/colorClaro para que combinen
+// (ver TEMAS_FONDOS) y resincroniza los selectores de color libre — el
+// usuario puede seguir ajustándolos a mano después, como siempre.
+function aplicarFondosDeTema(temaId) {
+  const par = TEMAS_FONDOS[temaId];
+  if (!par) return;
+  estado.colorOscuro = par.oscuro;
+  estado.colorClaro = par.claro;
+  enlazarColorLibre("#in-color-oscuro", "#in-color-oscuro-texto", "colorOscuro", "#16191e");
+  enlazarColorLibre("#in-color-claro", "#in-color-claro-texto", "colorClaro", "#ffffff");
+}
+
 // Los <select> de fuente/íconos arrancan vacíos en el HTML — se llenan acá
 // desde el registro (FUENTES/PAQUETES_ICONOS) en vez de tenerlos
 // hardcodeados en index.html, para no mantener la lista en dos lugares.
@@ -3975,8 +4542,21 @@ function poblarSelectorDesdeRegistro(idSelect, registro) {
 }
 
 function poblarDesdeEstado() {
+  $("#in-tipo-documento").value = estado.tipoDocumento || "cv";
+  $("#in-tipo-documento").onchange = () => {
+    estado.tipoDocumento = $("#in-tipo-documento").value;
+    actualizarVisibilidadTipoDocumento();
+    renderPreview(); guardar();
+  };
+  actualizarVisibilidadTipoDocumento();
   enlazarCampoSimple("#in-modelo", "modelo");
-  enlazarCampoSimple("#in-tema", "tema");
+  enlazarCampoSimple("#in-modelo-carta", "modeloCarta");
+  $("#in-tema").value = estado.tema || "turquesa";
+  $("#in-tema").onchange = () => {
+    estado.tema = $("#in-tema").value;
+    aplicarFondosDeTema(estado.tema);
+    renderPreview(); guardar();
+  };
   enlazarColorLibre("#in-color-oscuro", "#in-color-oscuro-texto", "colorOscuro", "#16191e");
   enlazarColorLibre("#in-color-claro", "#in-color-claro-texto", "colorClaro", "#ffffff");
   poblarSelectorDesdeRegistro("#in-fuente", FUENTES);
@@ -4004,6 +4584,14 @@ function poblarDesdeEstado() {
   montarListaEducacion();
   montarListaCertificaciones();
   montarListaReferencias();
+
+  enlazarCampoCarta("#in-carta-empresa", "empresaDestino");
+  enlazarCampoCarta("#in-carta-puesto", "puestoDestino");
+  enlazarCampoCarta("#in-carta-destinatario", "destinatario");
+  enlazarCampoCarta("#in-carta-fecha", "fecha");
+  enlazarCampoCarta("#in-carta-saludo", "saludo");
+  enlazarCampoCarta("#in-carta-cuerpo", "cuerpo");
+  enlazarCampoCarta("#in-carta-despedida", "despedida");
 
   // la vista previa de la foto y su botón "Quitar" dependen del estado
   // actual — se resincronizan acá porque poblarDesdeEstado() también
@@ -4106,6 +4694,57 @@ function bindearControlesEstaticos() {
     estado = datosIniciales();
     poblarDesdeEstado();
     guardar();
+  });
+
+  // ---- modal "Plantilla JSON": antes era un <a href download> directo al
+  // .json, pero bajo file:// (cómo corre esta app) Chrome ignora ese
+  // download hacia OTRO archivo y en vez de bajarlo lo abre — pantalla
+  // negra con el JSON crudo, que a cualquiera no técnico le parece un
+  // error. Ahora es un modal con el prompt (instrucciones + plantilla)
+  // ya armado para copiar y pegar en un asistente de IA. ----
+  const modalPlantilla = $("#modal-plantilla-json");
+  function abrirModalPlantilla() {
+    $("#modal-plantilla-json-texto").value = armarPromptPlantillaJson();
+    $("#modal-plantilla-json-copiado").classList.add("oculto");
+    modalPlantilla.classList.remove("oculto");
+  }
+  function cerrarModalPlantilla() { modalPlantilla.classList.add("oculto"); }
+  $("#btn-plantilla-json").addEventListener("click", abrirModalPlantilla);
+  $("#modal-plantilla-json-cerrar").addEventListener("click", cerrarModalPlantilla);
+  modalPlantilla.addEventListener("click", (e) => { if (e.target === modalPlantilla) cerrarModalPlantilla(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modalPlantilla.classList.contains("oculto")) cerrarModalPlantilla(); });
+  $("#modal-plantilla-json-copiar").addEventListener("click", async () => {
+    const texto = $("#modal-plantilla-json-texto");
+    let copiado = false;
+    try { await navigator.clipboard.writeText(texto.value); copiado = true; }
+    catch {
+      // fallback para contextos donde navigator.clipboard no está
+      // disponible (algunos navegadores lo restringen bajo file://):
+      // seleccionar el texto y usar el comando de copiar clásico.
+      texto.removeAttribute("readonly");
+      texto.select();
+      copiado = document.execCommand("copy");
+      texto.setAttribute("readonly", "");
+    }
+    if (copiado) {
+      const aviso = $("#modal-plantilla-json-copiado");
+      aviso.classList.remove("oculto");
+      setTimeout(() => aviso.classList.add("oculto"), 2200);
+    } else {
+      texto.select();
+      alert("No se pudo copiar automáticamente — seleccioná el texto y copialo con Ctrl+C.");
+    }
+  });
+  $("#modal-plantilla-json-descargar").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(PLANTILLA_JSON_EJEMPLO, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "plantilla-datos-cv.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   });
 
   // ---- exportar/importar: respaldo real de tus datos como .json, fuera
