@@ -2486,26 +2486,17 @@ a.btn { display: inline-block; text-decoration: none; }
 }
 .cv-m28-vinilo {
   position: relative;
-  width: calc(32mm * var(--cv-escala-foto, 1));
-  height: calc(32mm * var(--cv-escala-foto, 1));
+  width: calc(36mm * var(--cv-escala-foto, 1));
+  height: calc(36mm * var(--cv-escala-foto, 1));
   border-radius: 50%;
   flex-shrink: 0;
   background: repeating-radial-gradient(circle at center, #16121c 0 2.4mm, #221c2c 2.4mm 4.8mm);
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
   display: flex; align-items: center; justify-content: center;
 }
-.cv-m28-vinilo::after {
-  content: "";
-  position: absolute;
-  width: 22%; height: 22%;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--cv-acento), var(--cv-acento-2));
-  z-index: 2;
-  box-shadow: 0 0 0 2px #16121c;
-}
 .cv-m28-foto, .cv-m28-foto-placeholder {
   position: relative;
-  width: 62%; height: 62%;
+  width: 82%; height: 82%;
   border-radius: 50%;
   object-fit: cover;
   z-index: 1;
@@ -3229,7 +3220,7 @@ a.btn { display: inline-block; text-decoration: none; }
   font-size: 8pt; padding: 1.3mm 3mm;
   background: linear-gradient(120deg, var(--cv-acento), var(--cv-acento-2));
   color: var(--cv-acento-texto);
-  border-radius: 60% 40% 50% 50% / 55% 55% 45% 45%;
+  border-radius: 999px;
 }
 .cv-m33-pill-alt { background: color-mix(in srgb, var(--cv-lateral-texto) 12%, transparent); color: var(--cv-lateral-texto); }
 
@@ -3260,7 +3251,7 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m33-job-empresa .cv-ubicacion { color: var(--cv-tenue); font-weight: 400; }
 .cv-m33-job-rol { font-size: 9pt; color: var(--cv-acento-2); font-weight: 600; }
 .cv-m33-job-fecha {
-  font-size: 8pt; padding: 1mm 3mm; border-radius: 40% 60% 60% 40% / 50%;
+  font-size: 8pt; padding: 1mm 3mm; border-radius: 999px;
   background: var(--cv-acento-2); color: var(--cv-badge-texto); white-space: nowrap;
 }
 .cv-m33-job-desc { font-size: 9pt; color: var(--cv-texto); margin: 2mm 0; }
@@ -3269,7 +3260,7 @@ a.btn { display: inline-block; text-decoration: none; }
 .cv-m33-job-tools { display: flex; flex-wrap: wrap; gap: 2mm; margin-top: 2mm; }
 .cv-m33-tool { font-size: 8pt; color: var(--cv-tenue); background: color-mix(in srgb, var(--cv-acento) 10%, transparent); padding: 1mm 2.5mm; border-radius: 3mm; }
 
-.cv-m33-edu, .cv-m33-cert { margin-bottom: 4mm; padding: 3mm 4mm; border-radius: 55% 45% 50% 50% / 30% 30% 70% 70%; background: color-mix(in srgb, var(--cv-acento) 7%, transparent); }
+.cv-m33-edu, .cv-m33-cert { margin-bottom: 4mm; padding: 3mm 4mm; border-radius: 3mm 8mm 3mm 8mm; background: color-mix(in srgb, var(--cv-acento) 7%, transparent); }
 .cv-m33-edu-head, .cv-m33-cert { display: flex; justify-content: space-between; gap: 3mm; flex-wrap: wrap; }
 .cv-m33-edu-inst, .cv-m33-cert-titulo { font-weight: 700; color: var(--cv-texto); }
 .cv-m33-edu-fecha { font-size: 8pt; color: var(--cv-tenue); }
@@ -3843,24 +3834,19 @@ a.btn { display: inline-block; text-decoration: none; }
 
 .cv-m39-header { text-align: center; padding: 10mm 12mm 6mm; position: relative; }
 .cv-m39-vinilo {
-  width: calc(30mm * var(--cv-escala-foto, 1));
-  height: calc(30mm * var(--cv-escala-foto, 1));
+  width: calc(36mm * var(--cv-escala-foto, 1));
+  height: calc(36mm * var(--cv-escala-foto, 1));
   margin: 0 auto 4mm;
   border-radius: 50%;
-  background: radial-gradient(circle, #1a1a1a 0 18%, #0b0714 19% 21%, #1a1a1a 22% 32%, #0b0714 33% 35%, #1a1a1a 36%);
+  background: radial-gradient(circle, #1a1a1a 0 78%, #0b0714 79% 82%, #1a1a1a 83% 92%, #0b0714 93% 96%, #1a1a1a 97%);
   position: relative;
   box-shadow: 0 0 6mm rgba(200,0,255,0.45), 0 0 2mm rgba(0,225,255,0.4);
   display: flex; align-items: center; justify-content: center;
 }
-.cv-m39-vinilo::after {
-  content: ""; position: absolute; width: 34%; height: 34%; border-radius: 50%;
-  background: linear-gradient(135deg, var(--cv-acento), var(--cv-acento-2));
-  z-index: 1; box-shadow: 0 0 2mm rgba(255,255,255,0.4);
-}
 .cv-m39-foto, .cv-m39-foto-placeholder {
-  width: 32%; height: 32%; border-radius: 50%; object-fit: cover; position: relative; z-index: 2;
+  width: 76%; height: 76%; border-radius: 50%; object-fit: cover; position: relative; z-index: 2;
   display: flex; align-items: center; justify-content: center;
-  font-size: calc(6mm * var(--cv-escala-foto, 1));
+  font-size: calc(8mm * var(--cv-escala-foto, 1));
   background: #0b0714;
 }
 .cv-m39-nombre {
