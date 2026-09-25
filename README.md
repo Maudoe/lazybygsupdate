@@ -16,11 +16,11 @@ So: a simple, AI-friendly CV generator for people who want to get things done wi
 
 ![CV Generator screenshot](docs/screenshot.png)
 
-## 🎨 40 templates, 40 completely different designs
+## 🎨 45 templates, 45 completely different designs
 
-Not 40 recolors of the same layout — 40 actually different structures, each with its own persona and signature detail: a code-editor gutter for engineers, a scoreboard for gym coaches, a honeycomb of hexagons for data folks, a blueprint grid for architects, a chaptered "career as a story" layout, a menu card for chefs, a badge/credential layout for security guards, a vinyl-record photo frame for musicians, and more — the second batch of 20 is built around specific professions (baker, nurse, firefighter, photographer, lawyer, pilot, electrician, DJ, farmer, and others), each with its own visual identity.
+Not 45 recolors of the same layout — 40 actually different structures, each with its own persona and signature detail: a code-editor gutter for engineers, a scoreboard for gym coaches, a honeycomb of hexagons for data folks, a blueprint grid for architects, a chaptered "career as a story" layout, a menu card for chefs, a badge/credential layout for security guards, a vinyl-record photo frame for musicians, and more — the second batch of 20 is built around specific professions (baker, nurse, firefighter, photographer, lawyer, pilot, electrician, DJ, farmer, and others), each with its own visual identity.
 
-![A sample of 8 of the 40 templates](docs/models-showcase.png)
+![A sample of 8 of the 45 templates](docs/models-showcase.png)
 
 Pick one from the visual gallery (🖼 Ver, next to the template dropdown) or the "Modelo de plantilla" dropdown itself — your data stays exactly the same, only the layout changes.
 
@@ -35,8 +35,8 @@ Same underlying data — name, contact, photo — plus a small set of fields for
 
 ## 🚀 What it does (today)
 
-- **40 templates, one editor, visual gallery included.** Switch layouts freely — the form on the left never changes, so nothing you typed gets lost.
-- **56 color themes** (metallics, jewel tones, neons, pastels, warm/cool gradients) **+ full custom colors + 30 font pairings + 13 contact-icon packs** (including Google's Material Symbols in outlined/rounded/sharp)**.** Picking a theme also updates the background colors to match — or leave the picker alone, every template ships with its own strong default look.
+- **45 templates, one editor, visual gallery included.** Switch layouts freely — the form on the left never changes, so nothing you typed gets lost.
+- **56 color themes** (metallics, jewel tones, neons, pastels, warm/cool gradients) **+ full custom colors + 36 font pairings + 13 contact-icon packs** (including Google's Material Symbols in outlined/rounded/sharp)**.** Picking a theme also updates the background colors to match — or leave the picker alone, every template ships with its own strong default look.
 - **Cover letter generator, 6 templates.** Same data (name, contact, photo), a separate set of fields for the letter itself — pick "Carta de presentación" from the document-type dropdown.
 - **Bilingual output, one click.** A 🌐 EN/ES toggle flips every section title on the *printed CV* (Skills ↔ Habilidades, Work Experience ↔ Experiencia laboral, etc.) — independent from the editor, which stays in Spanish for editing convenience.
 - **Live preview, always in sync.** Every field you edit updates the actual print layout instantly — what you see is exactly what lands in the PDF.

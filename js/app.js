@@ -204,7 +204,7 @@ const TEMAS_FONDOS = {
 // docs/plantilla-datos-cv.json (ese archivo es el que la gente puede
 // descargar/inspeccionar directo, este es el que arma el prompt).
 const PLANTILLA_JSON_EJEMPLO = {
-  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo40'. modeloCarta: 'carta1' through 'carta6' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
+  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo45'. modeloCarta: 'carta1' through 'carta6' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
   modelo: "modelo1", modeloCarta: "carta1", tipoDocumento: "cv",
   tema: "turquesa", fuente: "jakarta", iconos: "emoji1",
   colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
@@ -480,6 +480,15 @@ const FUENTES = {
   outfit:       { nombre: "Outfit — SaaS moderno", titulos: '"Outfit", sans-serif', cuerpo: '"Outfit", sans-serif', familias: ["Outfit:wght@400;500;600;700;800"] },
   cabin:        { nombre: "Cabin — amigable simple", titulos: '"Cabin", sans-serif', cuerpo: '"Cabin", sans-serif', familias: ["Cabin:wght@400;500;600;700"] },
   zillaslab:    { nombre: "Zilla Slab + Work Sans — slab profesional", titulos: '"Zilla Slab", serif', cuerpo: '"Work Sans", sans-serif', familias: ["Zilla+Slab:wght@600;700"] },
+
+  // Atléticas: condensadas, pesadas y en mayúsculas, que es como está
+  // escrito todo en un gimnasio. Van bien con los modelos 41-45.
+  gym:          { nombre: "Anton + Barlow Condensed — gimnasio", titulos: '"Anton", sans-serif', cuerpo: '"Barlow Condensed", sans-serif', familias: ["Barlow+Condensed:wght@400;500;600;700"] },
+  atleta:       { nombre: "Bebas Neue + Oswald — atlética", titulos: '"Bebas Neue", sans-serif', cuerpo: '"Oswald", sans-serif', familias: ["Oswald:wght@300;400;500"] },
+  bigshoulders: { nombre: "Big Shoulders + Barlow — industrial deportiva", titulos: '"Big Shoulders Display", sans-serif', cuerpo: '"Barlow", sans-serif', familias: ["Big+Shoulders+Display:wght@700;800;900"] },
+  saira:        { nombre: "Saira Condensed + Saira — performance", titulos: '"Saira Condensed", sans-serif', cuerpo: '"Saira", sans-serif', familias: ["Saira+Condensed:wght@600;700;800", "Saira:wght@400;500;600;700"] },
+  fjalla:       { nombre: "Fjalla One + Roboto Condensed — cartel deportivo", titulos: '"Fjalla One", sans-serif', cuerpo: '"Roboto Condensed", sans-serif', familias: ["Fjalla+One", "Roboto+Condensed:wght@400;500;700"] },
+  russo:        { nombre: "Russo One + Chakra Petch — deportiva tech", titulos: '"Russo One", sans-serif', cuerpo: '"Chakra Petch", sans-serif', familias: ["Russo+One", "Chakra+Petch:wght@400;500;600;700"] },
 };
 
 // Todas las familias de las 30 combinaciones, en un único <link> inyectado
@@ -514,12 +523,76 @@ const FUENTES = {
 // cualquiera que clone el repo público. Si existe js/datos-privados.js
 // (ignorado por git, ver .gitignore), datosIniciales() usa eso en vez de
 // esto — ahí es donde vive tu CV real, sólo en tu copia local.
+/* ---------------- reencuadre de la foto ----------------
+   Se arrastra la foto directamente sobre la vista previa. Lo que se mueve
+   es object-position, o sea qué parte de la foto entra en el marco: el
+   marco y el layout no se tocan.
+
+   El recorrido se mide contra el tamaño del MARCO, no el de la foto: en un
+   marco de 30mm, arrastrar 30mm tiene que barrer la foto de punta a punta.
+   Con un factor fijo el arrastre se sentía distinto en cada modelo. */
+function activarReencuadreFoto() {
+  const pagina = $("#cv-pagina");
+  let arrastrando = null;
+
+  const esFoto = (el) => el && el.tagName === "IMG" && /-foto$/.test(el.id || "");
+
+  pagina.addEventListener("pointerdown", (ev) => {
+    if (!esFoto(ev.target) || ev.target.hidden) return;
+    ev.preventDefault();
+    const caja = ev.target.getBoundingClientRect();
+    const pos = estado.fotoPos || { x: 50, y: 50 };
+    arrastrando = {
+      x0: ev.clientX, y0: ev.clientY,
+      px: pos.x, py: pos.y,
+      ancho: caja.width || 1, alto: caja.height || 1,
+    };
+    estado.fotoPos = { x: pos.x, y: pos.y };
+    pagina.classList.add("reencuadrando");
+    ev.target.setPointerCapture(ev.pointerId);
+  });
+
+  pagina.addEventListener("pointermove", (ev) => {
+    if (!arrastrando) return;
+    // se invierte el signo: arrastrar hacia abajo tiene que traer hacia
+    // abajo lo que se ve, que es mover el encuadre hacia arriba
+    const dx = ((ev.clientX - arrastrando.x0) / arrastrando.ancho) * 100;
+    const dy = ((ev.clientY - arrastrando.y0) / arrastrando.alto) * 100;
+    const limitar = (v) => Math.max(0, Math.min(100, v));
+    estado.fotoPos = {
+      x: limitar(arrastrando.px - dx),
+      y: limitar(arrastrando.py - dy),
+    };
+    pagina.style.setProperty("--cv-foto-pos", `${estado.fotoPos.x}% ${estado.fotoPos.y}%`);
+    actualizarTextoFotoPos();
+  });
+
+  const soltar = () => {
+    if (!arrastrando) return;
+    arrastrando = null;
+    pagina.classList.remove("reencuadrando");
+    guardar();
+  };
+  pagina.addEventListener("pointerup", soltar);
+  pagina.addEventListener("pointercancel", soltar);
+}
+
+function actualizarTextoFotoPos() {
+  const el = $("#foto-pos-texto");
+  if (!el) return;
+  const p = estado.fotoPos || { x: 50, y: 50 };
+  el.textContent = (p.x === 50 && p.y === 50)
+    ? "centrada"
+    : `${Math.round(p.x)}% · ${Math.round(p.y)}%`;
+}
+
 function estadoPorDefecto() {
   const id = nuevoId;
   const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   const LOREM2 = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
   return {
     modelo: "modelo1", tema: "turquesa", fuente: "jakarta", iconos: "emoji1", colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
+    fotoPos: { x: 50, y: 50 },
     nombre: "Lorem", apellido: "Ipsum",
     puesto: "Dolor Sit Amet Engineer", subtitulo: "Consectetur+",
     // sólo el ejemplo público trae una foto de arranque (el logo del
@@ -702,6 +775,11 @@ const MODELOS = {
   modelo38: { nombre: "Modelo 38 — Real Estate", render: renderModelo38 },
   modelo39: { nombre: "Modelo 39 — DJ", render: renderModelo39 },
   modelo40: { nombre: "Modelo 40 — Farmer", render: renderModelo40 },
+  modelo41: { nombre: "Modelo 41 — Coach Studio", render: renderModelo41 },
+  modelo42: { nombre: "Modelo 42 — Race Bib", render: renderModelo42 },
+  modelo43: { nombre: "Modelo 43 — Fitness App", render: renderModelo43 },
+  modelo44: { nombre: "Modelo 44 — Iron Room", render: renderModelo44 },
+  modelo45: { nombre: "Modelo 45 — Class Board", render: renderModelo45 },
 };
 
 // ---------------- registro de cartas de presentación ----------------
@@ -754,6 +832,11 @@ function renderPreview() {
   // en el editor y ajustarEscala() más abajo.
   pagina.style.setProperty("--cv-escala-foto", estado.escalaFoto ?? 1);
   pagina.style.setProperty("--cv-escala-iconos", estado.escalaIconos ?? 1);
+  // Reencuadre: las fotos van con object-fit cover, así que object-position
+  // decide QUÉ parte de la foto se ve dentro del marco. Es para las fotos
+  // donde la cara queda cortada arriba o corrida a un costado.
+  const fpos = estado.fotoPos || { x: 50, y: 50 };
+  pagina.style.setProperty("--cv-foto-pos", `${fpos.x}% ${fpos.y}%`);
   if (esCarta) {
     const carta = CARTAS[estado.modeloCarta] || CARTAS.carta1;
     carta.render();
@@ -7524,6 +7607,837 @@ function renderModelo40() {
 }
 
 // ============================================================
+/* ============================================================
+   MODELOS 41-45 — gimnasio / entrenamiento personal
+   ============================================================ */
+
+// ---------------- Modelo 41 — Personal Trainer (ficha de rutina) ----------------
+function asegurarEsqueletoModelo41() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo41") return;
+  pagina.dataset.esqueleto = "modelo41";
+  pagina.innerHTML = `
+    <header class="cv-m41-header">
+      <div class="cv-m41-header-fondo" aria-hidden="true"></div>
+      <div class="cv-m41-foto-aro">
+        <img class="cv-m41-foto" id="cv-m41-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m41-foto-placeholder" id="cv-m41-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m41-header-texto">
+        <h1 class="cv-m41-nombre" id="cv-m41-nombre"></h1>
+        <div class="cv-m41-puesto" id="cv-m41-puesto"></div>
+        <div class="cv-m41-subtitulo" id="cv-m41-subtitulo"></div>
+        <div class="cv-m41-contacto" id="cv-m41-contacto"></div>
+      </div>
+    </header>
+
+    <section class="cv-m41-destacados" id="cv-m41-bloque-logros">
+      <div class="cv-m41-destacados-rotulo">${t('logros')}</div>
+      <div class="cv-m41-destacados-grilla" id="cv-m41-logros"></div>
+    </section>
+
+    <div class="cv-m41-cuerpo">
+      <main class="cv-m41-principal">
+        <section id="cv-m41-bloque-perfil">
+          <h2 class="cv-m41-titulo"><span class="cv-m41-titulo-barra"></span>${t('perfil')}</h2>
+          <p class="cv-m41-perfil" id="cv-m41-perfil"></p>
+        </section>
+        <section id="cv-m41-bloque-experiencia">
+          <h2 class="cv-m41-titulo"><span class="cv-m41-titulo-barra"></span>${t('experiencia')}</h2>
+          <div class="cv-m41-rutina" id="cv-m41-experiencia"></div>
+        </section>
+        <section id="cv-m41-bloque-educacion">
+          <h2 class="cv-m41-titulo"><span class="cv-m41-titulo-barra"></span>${t('educacion')}</h2>
+          <div id="cv-m41-educacion"></div>
+        </section>
+      </main>
+
+      <aside class="cv-m41-lateral">
+        <section id="cv-m41-bloque-habilidades">
+          <h3 class="cv-m41-titulo-lat">${t('habilidades')}</h3>
+          <div class="cv-m41-discos" id="cv-m41-habilidades"></div>
+        </section>
+        <section id="cv-m41-bloque-blandas">
+          <h3 class="cv-m41-titulo-lat">${t('blandas')}</h3>
+          <div class="cv-m41-discos" id="cv-m41-blandas"></div>
+        </section>
+        <section id="cv-m41-bloque-idiomas">
+          <h3 class="cv-m41-titulo-lat">${t('idiomas')}</h3>
+          <ul class="cv-m41-idiomas" id="cv-m41-idiomas"></ul>
+        </section>
+        <section id="cv-m41-bloque-cert">
+          <h3 class="cv-m41-titulo-lat">${t('certificaciones')}</h3>
+          <div id="cv-m41-certificaciones"></div>
+        </section>
+        <section id="cv-m41-bloque-ref">
+          <h3 class="cv-m41-titulo-lat">${t('referencias')}</h3>
+          <div id="cv-m41-referencias"></div>
+        </section>
+      </aside>
+    </div>
+  `;
+}
+
+function renderModelo41() {
+  asegurarEsqueletoModelo41();
+
+  const foto = $("#cv-m41-foto"), ph = $("#cv-m41-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  $("#cv-m41-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m41-puesto").textContent = estado.puesto || "";
+  $("#cv-m41-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m41-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m41-contacto").innerHTML = estado.contacto.map(c => `
+    <span class="cv-m41-contacto-item">
+      <span class="cv-m41-contacto-ico">${iconoDe(c.tipo)}</span>${contactoValorHTML(c)}
+    </span>
+  `).join("");
+
+  $("#cv-m41-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m41-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  // los logros arriba, como las marcas que se cuelgan en la pared del gym
+  $("#cv-m41-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m41-logros").innerHTML = estado.logros.map(l => `
+    <div class="cv-m41-destacado"><span class="cv-m41-destacado-marca"></span>${esc(l.texto)}</div>
+  `).join("");
+
+  $("#cv-m41-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m41-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m41-disco">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m41-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m41-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m41-disco cv-m41-disco-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m41-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m41-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m41-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m41-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m41-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m41-edu">
+      <div class="cv-m41-edu-head">
+        <span class="cv-m41-edu-inst">${esc(e.institucion)}</span>
+        <span class="cv-m41-edu-fecha">${esc(e.fecha)}</span>
+      </div>
+      ${e.bullets.length ? `<ul class="cv-m41-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m41-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m41-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m41-cert">
+      <div class="cv-m41-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m41-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m41-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m41-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m41-ref">
+      <div class="cv-m41-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m41-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m41-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m41-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  // cada trabajo es un bloque de la rutina, numerado como las series
+  $("#cv-m41-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m41-experiencia").innerHTML = estado.experiencia.map((x, i) => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m41-job-herr">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m41-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m41-bloque">
+        <div class="cv-m41-bloque-num">${String(i + 1).padStart(2, "0")}</div>
+        <div class="cv-m41-bloque-cont">
+          <div class="cv-m41-job-head">
+            <div class="cv-m41-job-rol">${esc(x.rol)}</div>
+            <div class="cv-m41-job-meta">
+              <span class="cv-m41-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</span>
+              <span class="cv-m41-job-fecha">${esc(x.fecha)}</span>
+            </div>
+          </div>
+          ${x.descripcion ? `<p class="cv-m41-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+          ${x.bullets.length ? `<ul class="cv-m41-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+          ${herramientasHTML}
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+// ---------------- Modelo 42 — Dorsal de competencia ----------------
+function asegurarEsqueletoModelo42() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo42") return;
+  pagina.dataset.esqueleto = "modelo42";
+  pagina.innerHTML = `
+    <header class="cv-m42-header">
+      <div class="cv-m42-dorsal">
+        <div class="cv-m42-dorsal-marca">BIB</div>
+        <div class="cv-m42-dorsal-num" id="cv-m42-iniciales"></div>
+        <div class="cv-m42-dorsal-pie" id="cv-m42-dorsal-pie"></div>
+      </div>
+      <div class="cv-m42-header-texto">
+        <h1 class="cv-m42-nombre" id="cv-m42-nombre"></h1>
+        <div class="cv-m42-puesto" id="cv-m42-puesto"></div>
+        <div class="cv-m42-subtitulo" id="cv-m42-subtitulo"></div>
+      </div>
+      <div class="cv-m42-foto-marco">
+        <img class="cv-m42-foto" id="cv-m42-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m42-foto-placeholder" id="cv-m42-foto-placeholder">🙂</div>
+      </div>
+    </header>
+    <div class="cv-m42-meta" aria-hidden="true"></div>
+    <div class="cv-m42-contacto" id="cv-m42-contacto"></div>
+
+    <div class="cv-m42-cuerpo">
+      <section id="cv-m42-bloque-perfil">
+        <h2 class="cv-m42-titulo">${t('perfil')}</h2>
+        <p class="cv-m42-perfil" id="cv-m42-perfil"></p>
+      </section>
+
+      <section id="cv-m42-bloque-experiencia">
+        <h2 class="cv-m42-titulo">${t('experiencia')}</h2>
+        <div id="cv-m42-experiencia"></div>
+      </section>
+
+      <div class="cv-m42-columnas">
+        <div>
+          <section id="cv-m42-bloque-educacion">
+            <h2 class="cv-m42-titulo">${t('educacion')}</h2>
+            <div id="cv-m42-educacion"></div>
+          </section>
+          <section id="cv-m42-bloque-cert">
+            <h2 class="cv-m42-titulo">${t('certificaciones')}</h2>
+            <div id="cv-m42-certificaciones"></div>
+          </section>
+        </div>
+        <div>
+          <section id="cv-m42-bloque-habilidades">
+            <h2 class="cv-m42-titulo">${t('habilidades')}</h2>
+            <div class="cv-m42-tags" id="cv-m42-habilidades"></div>
+          </section>
+          <section id="cv-m42-bloque-blandas">
+            <h2 class="cv-m42-titulo">${t('blandas')}</h2>
+            <div class="cv-m42-tags" id="cv-m42-blandas"></div>
+          </section>
+          <section id="cv-m42-bloque-idiomas">
+            <h2 class="cv-m42-titulo">${t('idiomas')}</h2>
+            <ul class="cv-m42-idiomas" id="cv-m42-idiomas"></ul>
+          </section>
+          <section id="cv-m42-bloque-logros">
+            <h2 class="cv-m42-titulo">${t('logros')}</h2>
+            <ul class="cv-m42-logros" id="cv-m42-logros"></ul>
+          </section>
+          <section id="cv-m42-bloque-ref">
+            <h2 class="cv-m42-titulo">${t('referencias')}</h2>
+            <div id="cv-m42-referencias"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderModelo42() {
+  asegurarEsqueletoModelo42();
+
+  const foto = $("#cv-m42-foto"), ph = $("#cv-m42-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  const nombreCompleto = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m42-nombre").textContent = nombreCompleto;
+  // el "número" del dorsal son las iniciales: un dato real, no un número inventado
+  const iniciales = [estado.nombre, estado.apellido]
+    .map(p => (p || "").trim().charAt(0).toUpperCase())
+    .filter(Boolean).join("");
+  $("#cv-m42-iniciales").textContent = iniciales || "—";
+  $("#cv-m42-dorsal-pie").textContent = estado.subtitulo || estado.puesto || "";
+
+  $("#cv-m42-puesto").textContent = estado.puesto || "";
+  $("#cv-m42-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m42-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m42-contacto").innerHTML = estado.contacto.map(c => `
+    <span class="cv-m42-contacto-item">
+      <span class="cv-m42-contacto-ico">${iconoDe(c.tipo)}</span>${contactoValorHTML(c)}
+    </span>
+  `).join("");
+
+  $("#cv-m42-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m42-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m42-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m42-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m42-tag">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m42-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m42-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m42-tag cv-m42-tag-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m42-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m42-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m42-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m42-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m42-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m42-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m42-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m42-edu">
+      <div class="cv-m42-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m42-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m42-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m42-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m42-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m42-cert">
+      <div class="cv-m42-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m42-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m42-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m42-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m42-ref">
+      <div class="cv-m42-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m42-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m42-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m42-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m42-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m42-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m42-job-herr">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m42-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m42-vuelta">
+        <div class="cv-m42-job-head">
+          <div class="cv-m42-job-rol">${esc(x.rol)}</div>
+          <div class="cv-m42-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        <div class="cv-m42-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+        ${x.descripcion ? `<p class="cv-m42-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m42-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+}
+
+// ---------------- Modelo 43 — Panel de métricas (app de fitness) ----------------
+function asegurarEsqueletoModelo43() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo43") return;
+  pagina.dataset.esqueleto = "modelo43";
+  pagina.innerHTML = `
+    <header class="cv-m43-header">
+      <div class="cv-m43-anillos" aria-hidden="true">
+        <span class="cv-m43-anillo cv-m43-anillo-1"></span>
+        <span class="cv-m43-anillo cv-m43-anillo-2"></span>
+      </div>
+      <div class="cv-m43-foto-marco">
+        <img class="cv-m43-foto" id="cv-m43-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m43-foto-placeholder" id="cv-m43-foto-placeholder">🙂</div>
+      </div>
+      <div class="cv-m43-header-texto">
+        <h1 class="cv-m43-nombre" id="cv-m43-nombre"></h1>
+        <div class="cv-m43-puesto" id="cv-m43-puesto"></div>
+        <div class="cv-m43-subtitulo" id="cv-m43-subtitulo"></div>
+      </div>
+      <div class="cv-m43-contacto" id="cv-m43-contacto"></div>
+    </header>
+
+    <div class="cv-m43-cuerpo">
+      <section class="cv-m43-tarjeta cv-m43-ancha" id="cv-m43-bloque-perfil">
+        <div class="cv-m43-tarjeta-rotulo">${t('perfil')}</div>
+        <p class="cv-m43-perfil" id="cv-m43-perfil"></p>
+      </section>
+
+      <section class="cv-m43-tarjeta cv-m43-ancha" id="cv-m43-bloque-experiencia">
+        <div class="cv-m43-tarjeta-rotulo">${t('experiencia')}</div>
+        <div id="cv-m43-experiencia"></div>
+      </section>
+
+      <section class="cv-m43-tarjeta" id="cv-m43-bloque-habilidades">
+        <div class="cv-m43-tarjeta-rotulo">${t('habilidades')}</div>
+        <div class="cv-m43-chips" id="cv-m43-habilidades"></div>
+      </section>
+
+      <section class="cv-m43-tarjeta" id="cv-m43-bloque-blandas">
+        <div class="cv-m43-tarjeta-rotulo">${t('blandas')}</div>
+        <div class="cv-m43-chips" id="cv-m43-blandas"></div>
+      </section>
+
+      <section class="cv-m43-tarjeta" id="cv-m43-bloque-educacion">
+        <div class="cv-m43-tarjeta-rotulo">${t('educacion')}</div>
+        <div id="cv-m43-educacion"></div>
+      </section>
+
+      <section class="cv-m43-tarjeta" id="cv-m43-bloque-cert">
+        <div class="cv-m43-tarjeta-rotulo">${t('certificaciones')}</div>
+        <div id="cv-m43-certificaciones"></div>
+      </section>
+
+      <section class="cv-m43-tarjeta" id="cv-m43-bloque-idiomas">
+        <div class="cv-m43-tarjeta-rotulo">${t('idiomas')}</div>
+        <ul class="cv-m43-idiomas" id="cv-m43-idiomas"></ul>
+      </section>
+
+      <section class="cv-m43-tarjeta" id="cv-m43-bloque-logros">
+        <div class="cv-m43-tarjeta-rotulo">${t('logros')}</div>
+        <ul class="cv-m43-logros" id="cv-m43-logros"></ul>
+      </section>
+
+      <section class="cv-m43-tarjeta cv-m43-ancha" id="cv-m43-bloque-ref">
+        <div class="cv-m43-tarjeta-rotulo">${t('referencias')}</div>
+        <div class="cv-m43-refs" id="cv-m43-referencias"></div>
+      </section>
+    </div>
+  `;
+}
+
+function renderModelo43() {
+  asegurarEsqueletoModelo43();
+
+  const foto = $("#cv-m43-foto"), ph = $("#cv-m43-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  $("#cv-m43-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m43-puesto").textContent = estado.puesto || "";
+  $("#cv-m43-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m43-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m43-contacto").innerHTML = estado.contacto.map(c => `
+    <span class="cv-m43-contacto-item">
+      <span class="cv-m43-contacto-ico">${iconoDe(c.tipo)}</span>${contactoValorHTML(c)}
+    </span>
+  `).join("");
+
+  $("#cv-m43-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m43-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m43-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m43-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m43-chip">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m43-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m43-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m43-chip cv-m43-chip-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m43-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m43-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m43-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m43-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m43-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m43-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m43-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m43-edu">
+      <div class="cv-m43-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m43-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m43-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m43-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m43-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m43-cert">
+      <div class="cv-m43-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m43-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m43-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m43-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m43-ref">
+      <div class="cv-m43-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m43-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m43-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m43-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m43-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m43-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m43-job-herr">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m43-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m43-sesion">
+        <div class="cv-m43-job-head">
+          <div class="cv-m43-job-rol">${esc(x.rol)}</div>
+          <div class="cv-m43-job-pill">${esc(x.fecha)}</div>
+        </div>
+        <div class="cv-m43-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+        ${x.descripcion ? `<p class="cv-m43-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m43-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+}
+
+// ---------------- Modelo 44 — Sala de hierro (discos y placas) ----------------
+function asegurarEsqueletoModelo44() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo44") return;
+  pagina.dataset.esqueleto = "modelo44";
+  pagina.innerHTML = `
+    <header class="cv-m44-header">
+      <div class="cv-m44-barra" aria-hidden="true">
+        <span class="cv-m44-disco-deco cv-m44-disco-izq"></span>
+        <span class="cv-m44-eje"></span>
+        <span class="cv-m44-disco-deco cv-m44-disco-der"></span>
+      </div>
+      <div class="cv-m44-placa">
+        <h1 class="cv-m44-nombre" id="cv-m44-nombre"></h1>
+        <div class="cv-m44-puesto" id="cv-m44-puesto"></div>
+        <div class="cv-m44-subtitulo" id="cv-m44-subtitulo"></div>
+      </div>
+      <div class="cv-m44-foto-marco">
+        <img class="cv-m44-foto" id="cv-m44-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m44-foto-placeholder" id="cv-m44-foto-placeholder">🙂</div>
+      </div>
+    </header>
+    <div class="cv-m44-contacto" id="cv-m44-contacto"></div>
+
+    <div class="cv-m44-cuerpo">
+      <section id="cv-m44-bloque-perfil">
+        <h2 class="cv-m44-titulo">${t('perfil')}</h2>
+        <p class="cv-m44-perfil" id="cv-m44-perfil"></p>
+      </section>
+
+      <section id="cv-m44-bloque-habilidades">
+        <h2 class="cv-m44-titulo">${t('habilidades')}</h2>
+        <div class="cv-m44-rack" id="cv-m44-habilidades"></div>
+      </section>
+
+      <section id="cv-m44-bloque-experiencia">
+        <h2 class="cv-m44-titulo">${t('experiencia')}</h2>
+        <div id="cv-m44-experiencia"></div>
+      </section>
+
+      <div class="cv-m44-columnas">
+        <div>
+          <section id="cv-m44-bloque-educacion">
+            <h2 class="cv-m44-titulo">${t('educacion')}</h2>
+            <div id="cv-m44-educacion"></div>
+          </section>
+          <section id="cv-m44-bloque-cert">
+            <h2 class="cv-m44-titulo">${t('certificaciones')}</h2>
+            <div id="cv-m44-certificaciones"></div>
+          </section>
+        </div>
+        <div>
+          <section id="cv-m44-bloque-blandas">
+            <h2 class="cv-m44-titulo">${t('blandas')}</h2>
+            <div class="cv-m44-rack" id="cv-m44-blandas"></div>
+          </section>
+          <section id="cv-m44-bloque-idiomas">
+            <h2 class="cv-m44-titulo">${t('idiomas')}</h2>
+            <ul class="cv-m44-idiomas" id="cv-m44-idiomas"></ul>
+          </section>
+          <section id="cv-m44-bloque-logros">
+            <h2 class="cv-m44-titulo">${t('logros')}</h2>
+            <ul class="cv-m44-logros" id="cv-m44-logros"></ul>
+          </section>
+          <section id="cv-m44-bloque-ref">
+            <h2 class="cv-m44-titulo">${t('referencias')}</h2>
+            <div id="cv-m44-referencias"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderModelo44() {
+  asegurarEsqueletoModelo44();
+
+  const foto = $("#cv-m44-foto"), ph = $("#cv-m44-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  $("#cv-m44-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m44-puesto").textContent = estado.puesto || "";
+  $("#cv-m44-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m44-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m44-contacto").innerHTML = estado.contacto.map(c => `
+    <span class="cv-m44-contacto-item">
+      <span class="cv-m44-contacto-ico">${iconoDe(c.tipo)}</span>${contactoValorHTML(c)}
+    </span>
+  `).join("");
+
+  $("#cv-m44-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m44-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  // cada skill es un disco del rack; el tamaño lo da el largo del texto,
+  // no un "nivel" que nadie cargó
+  $("#cv-m44-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m44-habilidades").innerHTML = estado.habilidades.map(h => `
+    <span class="cv-m44-placa-skill"><span class="cv-m44-placa-hueco"></span>${esc(h.texto)}</span>
+  `).join("");
+
+  $("#cv-m44-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m44-blandas").innerHTML = estado.blandas.map(h => `
+    <span class="cv-m44-placa-skill cv-m44-placa-alt"><span class="cv-m44-placa-hueco"></span>${esc(h.texto)}</span>
+  `).join("");
+
+  $("#cv-m44-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m44-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m44-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m44-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m44-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m44-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m44-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m44-edu">
+      <div class="cv-m44-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m44-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m44-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m44-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m44-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m44-cert">
+      <div class="cv-m44-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m44-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m44-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m44-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m44-ref">
+      <div class="cv-m44-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m44-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m44-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m44-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m44-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m44-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m44-job-herr">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m44-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m44-serie">
+        <div class="cv-m44-job-head">
+          <div>
+            <div class="cv-m44-job-rol">${esc(x.rol)}</div>
+            <div class="cv-m44-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+          </div>
+          <div class="cv-m44-job-fecha">${esc(x.fecha)}</div>
+        </div>
+        ${x.descripcion ? `<p class="cv-m44-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+        ${x.bullets.length ? `<ul class="cv-m44-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+        ${herramientasHTML}
+      </article>
+    `;
+  }).join("");
+}
+
+// ---------------- Modelo 45 — Pizarra de clases (bootcamp) ----------------
+function asegurarEsqueletoModelo45() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "modelo45") return;
+  pagina.dataset.esqueleto = "modelo45";
+  pagina.innerHTML = `
+    <header class="cv-m45-header">
+      <div class="cv-m45-header-izq">
+        <div class="cv-m45-rotulo">Coach</div>
+        <h1 class="cv-m45-nombre" id="cv-m45-nombre"></h1>
+        <div class="cv-m45-puesto" id="cv-m45-puesto"></div>
+        <div class="cv-m45-subtitulo" id="cv-m45-subtitulo"></div>
+      </div>
+      <div class="cv-m45-foto-marco">
+        <img class="cv-m45-foto" id="cv-m45-foto" src="" alt="Foto de perfil" hidden>
+        <div class="cv-m45-foto-placeholder" id="cv-m45-foto-placeholder">🙂</div>
+      </div>
+    </header>
+    <div class="cv-m45-tiza" aria-hidden="true"></div>
+    <div class="cv-m45-contacto" id="cv-m45-contacto"></div>
+
+    <div class="cv-m45-cuerpo">
+      <section class="cv-m45-panel" id="cv-m45-bloque-perfil">
+        <div class="cv-m45-panel-tab">${t('perfil')}</div>
+        <p class="cv-m45-perfil" id="cv-m45-perfil"></p>
+      </section>
+
+      <section class="cv-m45-panel" id="cv-m45-bloque-experiencia">
+        <div class="cv-m45-panel-tab">${t('experiencia')}</div>
+        <div class="cv-m45-agenda" id="cv-m45-experiencia"></div>
+      </section>
+
+      <div class="cv-m45-columnas">
+        <section class="cv-m45-panel" id="cv-m45-bloque-habilidades">
+          <div class="cv-m45-panel-tab">${t('habilidades')}</div>
+          <div class="cv-m45-clases" id="cv-m45-habilidades"></div>
+        </section>
+        <section class="cv-m45-panel" id="cv-m45-bloque-blandas">
+          <div class="cv-m45-panel-tab">${t('blandas')}</div>
+          <div class="cv-m45-clases" id="cv-m45-blandas"></div>
+        </section>
+        <section class="cv-m45-panel" id="cv-m45-bloque-educacion">
+          <div class="cv-m45-panel-tab">${t('educacion')}</div>
+          <div id="cv-m45-educacion"></div>
+        </section>
+        <section class="cv-m45-panel" id="cv-m45-bloque-cert">
+          <div class="cv-m45-panel-tab">${t('certificaciones')}</div>
+          <div id="cv-m45-certificaciones"></div>
+        </section>
+        <section class="cv-m45-panel" id="cv-m45-bloque-idiomas">
+          <div class="cv-m45-panel-tab">${t('idiomas')}</div>
+          <ul class="cv-m45-idiomas" id="cv-m45-idiomas"></ul>
+        </section>
+        <section class="cv-m45-panel" id="cv-m45-bloque-logros">
+          <div class="cv-m45-panel-tab">${t('logros')}</div>
+          <ul class="cv-m45-logros" id="cv-m45-logros"></ul>
+        </section>
+        <section class="cv-m45-panel cv-m45-panel-ancho" id="cv-m45-bloque-ref">
+          <div class="cv-m45-panel-tab">${t('referencias')}</div>
+          <div class="cv-m45-refs" id="cv-m45-referencias"></div>
+        </section>
+      </div>
+    </div>
+  `;
+}
+
+function renderModelo45() {
+  asegurarEsqueletoModelo45();
+
+  const foto = $("#cv-m45-foto"), ph = $("#cv-m45-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  $("#cv-m45-nombre").textContent = `${estado.nombre} ${estado.apellido}`.trim();
+  $("#cv-m45-puesto").textContent = estado.puesto || "";
+  $("#cv-m45-subtitulo").textContent = estado.subtitulo || "";
+  $("#cv-m45-subtitulo").hidden = !estado.subtitulo;
+
+  $("#cv-m45-contacto").innerHTML = estado.contacto.map(c => `
+    <span class="cv-m45-contacto-item">
+      <span class="cv-m45-contacto-ico">${iconoDe(c.tipo)}</span>${contactoValorHTML(c)}
+    </span>
+  `).join("");
+
+  $("#cv-m45-bloque-perfil").hidden = !estado.perfil;
+  $("#cv-m45-perfil").innerHTML = escPárrafo(estado.perfil || "");
+
+  $("#cv-m45-bloque-habilidades").hidden = !estado.habilidades.length;
+  $("#cv-m45-habilidades").innerHTML = estado.habilidades.map(h => `<span class="cv-m45-clase">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m45-bloque-blandas").hidden = !estado.blandas.length;
+  $("#cv-m45-blandas").innerHTML = estado.blandas.map(h => `<span class="cv-m45-clase cv-m45-clase-alt">${esc(h.texto)}</span>`).join("");
+
+  $("#cv-m45-bloque-idiomas").hidden = !estado.idiomas.length;
+  $("#cv-m45-idiomas").innerHTML = estado.idiomas.map(i =>
+    `<li><span>${esc(i.nombre)}</span><span class="cv-m45-nivel">${esc(i.nivel)}</span></li>`).join("");
+
+  $("#cv-m45-bloque-logros").hidden = !estado.logros.length;
+  $("#cv-m45-logros").innerHTML = estado.logros.map(l => `<li>${esc(l.texto)}</li>`).join("");
+
+  $("#cv-m45-bloque-educacion").hidden = !estado.educacion.length;
+  $("#cv-m45-educacion").innerHTML = estado.educacion.map(e => `
+    <div class="cv-m45-edu">
+      <div class="cv-m45-edu-inst">${esc(e.institucion)}</div>
+      <div class="cv-m45-edu-fecha">${esc(e.fecha)}</div>
+      ${e.bullets.length ? `<ul class="cv-m45-edu-bullets">${e.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m45-bloque-cert").hidden = !estado.certificaciones.length;
+  $("#cv-m45-certificaciones").innerHTML = estado.certificaciones.map(c => `
+    <div class="cv-m45-cert">
+      <div class="cv-m45-cert-titulo">${esc(c.titulo)}</div>
+      <div class="cv-m45-cert-sub">${esc(c.subtitulo)}</div>
+    </div>
+  `).join("");
+
+  $("#cv-m45-bloque-ref").hidden = !estado.referencias.length;
+  $("#cv-m45-referencias").innerHTML = estado.referencias.map(r => `
+    <div class="cv-m45-ref">
+      <div class="cv-m45-ref-nombre">${esc(r.nombre)}</div>
+      <div class="cv-m45-ref-rol">${esc(r.rol)}</div>
+      ${r.email ? `<div class="cv-m45-ref-dato">${esc(r.email)}</div>` : ""}
+      ${r.linkedin ? `<div class="cv-m45-ref-dato">${esc(r.linkedin)}</div>` : ""}
+    </div>
+  `).join("");
+
+  $("#cv-m45-bloque-experiencia").hidden = !estado.experiencia.length;
+  $("#cv-m45-experiencia").innerHTML = estado.experiencia.map(x => {
+    const grupos = {};
+    (x.herramientas || []).forEach(h => {
+      const clave = h.etiqueta || "";
+      (grupos[clave] = grupos[clave] || []).push(h.valor);
+    });
+    const herramientasHTML = Object.keys(grupos).length ? `
+      <div class="cv-m45-job-herr">
+        ${Object.entries(grupos).map(([etq, vals]) => `
+          <span class="cv-m45-herr-grupo">${etq ? `<b>${esc(etq)}:</b> ` : ""}${vals.map(v => esc(v)).join(", ")}</span>
+        `).join("")}
+      </div>` : "";
+    return `
+      <article class="cv-m45-turno">
+        <div class="cv-m45-turno-hora">${esc(x.fecha)}</div>
+        <div class="cv-m45-turno-cont">
+          <div class="cv-m45-job-head">
+            <div class="cv-m45-job-rol">${esc(x.rol)}</div>
+            <div class="cv-m45-job-empresa">${enlaceSiHay(x.empresa, x.empresaUrl, "cv-enlace-empresa") + ubicacionSufijo(x)}</div>
+          </div>
+          ${x.descripcion ? `<p class="cv-m45-job-desc">${escPárrafo(x.descripcion)}</p>` : ""}
+          ${x.bullets.length ? `<ul class="cv-m45-job-bullets">${x.bullets.map(b => `<li>${esc(b.texto)}</li>`).join("")}</ul>` : ""}
+          ${herramientasHTML}
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
 // CARTAS DE PRESENTACIÓN — 6 modelos, misma lógica de esqueleto+render
 // que los CV (ver comentario de asegurarEsqueletoModelo1 más arriba).
 // Reusan nombre/apellido/puesto/foto/contacto de `estado` y sólo agregan
@@ -8226,6 +9140,7 @@ function ajustarEscala(clave, delta, maximo) {
 }
 function actualizarTextosEscala() {
   $("#foto-escala-texto").textContent = Math.round((estado.escalaFoto ?? 1) * 100) + "%";
+  actualizarTextoFotoPos();
   $("#iconos-escala-texto").textContent = Math.round((estado.escalaIconos ?? 1) * 100) + "%";
 }
 
@@ -8254,6 +9169,11 @@ function bindearControlesEstaticos() {
 
   $("#btn-foto-menos").addEventListener("click", () => ajustarEscala("escalaFoto", -ESCALA_PASO, ESCALA_MAX_FOTO));
   $("#btn-foto-mas").addEventListener("click", () => ajustarEscala("escalaFoto", ESCALA_PASO, ESCALA_MAX_FOTO));
+  activarReencuadreFoto();
+  $("#btn-foto-centrar").addEventListener("click", () => {
+    estado.fotoPos = { x: 50, y: 50 };
+    renderPreview(); guardar(); actualizarTextoFotoPos();
+  });
   $("#btn-iconos-menos").addEventListener("click", () => ajustarEscala("escalaIconos", -ESCALA_PASO, ESCALA_MAX_ICONOS));
   $("#btn-iconos-mas").addEventListener("click", () => ajustarEscala("escalaIconos", ESCALA_PASO, ESCALA_MAX_ICONOS));
 

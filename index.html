@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/style.css?v=41">
 </head>
 <body>
 
@@ -103,8 +103,13 @@
                   <option value="modelo38">Modelo 38 — Real Estate</option>
                   <option value="modelo39">Modelo 39 — DJ</option>
                   <option value="modelo40">Modelo 40 — Farmer</option>
+                  <option value="modelo41">Modelo 41 — Coach Studio</option>
+                  <option value="modelo42">Modelo 42 — Race Bib</option>
+                  <option value="modelo43">Modelo 43 — Fitness App</option>
+                  <option value="modelo44">Modelo 44 — Iron Room</option>
+                  <option value="modelo45">Modelo 45 — Class Board</option>
                 </select>
-                <button class="btn btn-fantasma" id="btn-galeria-modelos" type="button" title="Ver los 40 modelos con una miniatura, en vez de elegir a ciegas por nombre">🖼 Ver</button>
+                <button class="btn btn-fantasma" id="btn-galeria-modelos" type="button" title="Ver los 45 modelos con una miniatura, en vez de elegir a ciegas por nombre">🖼 Ver</button>
               </div>
             </div>
             <div class="campo oculto" id="campo-modelo-carta">
@@ -262,6 +267,15 @@
                 <button type="button" class="btn btn-fantasma" id="btn-foto-menos" title="Achicar">−</button>
                 <span class="ajustador-valor" id="foto-escala-texto">100%</span>
                 <button type="button" class="btn btn-fantasma" id="btn-foto-mas" title="Agrandar">+</button>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Encuadre de la foto</label>
+              <div class="ajustador">
+                <span class="ajuste-pista">Arrastrá la foto en la vista previa</span>
+                <span class="ajustador-valor" id="foto-pos-texto">centrada</span>
+                <button type="button" class="btn btn-fantasma" id="btn-foto-centrar" title="Volver al centro">Centrar</button>
               </div>
             </div>
 
@@ -539,7 +553,7 @@
        no rompe la página) y js/app.js sigue con el ejemplo lorem-ipsum.
        Tiene que ir ANTES de app.js: es lo único que decide qué datos
        arrancan como estado inicial. -->
-  <script src="js/datos-privados.js?v=39"></script>
-  <script src="js/app.js?v=39"></script>
+  <script src="js/datos-privados.js?v=41"></script>
+  <script src="js/app.js?v=41"></script>
 </body>
 </html>
