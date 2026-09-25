@@ -24,9 +24,9 @@ Not 45 recolors of the same layout — 40 actually different structures, each wi
 
 Pick one from the visual gallery (🖼 Ver, next to the template dropdown) or the "Modelo de plantilla" dropdown itself — your data stays exactly the same, only the layout changes.
 
-## ✉️ Cover letters too, 6 templates
+## ✉️ Cover letters too, 11 templates
 
-Same underlying data — name, contact, photo — plus a small set of fields for the letter itself (who it's for, the role, the body). Switch "Documento a generar" to **Carta de presentación** and pick one of 6 letter designs, from a classic business letter to an editorial layout with a drop cap.
+Same underlying data — name, contact, photo — plus a small set of fields for the letter itself (who it's for, the role, the body). Switch "Documento a generar" to **Carta de presentación** and pick one of 11 letter designs, from a classic business letter to an editorial layout with a drop cap.
 
 <p align="center">
   <img src="docs/cover-letter-1.png" alt="Cover letter template — sidebar layout" width="48%">
@@ -37,7 +37,7 @@ Same underlying data — name, contact, photo — plus a small set of fields for
 
 - **45 templates, one editor, visual gallery included.** Switch layouts freely — the form on the left never changes, so nothing you typed gets lost.
 - **56 color themes** (metallics, jewel tones, neons, pastels, warm/cool gradients) **+ full custom colors + 36 font pairings + 13 contact-icon packs** (including Google's Material Symbols in outlined/rounded/sharp)**.** Picking a theme also updates the background colors to match — or leave the picker alone, every template ships with its own strong default look.
-- **Cover letter generator, 6 templates.** Same data (name, contact, photo), a separate set of fields for the letter itself — pick "Carta de presentación" from the document-type dropdown.
+- **Cover letter generator, 11 templates.** Same data (name, contact, photo), a separate set of fields for the letter itself — pick "Carta de presentación" from the document-type dropdown.
 - **Bilingual output, one click.** A 🌐 EN/ES toggle flips every section title on the *printed CV* (Skills ↔ Habilidades, Work Experience ↔ Experiencia laboral, etc.) — independent from the editor, which stays in Spanish for editing convenience.
 - **Live preview, always in sync.** Every field you edit updates the actual print layout instantly — what you see is exactly what lands in the PDF.
 - **Add/remove anything.** Work experience, education, certifications, references, skills, languages, achievements — all repeatable, reorderable, no fixed number of entries.

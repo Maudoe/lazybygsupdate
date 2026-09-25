@@ -204,7 +204,7 @@ const TEMAS_FONDOS = {
 // docs/plantilla-datos-cv.json (ese archivo es el que la gente puede
 // descargar/inspeccionar directo, este es el que arma el prompt).
 const PLANTILLA_JSON_EJEMPLO = {
-  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo45'. modeloCarta: 'carta1' through 'carta6' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
+  _instrucciones: "This is NOT CV data — it's just a guide for whoever fills in this file (you or an AI assistant like ChatGPT/Claude). Delete this '_instrucciones' key before importing, or leave it: the app ignores it safely either way. Fields you can leave as-is (they're design settings, changeable later from the app): modelo, modeloCarta, tema, fuente, iconos, colorOscuro, colorClaro, escalaFoto, escalaIconos, idiomaCv, tipoDocumento. Valid values — modelo: 'modelo1' through 'modelo45'. modeloCarta: 'carta1' through 'carta11' (only used if tipoDocumento is 'carta'). tema: 'turquesa', 'azul', 'verde', 'bordo', 'violeta', 'coral' (there are 50+ additional themes, see the app's picker — leave it as 'turquesa' if unsure). idiomaCv: 'en' or 'es' (the language of the printed CV's SECTION TITLES, not your content). tipoDocumento: 'cv' or 'carta'. contacto[].tipo: 'telefono', 'email', 'ubicacion', 'linkedin', 'web'. contacto[].url is optional, only has an effect on the 'linkedin' type (turns your name into a link to your profile). experiencia[].empresaUrl is optional (turns the company name into a link to its site). experiencia[].ubicacion is optional (the city and country where you worked that role, e.g. 'Buenos Aires, Argentina'; leave it empty if you don't want it shown). The 'carta' block holds the cover letter's own fields (name/contact/photo come from the rest of the file). Everything else is free text in whatever language you want (English recommended, it's the CV standard). 'foto' stays null — the photo is uploaded separately, by dragging it into the app, it doesn't go in this file.",
   modelo: "modelo1", modeloCarta: "carta1", tipoDocumento: "cv",
   tema: "turquesa", fuente: "jakarta", iconos: "emoji1",
   colorOscuro: "#16191e", colorClaro: "#ffffff", escalaFoto: 1, escalaIconos: 1, idiomaCv: "en",
@@ -793,6 +793,11 @@ const CARTAS = {
   carta4: { nombre: "Carta 4 — Minimalista", render: renderCarta4 },
   carta5: { nombre: "Carta 5 — Editorial", render: renderCarta5 },
   carta6: { nombre: "Carta 6 — Ejecutiva", render: renderCarta6 },
+  carta7: { nombre: "Carta 7 — Coach Studio", render: renderCarta7 },
+  carta8: { nombre: "Carta 8 — Race Bib", render: renderCarta8 },
+  carta9: { nombre: "Carta 9 — Fitness App", render: renderCarta9 },
+  carta10: { nombre: "Carta 10 — Iron Room", render: renderCarta10 },
+  carta11: { nombre: "Carta 11 — Class Board", render: renderCarta11 },
 };
 
 // Si el usuario no cargó una fecha propia, usa la de hoy (formateada,
@@ -8704,6 +8709,278 @@ function renderCarta6() {
   $("#cv-c6-despedida").textContent = c.despedida || "";
   $("#cv-c6-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
   $("#cv-c6-firma-cargo").textContent = estado.puesto || "";
+}
+
+/* ============================================================
+   CARTAS 7-11 — a juego con los modelos de gimnasio (41-45).
+   Cada una toma el lenguaje visual de su modelo para que el CV y la
+   carta se lean como un mismo set cuando se mandan juntos.
+   ============================================================ */
+
+// ---- Carta 7 — Coach Studio (va con el modelo 41) ----
+function asegurarEsqueletoCarta7() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta7") return;
+  pagina.dataset.esqueleto = "carta7";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta7">
+      <header class="cv-c7-header">
+        <div class="cv-c7-header-fondo" aria-hidden="true"></div>
+        <div class="cv-c7-foto-aro">
+          <img class="cv-c7-foto" id="cv-c7-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-c7-foto-placeholder" id="cv-c7-foto-placeholder">🙂</div>
+        </div>
+        <div class="cv-c7-header-texto">
+          <h1 class="cv-c7-nombre" id="cv-c7-nombre"></h1>
+          <p class="cv-c7-puesto" id="cv-c7-puesto"></p>
+          <p class="cv-c7-contacto" id="cv-c7-contacto"></p>
+        </div>
+      </header>
+      <div class="cv-c7-cuerpo-envoltorio">
+        <div class="cv-c7-meta">
+          <div class="cv-c7-destinatario" id="cv-c7-destinatario"></div>
+          <p class="cv-c7-fecha" id="cv-c7-fecha"></p>
+        </div>
+        <p class="cv-c7-saludo" id="cv-c7-saludo"></p>
+        <div class="cv-c7-cuerpo" id="cv-c7-cuerpo"></div>
+        <p class="cv-c7-despedida" id="cv-c7-despedida"></p>
+        <p class="cv-c7-firma" id="cv-c7-firma"></p>
+        <p class="cv-c7-firma-cargo" id="cv-c7-firma-cargo"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta7() {
+  asegurarEsqueletoCarta7();
+  const c = estado.carta;
+  const foto = $("#cv-c7-foto"), ph = $("#cv-c7-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  $("#cv-c7-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c7-puesto").textContent = estado.puesto || "";
+  $("#cv-c7-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c7-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c7-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? esc(c.puestoDestino) : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c7-saludo").textContent = c.saludo || "";
+  $("#cv-c7-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c7-despedida").textContent = c.despedida || "";
+  $("#cv-c7-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c7-firma-cargo").textContent = estado.puesto || "";
+}
+
+// ---- Carta 8 — Race Bib (va con el modelo 42) ----
+function asegurarEsqueletoCarta8() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta8") return;
+  pagina.dataset.esqueleto = "carta8";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta8">
+      <header class="cv-c8-header">
+        <div class="cv-c8-dorsal">
+          <div class="cv-c8-dorsal-marca">BIB</div>
+          <div class="cv-c8-dorsal-num" id="cv-c8-iniciales"></div>
+        </div>
+        <div class="cv-c8-header-texto">
+          <h1 class="cv-c8-nombre" id="cv-c8-nombre"></h1>
+          <p class="cv-c8-puesto" id="cv-c8-puesto"></p>
+        </div>
+      </header>
+      <div class="cv-c8-meta-banda" aria-hidden="true"></div>
+      <p class="cv-c8-contacto" id="cv-c8-contacto"></p>
+      <div class="cv-c8-cuerpo-envoltorio">
+        <p class="cv-c8-fecha" id="cv-c8-fecha"></p>
+        <div class="cv-c8-destinatario" id="cv-c8-destinatario"></div>
+        <p class="cv-c8-saludo" id="cv-c8-saludo"></p>
+        <div class="cv-c8-cuerpo" id="cv-c8-cuerpo"></div>
+        <p class="cv-c8-despedida" id="cv-c8-despedida"></p>
+        <p class="cv-c8-firma" id="cv-c8-firma"></p>
+        <p class="cv-c8-firma-cargo" id="cv-c8-firma-cargo"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta8() {
+  asegurarEsqueletoCarta8();
+  const c = estado.carta;
+  // el número del dorsal son las iniciales reales, no un número inventado
+  const iniciales = [estado.nombre, estado.apellido]
+    .map((p) => (p || "").trim().charAt(0).toUpperCase()).filter(Boolean).join("");
+  $("#cv-c8-iniciales").textContent = iniciales || "—";
+  $("#cv-c8-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c8-puesto").textContent = estado.puesto || "";
+  $("#cv-c8-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c8-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c8-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? `Re: ${esc(c.puestoDestino)}` : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c8-saludo").textContent = c.saludo || "";
+  $("#cv-c8-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c8-despedida").textContent = c.despedida || "";
+  $("#cv-c8-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c8-firma-cargo").textContent = estado.puesto || "";
+}
+
+// ---- Carta 9 — Fitness App (va con el modelo 43) ----
+function asegurarEsqueletoCarta9() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta9") return;
+  pagina.dataset.esqueleto = "carta9";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta9">
+      <header class="cv-c9-header">
+        <div class="cv-c9-anillos" aria-hidden="true">
+          <span class="cv-c9-anillo cv-c9-anillo-1"></span>
+          <span class="cv-c9-anillo cv-c9-anillo-2"></span>
+        </div>
+        <h1 class="cv-c9-nombre" id="cv-c9-nombre"></h1>
+        <p class="cv-c9-puesto" id="cv-c9-puesto"></p>
+        <p class="cv-c9-contacto" id="cv-c9-contacto"></p>
+      </header>
+      <div class="cv-c9-tarjeta">
+        <div class="cv-c9-tarjeta-cima">
+          <div class="cv-c9-destinatario" id="cv-c9-destinatario"></div>
+          <span class="cv-c9-fecha-pill" id="cv-c9-fecha"></span>
+        </div>
+        <p class="cv-c9-saludo" id="cv-c9-saludo"></p>
+        <div class="cv-c9-cuerpo" id="cv-c9-cuerpo"></div>
+        <p class="cv-c9-despedida" id="cv-c9-despedida"></p>
+        <p class="cv-c9-firma" id="cv-c9-firma"></p>
+        <p class="cv-c9-firma-cargo" id="cv-c9-firma-cargo"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta9() {
+  asegurarEsqueletoCarta9();
+  const c = estado.carta;
+  $("#cv-c9-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c9-puesto").textContent = estado.puesto || "";
+  $("#cv-c9-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c9-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c9-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? esc(c.puestoDestino) : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c9-saludo").textContent = c.saludo || "";
+  $("#cv-c9-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c9-despedida").textContent = c.despedida || "";
+  $("#cv-c9-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c9-firma-cargo").textContent = estado.puesto || "";
+}
+
+// ---- Carta 10 — Iron Room (va con el modelo 44) ----
+function asegurarEsqueletoCarta10() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta10") return;
+  pagina.dataset.esqueleto = "carta10";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta10">
+      <header class="cv-c10-header">
+        <div class="cv-c10-barra" aria-hidden="true">
+          <span class="cv-c10-disco cv-c10-disco-izq"></span>
+          <span class="cv-c10-eje"></span>
+          <span class="cv-c10-disco cv-c10-disco-der"></span>
+        </div>
+        <div class="cv-c10-placa">
+          <h1 class="cv-c10-nombre" id="cv-c10-nombre"></h1>
+          <p class="cv-c10-puesto" id="cv-c10-puesto"></p>
+        </div>
+      </header>
+      <p class="cv-c10-contacto" id="cv-c10-contacto"></p>
+      <div class="cv-c10-cuerpo-envoltorio">
+        <div class="cv-c10-meta">
+          <div class="cv-c10-destinatario" id="cv-c10-destinatario"></div>
+          <p class="cv-c10-fecha" id="cv-c10-fecha"></p>
+        </div>
+        <p class="cv-c10-saludo" id="cv-c10-saludo"></p>
+        <div class="cv-c10-cuerpo" id="cv-c10-cuerpo"></div>
+        <p class="cv-c10-despedida" id="cv-c10-despedida"></p>
+        <p class="cv-c10-firma" id="cv-c10-firma"></p>
+        <p class="cv-c10-firma-cargo" id="cv-c10-firma-cargo"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta10() {
+  asegurarEsqueletoCarta10();
+  const c = estado.carta;
+  $("#cv-c10-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c10-puesto").textContent = estado.puesto || "";
+  $("#cv-c10-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c10-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c10-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? esc(c.puestoDestino) : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c10-saludo").textContent = c.saludo || "";
+  $("#cv-c10-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c10-despedida").textContent = c.despedida || "";
+  $("#cv-c10-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c10-firma-cargo").textContent = estado.puesto || "";
+}
+
+// ---- Carta 11 — Class Board (va con el modelo 45) ----
+function asegurarEsqueletoCarta11() {
+  const pagina = $("#cv-pagina");
+  if (pagina.dataset.esqueleto === "carta11") return;
+  pagina.dataset.esqueleto = "carta11";
+  pagina.innerHTML = `
+    <div class="cv-carta cv-carta11">
+      <header class="cv-c11-header">
+        <div class="cv-c11-header-izq">
+          <span class="cv-c11-rotulo">Coach</span>
+          <h1 class="cv-c11-nombre" id="cv-c11-nombre"></h1>
+          <p class="cv-c11-puesto" id="cv-c11-puesto"></p>
+        </div>
+        <div class="cv-c11-foto-marco">
+          <img class="cv-c11-foto" id="cv-c11-foto" src="" alt="Foto de perfil" hidden>
+          <div class="cv-c11-foto-placeholder" id="cv-c11-foto-placeholder">🙂</div>
+        </div>
+      </header>
+      <div class="cv-c11-tiza" aria-hidden="true"></div>
+      <p class="cv-c11-contacto" id="cv-c11-contacto"></p>
+      <div class="cv-c11-panel">
+        <span class="cv-c11-panel-tab" id="cv-c11-fecha"></span>
+        <div class="cv-c11-destinatario" id="cv-c11-destinatario"></div>
+        <p class="cv-c11-saludo" id="cv-c11-saludo"></p>
+        <div class="cv-c11-cuerpo" id="cv-c11-cuerpo"></div>
+        <p class="cv-c11-despedida" id="cv-c11-despedida"></p>
+        <p class="cv-c11-firma" id="cv-c11-firma"></p>
+        <p class="cv-c11-firma-cargo" id="cv-c11-firma-cargo"></p>
+      </div>
+    </div>
+  `;
+}
+function renderCarta11() {
+  asegurarEsqueletoCarta11();
+  const c = estado.carta;
+  const foto = $("#cv-c11-foto"), ph = $("#cv-c11-foto-placeholder");
+  if (estado.foto) { foto.src = estado.foto; foto.hidden = false; ph.hidden = true; }
+  else { foto.hidden = true; ph.hidden = false; }
+
+  $("#cv-c11-nombre").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c11-puesto").textContent = estado.puesto || "";
+  $("#cv-c11-contacto").innerHTML = contactoLineaCarta();
+  $("#cv-c11-fecha").textContent = fechaCartaFormateada();
+  $("#cv-c11-destinatario").innerHTML = [
+    c.destinatario ? esc(c.destinatario) : "",
+    c.empresaDestino ? esc(c.empresaDestino) : "",
+    c.puestoDestino ? esc(c.puestoDestino) : "",
+  ].filter(Boolean).map((l) => `<span>${l}</span>`).join("");
+  $("#cv-c11-saludo").textContent = c.saludo || "";
+  $("#cv-c11-cuerpo").innerHTML = escPárrafo(c.cuerpo || "").split("<br><br>").map((p) => `<p>${p}</p>`).join("");
+  $("#cv-c11-despedida").textContent = c.despedida || "";
+  $("#cv-c11-firma").textContent = `${estado.nombre || ""} ${estado.apellido || ""}`.trim();
+  $("#cv-c11-firma-cargo").textContent = estado.puesto || "";
 }
 
 // ============================================================

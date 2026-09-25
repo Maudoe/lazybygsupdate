@@ -5233,3 +5233,309 @@ a.btn { display: inline-block; text-decoration: none; }
   #cv-pagina img[id$="-foto"] { cursor: default; }
 }
 .ajuste-pista { font-size: 0.72rem; color: var(--tenue); flex: 1; line-height: 1.3; }
+
+/* ============================================================
+   Cartas 7-11 — a juego con los modelos de gimnasio (41-45)
+   ============================================================ */
+
+/* ---- Carta 7 — Coach Studio (modelo 41) ---- */
+.cv-c7-header {
+  position: relative; display: flex; align-items: center; gap: 6mm;
+  padding: 11mm 16mm; overflow: hidden;
+}
+.cv-c7-header-fondo {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(115deg, #15161c 0%, #1e2029 60%);
+}
+.cv-c7-header-fondo::after {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(115deg, transparent 0 9mm, rgba(255,255,255,0.03) 9mm 10mm);
+}
+.cv-c7-foto-aro {
+  position: relative; z-index: 1; flex: none;
+  width: calc(26mm * var(--cv-escala-foto, 1));
+  height: calc(26mm * var(--cv-escala-foto, 1));
+  border-radius: 50%; padding: 1.4mm;
+  background: conic-gradient(from 210deg, var(--cv-acento), var(--cv-acento-2), var(--cv-acento));
+  display: flex; align-items: center; justify-content: center;
+}
+.cv-c7-foto, .cv-c7-foto-placeholder {
+  width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+  display: flex; align-items: center; justify-content: center;
+  font-size: calc(9mm * var(--cv-escala-foto, 1));
+  background: #0f1015;
+}
+.cv-c7-foto[hidden], .cv-c7-foto-placeholder[hidden] { display: none; }
+.cv-c7-header-texto { position: relative; z-index: 1; min-width: 0; }
+.cv-c7-nombre {
+  font-family: var(--cv-font-titulos); font-size: 24pt; line-height: 1;
+  margin: 0; text-transform: uppercase; color: #fff;
+}
+.cv-c7-puesto {
+  margin: 1.5mm 0 0; font-size: 9.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.16em; color: var(--cv-acento);
+}
+.cv-c7-contacto { margin: 2.5mm 0 0; font-size: 8.5pt; color: #cbd0da; }
+.cv-c7-cuerpo-envoltorio { padding: 10mm 16mm 16mm; }
+.cv-c7-meta {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm;
+  padding-bottom: 5mm; margin-bottom: 6mm;
+  border-bottom: 1.4mm solid var(--cv-acento);
+}
+.cv-c7-destinatario { display: flex; flex-direction: column; gap: 0.6mm; font-size: 9.5pt; }
+.cv-c7-destinatario span:first-child { font-weight: 700; color: var(--cv-texto); }
+.cv-c7-destinatario span { color: var(--cv-tenue); }
+.cv-c7-fecha {
+  margin: 0; font-size: 8pt; font-weight: 700; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--cv-tenue);
+}
+.cv-c7-saludo { margin: 0 0 4mm; font-size: 10.5pt; font-weight: 700; color: var(--cv-texto); }
+.cv-c7-cuerpo { font-size: 10pt; line-height: 1.7; color: var(--cv-texto); }
+.cv-c7-cuerpo p { margin: 0 0 4mm; }
+.cv-c7-cuerpo p:last-child { margin-bottom: 0; }
+.cv-c7-despedida { margin: 7mm 0 0; font-size: 10pt; color: var(--cv-texto); }
+.cv-c7-firma {
+  margin: 6mm 0 0; font-family: var(--cv-font-titulos); font-size: 13pt;
+  text-transform: uppercase; color: var(--cv-texto);
+}
+.cv-c7-firma-cargo { margin: 0.5mm 0 0; font-size: 8.5pt; color: var(--cv-acento); font-weight: 700; }
+
+/* ---- Carta 8 — Race Bib (modelo 42) ---- */
+.cv-c8-header { display: flex; align-items: center; gap: 6mm; padding: 13mm 16mm 7mm; }
+.cv-c8-dorsal {
+  flex: none; width: 30mm; padding: 2.5mm 2mm;
+  border: 0.9mm solid var(--cv-texto); border-radius: 2mm; text-align: center;
+}
+.cv-c8-dorsal-marca {
+  font-size: 6.5pt; font-weight: 700; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--cv-tenue);
+}
+.cv-c8-dorsal-num {
+  font-family: var(--cv-font-titulos); font-size: 26pt; line-height: 1;
+  color: var(--cv-texto); margin-top: 1mm;
+}
+.cv-c8-header-texto { min-width: 0; }
+.cv-c8-nombre {
+  font-family: var(--cv-font-titulos); font-size: 26pt; line-height: 1;
+  margin: 0; text-transform: uppercase; color: var(--cv-texto);
+}
+.cv-c8-puesto {
+  margin: 1.5mm 0 0; font-size: 9.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--cv-acento);
+}
+.cv-c8-meta-banda {
+  height: 4.5mm;
+  background: repeating-conic-gradient(var(--cv-texto) 0% 25%, #ffffff 0% 50%) 0 0 / 4.5mm 4.5mm;
+}
+.cv-c8-contacto {
+  margin: 0; padding: 3mm 16mm; font-size: 8.5pt;
+  background: var(--cv-texto); color: #fff;
+}
+.cv-c8-cuerpo-envoltorio { padding: 9mm 16mm 16mm; }
+.cv-c8-fecha {
+  margin: 0 0 5mm; font-size: 8pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--cv-tenue);
+}
+.cv-c8-destinatario { display: flex; flex-direction: column; gap: 0.6mm; font-size: 9.5pt; margin-bottom: 6mm; }
+.cv-c8-destinatario span:first-child { font-weight: 700; color: var(--cv-texto); }
+.cv-c8-destinatario span { color: var(--cv-tenue); }
+.cv-c8-saludo { margin: 0 0 4mm; font-size: 10.5pt; font-weight: 700; color: var(--cv-texto); }
+.cv-c8-cuerpo { font-size: 10pt; line-height: 1.7; color: var(--cv-texto); }
+.cv-c8-cuerpo p { margin: 0 0 4mm; }
+.cv-c8-cuerpo p:last-child { margin-bottom: 0; }
+.cv-c8-despedida { margin: 7mm 0 0; font-size: 10pt; color: var(--cv-texto); }
+.cv-c8-firma {
+  margin: 6mm 0 0; font-family: var(--cv-font-titulos); font-size: 13pt;
+  text-transform: uppercase; color: var(--cv-texto);
+}
+.cv-c8-firma-cargo { margin: 0.5mm 0 0; font-size: 8.5pt; color: var(--cv-acento); font-weight: 700; }
+
+/* ---- Carta 9 — Fitness App (modelo 43) ---- */
+.cv-pagina[data-modelo="carta9"] { background: #0e1014; }
+.cv-c9-header {
+  position: relative; padding: 13mm 16mm 9mm; overflow: hidden;
+  background: radial-gradient(120% 90% at 82% 0%, rgba(255,255,255,0.07), transparent 60%), #14161d;
+}
+.cv-c9-anillos { position: absolute; right: -12mm; top: -14mm; width: 52mm; height: 52mm; z-index: 0; }
+.cv-c9-anillo { position: absolute; inset: 0; border-radius: 50%; border: 2.2mm solid; }
+.cv-c9-anillo-1 { border-color: var(--cv-acento); opacity: 0.5; }
+.cv-c9-anillo-2 { inset: 7mm; border-color: var(--cv-acento-2); opacity: 0.38; }
+.cv-c9-nombre {
+  position: relative; z-index: 1;
+  font-family: var(--cv-font-titulos); font-size: 24pt; line-height: 1.02;
+  margin: 0; color: #fff; text-transform: uppercase;
+}
+.cv-c9-puesto {
+  position: relative; z-index: 1; margin: 1.4mm 0 0; font-size: 9.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--cv-acento);
+}
+.cv-c9-contacto { position: relative; z-index: 1; margin: 2.5mm 0 0; font-size: 8.5pt; color: #c6cad3; }
+.cv-c9-tarjeta {
+  margin: 8mm 14mm 14mm;
+  background: #171a22; border: 0.3mm solid #262a35; border-radius: 4mm;
+  padding: 8mm 9mm 9mm;
+}
+.cv-c9-tarjeta-cima {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 5mm;
+  padding-bottom: 5mm; margin-bottom: 6mm; border-bottom: 0.3mm solid #262a35;
+}
+.cv-c9-destinatario { display: flex; flex-direction: column; gap: 0.6mm; font-size: 9.5pt; }
+.cv-c9-destinatario span:first-child { font-weight: 700; color: #fff; }
+.cv-c9-destinatario span { color: #9aa0ad; }
+.cv-c9-fecha-pill {
+  font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 1mm 2.6mm; border-radius: 999px; white-space: nowrap;
+  background: rgba(255,255,255,0.08); color: var(--cv-acento);
+  border: 0.25mm solid var(--cv-acento);
+}
+.cv-c9-saludo { margin: 0 0 4mm; font-size: 10.5pt; font-weight: 700; color: #fff; }
+.cv-c9-cuerpo { font-size: 10pt; line-height: 1.7; color: #d7dae2; }
+.cv-c9-cuerpo p { margin: 0 0 4mm; }
+.cv-c9-cuerpo p:last-child { margin-bottom: 0; }
+.cv-c9-despedida { margin: 7mm 0 0; font-size: 10pt; color: #d7dae2; }
+.cv-c9-firma {
+  margin: 6mm 0 0; font-family: var(--cv-font-titulos); font-size: 13pt;
+  text-transform: uppercase; color: #fff;
+}
+.cv-c9-firma-cargo { margin: 0.5mm 0 0; font-size: 8.5pt; color: var(--cv-acento); font-weight: 700; }
+
+/* ---- Carta 10 — Iron Room (modelo 44) ---- */
+.cv-c10-header {
+  position: relative; padding: 11mm 16mm 9mm; background: #17181c; overflow: hidden;
+}
+.cv-c10-barra {
+  position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  height: 11mm; display: flex; align-items: center; z-index: 0; opacity: 0.22;
+}
+.cv-c10-eje { flex: 1; height: 2mm; background: linear-gradient(180deg, #8d93a1, #4c505a); }
+.cv-c10-disco {
+  width: 6.5mm; height: 11mm; border-radius: 1.2mm; flex: none;
+  background: linear-gradient(180deg, var(--cv-acento), var(--cv-acento-2));
+}
+.cv-c10-placa {
+  position: relative; z-index: 1;
+  background: #101114; border: 0.7mm solid var(--cv-acento);
+  padding: 4mm 5mm; border-radius: 1.5mm;
+}
+.cv-c10-nombre {
+  font-family: var(--cv-font-titulos); font-size: 23pt; line-height: 1;
+  margin: 0; text-transform: uppercase; color: #fff;
+}
+.cv-c10-puesto {
+  margin: 1.4mm 0 0; font-size: 9.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--cv-acento);
+}
+.cv-c10-contacto {
+  margin: 0; padding: 3mm 16mm; font-size: 8.5pt;
+  background: linear-gradient(90deg, var(--cv-acento), var(--cv-acento-2));
+  color: var(--cv-acento-texto);
+}
+.cv-c10-cuerpo-envoltorio { padding: 9mm 16mm 16mm; }
+.cv-c10-meta {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm;
+  padding-bottom: 5mm; margin-bottom: 6mm;
+  border-bottom: 0.4mm solid var(--cv-linea);
+}
+.cv-c10-destinatario { display: flex; flex-direction: column; gap: 0.6mm; font-size: 9.5pt; }
+.cv-c10-destinatario span:first-child { font-weight: 700; color: var(--cv-texto); }
+.cv-c10-destinatario span { color: var(--cv-tenue); }
+.cv-c10-fecha {
+  margin: 0; font-size: 8pt; font-weight: 700; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--cv-tenue);
+}
+.cv-c10-saludo { margin: 0 0 4mm; font-size: 10.5pt; font-weight: 700; color: var(--cv-texto); }
+.cv-c10-cuerpo { font-size: 10pt; line-height: 1.7; color: var(--cv-texto); }
+.cv-c10-cuerpo p { margin: 0 0 4mm; }
+.cv-c10-cuerpo p:last-child { margin-bottom: 0; }
+.cv-c10-despedida { margin: 7mm 0 0; font-size: 10pt; color: var(--cv-texto); }
+.cv-c10-firma {
+  margin: 6mm 0 0; font-family: var(--cv-font-titulos); font-size: 13pt;
+  text-transform: uppercase; color: var(--cv-texto);
+}
+.cv-c10-firma-cargo { margin: 0.5mm 0 0; font-size: 8.5pt; color: var(--cv-acento); font-weight: 700; }
+
+/* ---- Carta 11 — Class Board (modelo 45) ---- */
+.cv-pagina[data-modelo="carta11"] { background: #12211c; }
+.cv-c11-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 5mm;
+  padding: 12mm 16mm 7mm;
+  background: #13231d;
+  background-image: radial-gradient(60% 40% at 20% 10%, rgba(255,255,255,0.05), transparent 70%);
+}
+.cv-c11-header-izq { min-width: 0; }
+.cv-c11-rotulo {
+  display: inline-block; font-size: 7pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.3em;
+  color: var(--cv-acento-texto); background: var(--cv-acento);
+  padding: 1mm 2.5mm; border-radius: 0.8mm; margin-bottom: 2mm;
+}
+.cv-c11-nombre {
+  font-family: var(--cv-font-titulos); font-size: 24pt; line-height: 1;
+  margin: 0; color: #f4f6f3; text-transform: uppercase;
+}
+.cv-c11-puesto {
+  margin: 1.4mm 0 0; font-size: 9.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.15em; color: var(--cv-acento-2);
+}
+.cv-c11-foto-marco {
+  flex: none;
+  width: calc(24mm * var(--cv-escala-foto, 1));
+  height: calc(24mm * var(--cv-escala-foto, 1));
+  border-radius: 1.5mm; overflow: hidden;
+  border: 0.6mm dashed rgba(255,255,255,0.35);
+  padding: 1.1mm; background: rgba(255,255,255,0.05);
+  display: flex; align-items: center; justify-content: center;
+}
+.cv-c11-foto, .cv-c11-foto-placeholder {
+  width: 100%; height: 100%; object-fit: cover; border-radius: 1mm;
+  display: flex; align-items: center; justify-content: center;
+  font-size: calc(8mm * var(--cv-escala-foto, 1));
+  background: rgba(0,0,0,0.25);
+}
+.cv-c11-foto[hidden], .cv-c11-foto-placeholder[hidden] { display: none; }
+.cv-c11-tiza {
+  height: 0.8mm; margin: 0 16mm;
+  background: repeating-linear-gradient(90deg,
+    rgba(255,255,255,0.45) 0 6mm, rgba(255,255,255,0.12) 6mm 8mm);
+}
+.cv-c11-contacto { margin: 3mm 0 0; padding: 0 16mm; font-size: 8.5pt; color: #cfdbd5; }
+.cv-c11-panel {
+  position: relative; margin: 8mm 14mm 14mm;
+  border: 0.3mm solid rgba(255,255,255,0.16); border-radius: 2mm;
+  padding: 8mm 8mm 9mm; background: rgba(255,255,255,0.035);
+}
+.cv-c11-panel-tab {
+  position: absolute; top: -2.2mm; left: 5mm;
+  font-family: var(--cv-font-titulos); font-size: 7.5pt;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  background: var(--cv-acento); color: var(--cv-acento-texto);
+  padding: 0.9mm 2.5mm; border-radius: 0.8mm;
+}
+.cv-c11-destinatario { display: flex; flex-direction: column; gap: 0.6mm; font-size: 9.5pt; margin-bottom: 6mm; }
+.cv-c11-destinatario span:first-child { font-weight: 700; color: #f4f6f3; }
+.cv-c11-destinatario span { color: #9fb0a8; }
+.cv-c11-saludo { margin: 0 0 4mm; font-size: 10.5pt; font-weight: 700; color: #f4f6f3; }
+.cv-c11-cuerpo { font-size: 10pt; line-height: 1.7; color: #dce5e0; }
+.cv-c11-cuerpo p { margin: 0 0 4mm; }
+.cv-c11-cuerpo p:last-child { margin-bottom: 0; }
+.cv-c11-despedida { margin: 7mm 0 0; font-size: 10pt; color: #dce5e0; }
+.cv-c11-firma {
+  margin: 6mm 0 0; font-family: var(--cv-font-titulos); font-size: 13pt;
+  text-transform: uppercase; color: #f4f6f3;
+}
+.cv-c11-firma-cargo { margin: 0.5mm 0 0; font-size: 8.5pt; color: var(--cv-acento); font-weight: 700; }
+
+@media print {
+  /* la carta entra en una carilla; lo único que no conviene partir es el
+     cierre (despedida + firma), que separado del cuerpo queda huérfano */
+  .cv-c7-despedida, .cv-c7-firma, .cv-c8-despedida, .cv-c8-firma,
+  .cv-c9-despedida, .cv-c9-firma, .cv-c10-despedida, .cv-c10-firma,
+  .cv-c11-despedida, .cv-c11-firma { break-inside: avoid; }
+  .cv-c7-despedida, .cv-c8-despedida, .cv-c9-despedida,
+  .cv-c10-despedida, .cv-c11-despedida { break-after: avoid-page; }
+}
+
+/* Las cartas 7-11 manejan sus propios márgenes (headers a sangre, bandas
+   que cruzan la hoja), así que anulan el padding del contenedor común —
+   si no, quedaba doble margen y el header no llegaba a los bordes. */
+.cv-carta7, .cv-carta8, .cv-carta9, .cv-carta10, .cv-carta11 { padding: 0; }
